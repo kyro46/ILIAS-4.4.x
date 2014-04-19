@@ -1574,6 +1574,13 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 				$template->setVariable('CLASS', ($row['walked_through']) ? ('answered'.$active) : ('unanswered'.$active));
 				$template->setVariable('ITEM', ilUtil::prepareFormOutput($row['title']));
 				$template->setVariable('SEQUENCE', $row['sequence']);
+				//******************************************************
+				if ($row['marked'])
+				{
+					$template->setVariable('HREF_MARKED', ilUtil::getImagePath("marked.png"));
+					$template->setVariable('ALT_MARKED', $this->lng->txt("tst_question_marked"));
+				}
+				//******************************************************
 				$template->parseCurrentBlock();
 			}
 			
