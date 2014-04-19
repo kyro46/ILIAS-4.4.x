@@ -473,6 +473,9 @@ ilObjTest extends ilObject
 	/** @var $enbale_archiving bool */
 	protected $enable_archiving;
 
+	/** @var $autoshow_question_list bool */
+	protected $autoshow_question_list;
+	
 	/**
 	 * @var int
 	 */
@@ -1303,7 +1306,10 @@ ilObjTest extends ilObject
 				'sign_submission' => array('integer', (int)$this->getSignSubmission()),
 				'question_set_type' => array('text', $this->getQuestionSetType()),
 				'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
-				'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition())
+				'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition()),
+				//**************************************************************
+				'autoshow_question_list' => array('integer', (int)$this->getAutoshowQuestionList())
+				//**************************************************************
 			));
 				    
 			$this->test_id = $next_id;
@@ -1412,7 +1418,10 @@ ilObjTest extends ilObject
 						'sign_submission' => array('integer', (int)$this->getSignSubmission()),
 						'question_set_type' => array('text', $this->getQuestionSetType()),
 						'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
-						'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition())
+						'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition()),
+						//**************************************************************
+						'autoshow_question_list' => array('integer', (int)$this->getAutoshowQuestionList())
+						//**************************************************************
 					),
 					array(
 						'test_id' => array('integer', (int)$this->getTestId())
@@ -1890,6 +1899,9 @@ ilObjTest extends ilObject
 			$this->setShowExamviewHtml((bool)$data->show_examview_html);
 			$this->setShowExamviewPdf((bool)$data->show_examview_pdf);
 			$this->setEnableArchiving((bool)$data->enable_archiving);
+			//**************************************************************
+			$this->setAutoshowQuestionList((bool)$data->autoshow_question_list);
+			//**************************************************************
 			$this->setExamidInKiosk( (bool)$data->examid_in_kiosk);
 			$this->setShowExamid( (bool)$data->show_exam_id);
 			$this->setSignSubmission( (bool)$data->sign_submission );
@@ -5884,6 +5896,11 @@ function getAnswerFeedbackPoints()
 				case 'enable_archiving':
 					$this->setEnableArchiving($metadata['entry']);
 					break;
+				//**************************************************************
+				case 'autoshow_question_list':
+					$this->setAutoshowQuestionList($metadata['entry']);
+					break;
+				//**************************************************************
 				case 'sign_submission':
 					$this->setSignSubmission($metadata['entry']);
 					break;
@@ -6253,6 +6270,14 @@ function getAnswerFeedbackPoints()
 		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getEnableArchiving());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
+		//**************************************************************
+		// autoshow_question_list
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "autoshow_question_list");
+		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getAutoshowQuestionList());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+		//**************************************************************
+				
 		// sign_submission
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "sign_submission");
@@ -6872,6 +6897,9 @@ function getAnswerFeedbackPoints()
 		$newObj->setShowExamViewHtml($this->getShowExamviewHtml());
 		$newObj->setShowExamViewPdf($this->getShowExamviewPdf());
 		$newObj->setEnableArchiving($this->getEnableArchiving());
+		//**************************************************************
+		$newObj->setAutoshowQuestionList($this->getAutoshowQuestionList());
+		//**************************************************************
 		$newObj->setSignSubmission($this->getSignSubmission());
 		$newObj->setCharSelectorAvailability((int)$this->getCharSelectorAvailability());
 		$newObj->setCharSelectorDefinition($this->getCharSelectorDefinition());
@@ -11207,6 +11235,22 @@ function getAnswerFeedbackPoints()
 		return $this->enable_archiving;
 	}
 
+	/**
+	 *  @param boolean $autoshow_question_list
+	 */
+	public function setAutoshowQuestionList($autoshow_question_list)
+	{
+		$this->autoshow_question_list = $autoshow_question_list;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function getAutoshowQuestionList()
+	{
+		return $this->autoshow_question_list;
+	}	
+	
 	public function getMaxPassOfTest()
 	{
 		/**

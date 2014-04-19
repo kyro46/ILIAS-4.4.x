@@ -372,6 +372,17 @@ class ilObjTestSettingsGeneralGUI
 			$this->testOBJ->setListOfQuestionsDescription(0);
 		}
 		
+		// autoshow_question_list
+		$autoshow_question_list_option = $form->getItemByPostVar('autoshow_question_list')->getValue();
+		if( is_array($autoshow_question_list_option) )
+		{
+			$this->testOBJ->setAutoshowQuestionList( in_array('chb_autoshow_question_list', $autoshow_question_list_option) );
+		}
+		else
+		{
+			$this->testOBJ->setAutoshowQuestionList(0);
+		}
+		
 		if( $form->getItemByPostVar('mailnotification') instanceof ilFormPropertyGUI )
 		{
 			$this->testOBJ->setMailNotification($form->getItemByPostVar('mailnotification')->getValue());
@@ -1114,6 +1125,17 @@ class ilObjTestSettingsGeneralGUI
 		$list_of_questions_options->setValue($values);
 
 		$list_of_questions->addSubItem($list_of_questions_options);
+		
+		//**************************************************************
+		// Show the List of Questions on the left side from the start
+		$autoshow_question_list_option = new ilCheckboxGroupInputGUI("", "autoshow_question_list");
+		$autoshow_question_list_option->addOption(new ilCheckboxOption("Show the List of Questions on the left side from the start", 'chb_autoshow_question_list'));
+		$value = array();
+		if ($this->testOBJ->getAutoshowQuestionList()) array_push($value, 'chb_autoshow_question_list');
+		$autoshow_question_list_option->setValue($value);
+		$list_of_questions->addSubItem($autoshow_question_list_option);
+		//**************************************************************
+		
 		$form->addItem($list_of_questions);
 
 		// show question marking

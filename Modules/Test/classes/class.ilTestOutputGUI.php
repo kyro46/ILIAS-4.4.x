@@ -107,6 +107,18 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 	protected function startTestCmd()
 	{
 		$_GET['activecommand'] = 'start';
+		
+		//*************************************************************
+		global $ilUser, $ilDB;
+		
+		$result = $ilDB->queryF("SELECT autoshow_question_list FROM tst_tests WHERE test_id = %s",
+				array("integer"), array($this->testSession->getTestId()));
+		$record = $ilDB->fetchAssoc($result);
+		
+		//$show_side_list = $ilUser->getPref('side_list_of_questions');
+		$ilUser->writePref('side_list_of_questions', $record["autoshow_question_list"]);
+		//*************************************************************
+				
 		$this->redirectQuestionCmd();
 	}
 
