@@ -9,7 +9,7 @@
 * GUI class for scorm learning module presentation
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSAHSPresentationGUI.php 45783 2013-10-23 18:09:45Z ukohnle $
+* @version $Id$
 *
 * @ilCtrl_Calls ilSAHSPresentationGUI: ilSCORMPresentationGUI, ilAICCPresentationGUI, ilHACPPresentationGUI
 * @ilCtrl_Calls ilSAHSPresentationGUI: ilInfoScreenGUI, ilscorm13player, ilShopPurchaseGUI

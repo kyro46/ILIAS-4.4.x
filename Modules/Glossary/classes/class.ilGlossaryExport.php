@@ -28,7 +28,7 @@ require_once("./Modules/Glossary/classes/class.ilObjGlossary.php");
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* @version $Id: class.ilGlossaryExport.php 44337 2013-08-21 13:04:48Z akill $
+* @version $Id$
 *
 * @ingroup ModulesGlossary
 */

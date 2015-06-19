@@ -23,7 +23,7 @@
    |                     http://validator.aborla.net/                     |
    +----------------------------------------------------------------------+
 
-     $Id: config.inc 8377 2005-08-15 09:27:49Z akill $
+     $Id$
 */
 
 //error_reporting(E_ALL | E_STRICT);

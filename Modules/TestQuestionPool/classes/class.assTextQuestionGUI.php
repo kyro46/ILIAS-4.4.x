@@ -15,11 +15,11 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author	Björn Heyser <bheyser@databay.de>
  * @author	Maximilian Becker <mbecker@databay.de>
  *
- * @version	$Id: class.assTextQuestionGUI.php 46059 2013-11-06 16:01:39Z mbecker $
+ * @version	$Id$
  *
  * @ingroup ModulesTestQuestionPool
  */
-class assTextQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringAdjustable, ilGuiAnswerScoringAdjustable
+class assTextQuestionGUI extends assQuestionGUI //implements ilGuiQuestionScoringAdjustable, ilGuiAnswerScoringAdjustable
 {
 	/**
 	 * assTextQuestionGUI constructor
@@ -182,7 +182,8 @@ class assTextQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringA
 		include_once "./Services/UICore/classes/class.ilTemplate.php";
 		$template = new ilTemplate("tpl.il_as_qpl_text_question_output_solution.html", TRUE, TRUE, "Modules/TestQuestionPool");
 		$solutiontemplate = new ilTemplate("tpl.il_as_tst_solution_output.html",TRUE, TRUE, "Modules/TestQuestionPool");
-		$solution = htmlentities($solution, ENT_COMPAT | ENT_HTML401, 'UTF-8');
+
+		$solution = $this->object->getHtmlUserSolutionPurifier()->purify($solution);
 		$template->setVariable("ESSAY", $this->object->prepareTextareaOutput($solution, TRUE));
 		
 		$questiontext = $this->object->getQuestion();
@@ -515,7 +516,7 @@ class assTextQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringA
 		
 			foreach ($this->object->getAnswers() as $idx => $ans)
 			{
-				if ($this->object->isKeywordInAnswer($user_answer, $ans->getAnswertext() ))
+				if ($this->object->isKeywordMatching($user_answer, $ans->getAnswertext() ))
 				{
 					$fb = $this->object->feedbackOBJ->getSpecificAnswerFeedbackTestPresentation(
 							$this->object->getId(), $idx
@@ -568,6 +569,22 @@ class assTextQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringA
 			$maxchars->setValue( $this->object->getMaxNumOfChars() );
 		$maxchars->setInfo( $this->lng->txt( "description_maxchars" ) );
 		$form->addItem( $maxchars );
+
+		// text rating
+		$textrating = new ilSelectInputGUI($this->lng->txt("text_rating"), "text_rating");
+		$text_options = array(
+			"ci" => $this->lng->txt("cloze_textgap_case_insensitive"),
+			"cs" => $this->lng->txt("cloze_textgap_case_sensitive"),
+			"l1" => sprintf($this->lng->txt("cloze_textgap_levenshtein_of"), "1"),
+			"l2" => sprintf($this->lng->txt("cloze_textgap_levenshtein_of"), "2"),
+			"l3" => sprintf($this->lng->txt("cloze_textgap_levenshtein_of"), "3"),
+			"l4" => sprintf($this->lng->txt("cloze_textgap_levenshtein_of"), "4"),
+			"l5" => sprintf($this->lng->txt("cloze_textgap_levenshtein_of"), "5")
+		);
+		$textrating->setOptions($text_options);
+		$textrating->setValue($this->object->getTextRating());
+		$form->addItem($textrating);
+
 		return $form;
 	}
 
@@ -605,7 +622,7 @@ class assTextQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringA
 
 		if ($this->object->getAnswerCount() == 0)
 		{
-			$this->object->addAnswer( "", 0, 0, 0 );
+			$this->object->addAnswer( "", 1, 0, 0 );
 		}
 		require_once "./Modules/TestQuestionPool/classes/class.ilEssayKeywordWizardInputGUI.php";
 
@@ -634,6 +651,7 @@ class assTextQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringA
 		$allKeyword->setValues( self::buildAnswerTextOnlyArray( $this->object->getAnswers() ) );
 		$scoringOptionAllKeyword->addSubItem( $allKeyword );
 		$allKeywordPoints = new ilNumberInputGUI($this->lng->txt( "points" ), "all_keyword_points");
+		$allKeywordPoints->allowDecimals(TRUE);
 		$allKeywordPoints->setValue( $this->object->getPoints() );
 		$allKeywordPoints->setRequired( TRUE );
 		$allKeywordPoints->setSize( 3 );
@@ -649,6 +667,7 @@ class assTextQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringA
 		$oneKeyword->setValues( self::buildAnswerTextOnlyArray( $this->object->getAnswers() ) );
 		$scoringOptionOneKeyword->addSubItem( $oneKeyword );
 		$oneKeywordPoints = new ilNumberInputGUI($this->lng->txt( "points" ), "one_keyword_points");
+		$oneKeywordPoints->allowDecimals(TRUE);
 		$oneKeywordPoints->setValue( $this->object->getPoints() );
 		$oneKeywordPoints->setRequired( TRUE );
 		$oneKeywordPoints->setSize( 3 );

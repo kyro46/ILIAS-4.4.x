@@ -8,7 +8,7 @@
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* $Id: class.ilObjFileBasedLMGUI.php 49368 2014-04-11 08:55:45Z jluetzen $
+* $Id$
 *
 * @ilCtrl_Calls ilObjFileBasedLMGUI: ilFileSystemGUI, ilMDEditorGUI, ilPermissionGUI, ilLearningProgressGUI, ilInfoScreenGUI
 * @ilCtrl_Calls ilObjFileBasedLMGUI: ilShopPurchaseGUI, ilCommonActionDispatcherGUI

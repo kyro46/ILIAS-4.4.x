@@ -5,7 +5,7 @@
 * buttons for client details
 * 
 * @author	Sascha Hofmann <shofmann@databay.de>
-* @version	$Id: inc.client_tabs.php 45109 2013-09-30 15:46:28Z akill $
+* @version	$Id$
 *
 * @package	ilias-setup
 */

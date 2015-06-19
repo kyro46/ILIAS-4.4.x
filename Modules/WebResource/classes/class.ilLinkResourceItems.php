@@ -8,7 +8,7 @@ include_once "./Services/Object/classes/class.ilObjectGUI.php";
 * Class ilObjLinkResourceGUI
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilLinkResourceItems.php 46540 2013-12-02 13:48:59Z smeyer $
+* @version $Id$
 * 
 * @ingroup ModulesWebResource
 */

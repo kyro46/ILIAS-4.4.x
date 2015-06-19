@@ -9,7 +9,7 @@ include_once 'Services/Search/classes/class.ilUserDefinedFieldSearch.php';
 * Performs Mysql Like search in table usr_defined_data
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilLikeUserDefinedFieldSearch.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 * 
 * @package ilias-search
 *

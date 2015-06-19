@@ -8,7 +8,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
  * Class ilObjGlossaryListGUI
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * $Id: class.ilObjGlossaryListGUI.php 40141 2013-02-26 11:01:12Z akill $
+ * $Id$
  *
  * @ingroup ModulesGlossary
  */

@@ -9,7 +9,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * @author Stefan Meyer <meyer@leifos.com> 
 * @author Sascha Hofmann <saschahofmann@gmx.de>
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilObjUserFolderGUI.php 48875 2014-03-24 10:02:48Z jluetzen $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjUserFolderGUI: ilPermissionGUI, ilUserTableGUI
 * @ilCtrl_Calls ilObjUserFolderGUI: ilAccountCodesGUI, ilCustomUserFieldsGUI, ilRepositorySearchGUI
@@ -2025,7 +2025,7 @@ class ilObjUserFolderGUI extends ilObjectGUI
 		$this->form->addItem($pass);
 		 
 		// password generation
-		$cb = new ilCheckboxInputGUI($this->lng->txt("passwd_generation"), "passwd_auto_generate");
+		$cb = new ilCheckboxInputGUI($this->lng->txt("passwd_generation_pre"), "passwd_auto_generate");
 		$cb->setChecked($ilSetting->get("passwd_auto_generate"));		
 		$cb->setInfo($this->lng->txt("passwd_generation_info"));
 		$this->form->addItem($cb);
@@ -2396,10 +2396,10 @@ class ilObjUserFolderGUI extends ilObjectGUI
 			$this->ilias->raiseError($this->lng->txt("select_max_one_item"),$this->ilias->error_obj->MESSAGE);
 		}
 
+		$file = basename($_POST["file"][0]);
 
 		$export_dir = $this->object->getExportDirectory();
-		ilUtil::deliverFile($export_dir."/".$_POST["file"][0],
-			$_POST["file"][0]);
+		ilUtil::deliverFile($export_dir."/".$file, $file);
 	}
 	
 	/**
@@ -2450,6 +2450,8 @@ class ilObjUserFolderGUI extends ilObjectGUI
 		$export_dir = $this->object->getExportDirectory();
 		foreach($_POST["file"] as $file)
 		{
+			$file = basename($file);
+			
 			$exp_file = $export_dir."/".$file;
 			if (@is_file($exp_file))
 			{

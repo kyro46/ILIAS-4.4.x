@@ -26,7 +26,7 @@
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilContObjLocatorGUI.php 19589 2009-04-10 08:08:17Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

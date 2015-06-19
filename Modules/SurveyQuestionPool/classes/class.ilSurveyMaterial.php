@@ -25,7 +25,7 @@
 * Survey material class
 *
 * @author		Helmut Schottmüller <ilias@aurealis.de>
-* @version	$Id: class.ilSurveyMaterial.php 43723 2013-07-29 11:19:02Z jluetzen $
+* @version	$Id$
 * @ingroup ModulesSurveyQuestionPool
 */
 class ilSurveyMaterial 

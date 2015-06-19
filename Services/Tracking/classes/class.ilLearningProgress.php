@@ -26,7 +26,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilLearningProgress.php 30131 2011-08-03 11:09:33Z jluetzen $
+* @version $Id$
 *
 * @extends ilObjectGUI
 * @package ilias-core

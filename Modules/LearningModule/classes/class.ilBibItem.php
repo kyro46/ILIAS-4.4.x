@@ -29,7 +29,7 @@ require_once ("Services/MetaData/classes/class.ilMDLanguageItem.php");
 * Handles Bib-Items of ILIAS DigiLib-Books (see ILIAS DTD)
 *
 * @author Databay AG <jc@databay.de>
-* @version $Id: class.ilBibItem.php 33496 2012-03-02 23:15:02Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

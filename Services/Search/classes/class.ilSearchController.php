@@ -6,7 +6,7 @@
 * Class ilObjSearchController
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilSearchController.php 46449 2013-11-27 15:40:37Z smeyer $
+* @version $Id$
 *
 * @package ilias-search
 *

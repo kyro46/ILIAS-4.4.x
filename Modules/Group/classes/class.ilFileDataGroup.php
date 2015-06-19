@@ -6,7 +6,7 @@
 * This class handles all operations of export files for the group object
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFileDataGroup.php 33510 2012-03-04 11:59:59Z akill $
+* @version $Id$
 * 
 */
 require_once("./Services/FileSystem/classes/class.ilFileData.php");

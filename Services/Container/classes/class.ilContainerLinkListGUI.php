@@ -27,7 +27,7 @@
 *
 * @author Stefan Meyer <alex.killing@gmx.de>
 
-* @version $Id: class.ilContainerLinkListGUI.php 33513 2012-03-04 16:43:19Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilContainerLinkListGUI:
 * 

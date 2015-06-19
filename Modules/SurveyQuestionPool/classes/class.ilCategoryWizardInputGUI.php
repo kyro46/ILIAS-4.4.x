@@ -25,7 +25,7 @@
 * This class represents a survey question category wizard property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilCategoryWizardInputGUI.php 43773 2013-07-30 15:04:06Z jluetzen $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilCategoryWizardInputGUI extends ilTextInputGUI

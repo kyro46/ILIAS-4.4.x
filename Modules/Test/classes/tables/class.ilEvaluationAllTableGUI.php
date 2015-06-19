@@ -8,7 +8,7 @@ include_once("./Services/Table/classes/class.ilTable2GUI.php");
 * TableGUI class for evaluation of all users
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilEvaluationAllTableGUI.php 48775 2014-03-20 11:17:19Z mjansen $
+* @version $Id$
 *
 * @ingroup ModulesTest
 * 

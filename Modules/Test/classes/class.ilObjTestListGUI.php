@@ -6,7 +6,7 @@
 *
 * @author		Helmut Schottmueller <helmut.schottmueller@mac.com>
 * @author		Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjTestListGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+* $Id$
 *
 * @extends ilObjectListGUI
 * @ingroup ModulesTest

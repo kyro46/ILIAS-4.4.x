@@ -6,7 +6,7 @@
 * This class handles all operations on files for the exercise object
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFileDataImportGroup.php 33510 2012-03-04 11:59:59Z akill $
+* @version $Id$
 * 
 */
 require_once("./Services/FileSystem/classes/class.ilFileDataImport.php");

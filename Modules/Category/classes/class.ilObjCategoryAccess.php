@@ -9,7 +9,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjCategoryAccess.php 37316 2012-10-03 10:04:36Z akill $
+* @version $Id$
 *
 * @ingroup ModulesCategory
 */

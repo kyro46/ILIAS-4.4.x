@@ -5,7 +5,7 @@
 * Class ilObjAuthSettingsGUI
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de> 
-* @version $Id: class.ilObjAuthSettingsGUI.php 45469 2013-10-15 10:56:59Z mjansen $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjAuthSettingsGUI: ilPermissionGUI, ilRegistrationSettingsGUI, ilLDAPSettingsGUI, ilRadiusSettingsGUI
 * @ilCtrl_Calls ilObjAuthSettingsGUI: ilAuthShibbolethSettingsGUI, ilOpenIdSettingsGUI, ilCASSettingsGUI
@@ -1126,11 +1126,11 @@ class ilObjAuthSettingsGUI extends ilObjectGUI
 
 		$chb_local = new ilCheckboxInputGUI($this->lng->txt('apache_enable_local'), 'apache_enable_local');
 		$form->addItem($chb_local);
-/*
+
 		$chb_ldap = new ilCheckboxInputGUI($this->lng->txt('apache_enable_ldap'), 'apache_enable_ldap');
 		$chb_ldap->setInfo($this->lng->txt('apache_ldap_hint_ldap_must_be_configured'));
 		$form->addItem($chb_ldap);
-*/
+
 		$txt = new ilTextInputGUI($this->lng->txt('apache_auth_indicator_name'), 'apache_auth_indicator_name');
 		$txt->setRequired(true);
 		$form->addItem($txt);

@@ -5,7 +5,7 @@
 * Helper class for local user accounts (in categories)
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilLocalUser.php 28582 2011-04-19 08:58:59Z smeyer $
+* @version $Id$
 *
 */
 

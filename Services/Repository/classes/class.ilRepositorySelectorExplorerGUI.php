@@ -22,6 +22,8 @@ class ilRepositorySelectorExplorerGUI extends ilTreeExplorerGUI
 {
 	protected $type_grps = array();
 	protected $session_materials = array();
+	protected $highlighted_node = null;
+	protected $clickable_types = array();
 	
 	/**
 	 * Constructor
@@ -138,6 +140,15 @@ class ilRepositorySelectorExplorerGUI extends ilTreeExplorerGUI
 	 */
 	function isNodeHighlighted($a_node)
 	{
+		if($this->getHighlightedNode())
+		{
+			if($this->getHighlightedNode() == $a_node["child"])
+			{
+				return true;
+			}
+			return false;
+		}
+
 		if ($a_node["child"] == $_GET["ref_id"] ||
 			($_GET["ref_id"] == "" && $a_node["child"] == $this->getNodeId($this->getRootNode())))
 		{
@@ -286,7 +297,57 @@ class ilRepositorySelectorExplorerGUI extends ilTreeExplorerGUI
 			return false;
 		}
 
+		if(is_array($this->getClickableTypes()) && count($this->getClickableTypes())>0)
+		{
+			return in_array($a_node["type"], $this->getClickableTypes());
+		}
+
 		return true;
+	}
+
+	/**
+	 * set an alternate highlighted node if $_GET["ref_id"] is not set or wrong
+	 *
+	 * @param int $a_value ref_id
+	 */
+	public function setHighlightedNode($a_value)
+	{
+		$this->highlighted_node = $a_value;
+	}
+
+	/**
+	 * get an alternate highlighted node if $_GET["ref_id"] is not set or wrong
+	 * Returns null if not set
+	 *
+	 * @return mixed ref_id
+	 */
+	public function getHighlightedNode()
+	{
+		return $this->highlighted_node;
+	}
+
+	/**
+	 * set Whitelist for clickable items
+	 *
+	 * @param array/string $a_types array type
+	 */
+	function setClickableTypes($a_types)
+	{
+		if(!is_array($a_types))
+		{
+			$a_types = array($a_types);
+		}
+		$this->clickable_types = $a_types;
+	}
+
+	/**
+	 * get whitelist for clickable items
+	 *
+	 * @return array types
+	 */
+	function getClickableTypes()
+	{
+		return (array)$this->clickable_types;
 	}
 
 }

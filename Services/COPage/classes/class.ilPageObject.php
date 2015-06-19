@@ -39,7 +39,7 @@ define ("IL_NO_HEADER", "none");
  *
  * @author Alex Killing <alex.killing@gmx.de>
  *
- * @version $Id: class.ilPageObject.php 49011 2014-03-26 13:28:15Z akill $
+ * @version $Id$
  *
  * @ingroup ServicesCOPage
  */
@@ -1492,7 +1492,7 @@ abstract class ilPageObject
 		// get all internal links of the page
 		$xpc = xpath_new_context($this->dom);
 		$path = "//IntLink";
-		$res =& xpath_eval($xpc, $path);
+		$res = xpath_eval($xpc, $path);
 
 		$links = array();
 		$cnt_multiple = 1;
@@ -1605,7 +1605,12 @@ abstract class ilPageObject
 	function validateDom()
 	{
 		$this->stripHierIDs();
+
+		// possible fix for #14820
+		libxml_disable_entity_loader(false);
+
 		@$this->dom->validate($error);
+
 		return $error;
 	}
 
@@ -2279,9 +2284,11 @@ abstract class ilPageObject
 
 //echo "<br>PageObject::createFromXML[".$this->getId()."]";
 
+		$empty = false;
 		if($this->getXMLContent() == "")
 		{
 			$this->setXMLContent("<PageObject></PageObject>");
+			$empty = true;
 		}
 		
 		$content = $this->getXMLContent();
@@ -2308,7 +2315,7 @@ abstract class ilPageObject
 			));
 		
 		// after update event
-		$this->__afterUpdate($dom_doc, $content, true);
+		$this->__afterUpdate($dom_doc, $content, true, $empty);
 
 	}
 
@@ -2364,24 +2371,28 @@ abstract class ilPageObject
 	 * 
 	 * @param
 	 */
-	protected final function __afterUpdate($a_domdoc, $a_xml, $a_creation = false)
+	protected final function __afterUpdate($a_domdoc, $a_xml, $a_creation = false, $a_empty = false)
 	{
-		// save internal link information
-		// the page object is responsible to do this, since it "offers" the
-		// internal link feature pc and page classes
-		$this->saveInternalLinks($a_domdoc);
-
-		// save style usage
-		$this->saveStyleUsage($a_domdoc);
-		
-		// pc classes hook
-		include_once("./Services/COPage/classes/class.ilCOPagePCDef.php");
-		$defs = ilCOPagePCDef::getPCDefinitions();
-		foreach ($defs as $def)
+		// we do not need this if we are creating an empty page
+		if (!$a_creation || !$a_empty)
 		{
-			ilCOPagePCDef::requirePCClassByName($def["name"]);
-			$cl = $def["pc_class"];
-			call_user_func($def["pc_class"].'::afterPageUpdate', $this, $a_domdoc, $a_xml, $a_creation);
+			// save internal link information
+			// the page object is responsible to do this, since it "offers" the
+			// internal link feature pc and page classes
+			$this->saveInternalLinks($a_domdoc);
+
+			// save style usage
+			$this->saveStyleUsage($a_domdoc);
+
+			// pc classes hook
+			include_once("./Services/COPage/classes/class.ilCOPagePCDef.php");
+			$defs = ilCOPagePCDef::getPCDefinitions();
+			foreach ($defs as $def)
+			{
+				ilCOPagePCDef::requirePCClassByName($def["name"]);
+				$cl = $def["pc_class"];
+				call_user_func($def["pc_class"].'::afterPageUpdate', $this, $a_domdoc, $a_xml, $a_creation);
+			}
 		}
 				
 		// call page hook
@@ -4808,7 +4819,7 @@ abstract class ilPageObject
 	 * @param string $a_parent_type target parent type
 	 * @param int $a_parent_id target parent id
 	 */
-	function copy($a_id, $a_parent_type = "", $a_parent_id = 0)
+	function copy($a_id, $a_parent_type = "", $a_parent_id = 0, $a_clone_mobs = false)
 	{
 		if ($a_parent_type == "")
 		{
@@ -4835,7 +4846,7 @@ abstract class ilPageObject
 				$new_page_object->setParentId($a_parent_id);
 				$new_page_object->setId($a_id);
 			}
-			$new_page_object->setXMLContent($orig_page->copyXMLContent());
+			$new_page_object->setXMLContent($orig_page->copyXMLContent($a_clone_mobs));
 			$new_page_object->setActive($orig_page->getActive());
 			$new_page_object->setActivationStart($orig_page->getActivationStart());
 			$new_page_object->setActivationEnd($orig_page->getActivationEnd());

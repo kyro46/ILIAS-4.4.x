@@ -25,7 +25,7 @@
 * Internal Link: Repository Item Selector Explorer
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilIntLinkRepItemExplorer.php 37171 2012-09-25 20:30:02Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

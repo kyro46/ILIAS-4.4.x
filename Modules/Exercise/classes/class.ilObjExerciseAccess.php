@@ -8,7 +8,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author 		Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjExerciseAccess.php 46851 2013-12-16 08:47:31Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesExercise
 */

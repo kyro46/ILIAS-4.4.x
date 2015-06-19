@@ -379,7 +379,7 @@ class SurveyImportParser extends ilSaxParser
 						{
 							// import an mediaobject which was inserted using tiny mce
 							if (!is_array($_SESSION["import_mob_xhtml"])) $_SESSION["import_mob_xhtml"] = array();
-							array_push($_SESSION["import_mob_xhtml"], array("mob" => $a_attribs["label"], "uri" => $a_attribs["uri"]));
+							array_push($_SESSION["import_mob_xhtml"], array("mob" => $a_attribs["label"], "uri" => $a_attribs["uri"], "type" => $a_attribs["type"], "id" => $a_attribs["id"]));
 						}
 					}
 				break;
@@ -459,17 +459,10 @@ class SurveyImportParser extends ilSaxParser
 		{
 			case "surveyobject":
 				if (is_object($this->survey))
-				{
-					// write constraints
-					if (count($this->constraints))
-					{
-						$relations = $this->survey->getAllRelations(TRUE);
-						foreach ($this->constraints as $constraint)
-						{							
-							$constraint_id= $this->survey->addConstraint($this->questions[$constraint["destref"]], $relations[$constraint["relation"]]["id"], $constraint["value"], $constraint["conjunction"]);
-							$this->survey->addConstraintToQuestion($this->questions[$constraint["sourceref"]], $constraint_id);									
-						}
-					}
+				{			
+					$this->survey->setStatus($this->survey_status);
+					$this->survey->saveToDb();
+					
 					// write question blocks
 					if (count($this->questionblocks))
 					{
@@ -485,8 +478,17 @@ class SurveyImportParser extends ilSaxParser
 							$this->survey->createQuestionblock($title, $this->showQuestiontext, false, $qblock);
 						}
 					}
-					$this->survey->setStatus($this->survey_status);
-					$this->survey->saveToDb();
+				
+					// #13878 - write constraints
+					if (count($this->constraints))
+					{
+						$relations = $this->survey->getAllRelations(TRUE);
+						foreach ($this->constraints as $constraint)
+						{							
+							$constraint_id= $this->survey->addConstraint($this->questions[$constraint["destref"]], $relations[$constraint["relation"]]["id"], $constraint["value"], $constraint["conjunction"]);
+							$this->survey->addConstraintToQuestion($this->questions[$constraint["sourceref"]], $constraint_id);									
+						}
+					}
 
 					// write textblocks
 					if (count($this->textblocks))
@@ -562,14 +564,22 @@ class SurveyImportParser extends ilSaxParser
 					{
 						$this->textblocks[$this->original_question_id] = $this->textblock;
 					}
-					$this->activequestion->saveToDb();
-					if (is_object($this->survey))
-					{
-						// duplicate the question for the survey
-						$question_id = $this->activequestion->duplicate(TRUE);
-						$this->survey->addQuestion($question_id);
-						$this->questions[$this->original_question_id] = $question_id;
+					$this->activequestion->saveToDb();					
+					// duplicate the question for the survey (if pool is to be used)
+					if (is_object($this->survey) && 
+						$this->spl_id > 0)
+					{						
+						$question_id = $this->activequestion->duplicate(TRUE);										
 					}
+					else
+					{
+						$question_id = $this->activequestion->getId();
+					}
+					if (is_object($this->survey)) // #15452
+					{
+						$this->survey->addQuestion($question_id);		
+					}
+					$this->questions[$this->original_question_id] = $question_id;					
 					$this->activequestion = NULL;
 				}
 				$this->textblock = "";
@@ -690,6 +700,27 @@ class SurveyImportParser extends ilSaxParser
 							case "evaluation_access":
 								$this->survey->setEvaluationAccess($value["entry"]);
 								break;
+							case "pool_usage":
+								$this->survey->setPoolUsage($value["entry"]);
+								break;							
+							case "mode_360":
+								$this->survey->set360Mode($value["entry"]);
+								break;
+							case "mode_360_self_eval":
+								$this->survey->set360SelfEvaluation($value["entry"]);
+								break;
+							case "mode_360_self_rate":
+								$this->survey->set360SelfRaters($value["entry"]);
+								break;
+							case "mode_360_self_appr":
+								$this->survey->set360SelfAppraisee($value["entry"]);
+								break;
+							case "mode_360_results":
+								$this->survey->set360Results($value["entry"]);
+								break;
+							case "mode_360_skill_service":
+								$this->survey->set360SkillService($value["entry"]);
+								break;						
 						}
 					}
 				}

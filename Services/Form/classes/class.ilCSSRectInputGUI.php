@@ -25,7 +25,7 @@
 * This class represents a text property in a property form.
 *
 * @author Alex Killing <alex.killing@gmx.de> 
-* @version $Id: class.ilCSSRectInputGUI.php 18149 2008-12-03 10:03:05Z hschottm $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilCSSRectInputGUI extends ilSubEnabledFormPropertyGUI

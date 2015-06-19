@@ -7,7 +7,7 @@ include_once './Services/Table/classes/class.ilTable2GUI.php';
  * Table GUI for ecs trees
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSNodeMappingTreeTableGUI.php 43927 2013-08-06 07:44:27Z smeyer $
+ * $Id$
  */
 class ilECSNodeMappingTreeTableGUI extends ilTable2GUI
 {

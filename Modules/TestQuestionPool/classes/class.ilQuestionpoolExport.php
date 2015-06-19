@@ -8,7 +8,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
 *
-* @version $Id: class.ilQuestionpoolExport.php 45909 2013-10-30 15:36:21Z mjansen $
+* @version $Id$
 *
 * @ingroup ModulesTestQuestionPool
 */

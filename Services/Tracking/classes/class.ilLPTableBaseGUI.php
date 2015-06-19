@@ -80,13 +80,13 @@ class ilLPTableBaseGUI extends ilTable2GUI
 				$obj->writeToSession();
 			}
 
-			if(isset($_POST["tbltplcrt"]))
+			if(isset($_REQUEST["tbltplcrt"]))
 			{
-				$ilCtrl->setParameter($this->parent_obj, "tbltplcrt", $_POST["tbltplcrt"]);
+				$ilCtrl->setParameter($this->parent_obj, "tbltplcrt", $_REQUEST["tbltplcrt"]);
 			}
-			if(isset($_POST["tbltpldel"]))
+			if(isset($_REQUEST["tbltpldel"]))
 			{
-				$ilCtrl->setParameter($this->parent_obj, "tbltpldel", $_POST["tbltpldel"]);
+				$ilCtrl->setParameter($this->parent_obj, "tbltpldel", $_REQUEST["tbltpldel"]);
 			}
 
 			$ilCtrl->redirect($this->parent_obj, $this->parent_cmd);
@@ -190,7 +190,8 @@ class ilLPTableBaseGUI extends ilTable2GUI
 			return false;
 		}		
 		$olp = ilObjectLP::getInstance($a_data["obj_id"]);
-		if(!$olp->isActive())
+		if(get_class($olp) != "ilObjectLP" && // #13654 - LP could be unsupported
+			!$olp->isActive())		
 		{
 			return false;
 		}
@@ -680,9 +681,9 @@ class ilLPTableBaseGUI extends ilTable2GUI
 		if(ilTimingCache::_showWarning($a_ref_id, $a_user_id))
 		{
 			$timings = ilTimingCache::_getTimings($a_ref_id);
-			if($timings['item']['changeable'] and $timings['user'][$a_usr_id]['end'])
+			if($timings['item']['changeable'] and $timings['user'][$a_user_id]['end'])
 			{
-				$end = $timings['user'][$a_usr_id]['end'];
+				$end = $timings['user'][$a_user_id]['end'];
 			}
 			else if ($timings['item']['suggestion_end'])
 			{

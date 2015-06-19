@@ -26,7 +26,7 @@
    * Soap utitliy functions
    *
    * @author Stefan Meyer <meyer@leifos.com>
-   * @version $Id: class.ilSoapUtils.php 41607 2013-04-22 11:59:03Z jluetzen $
+   * @version $Id$
    *
    * @package ilias
    */

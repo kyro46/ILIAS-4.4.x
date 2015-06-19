@@ -9,7 +9,7 @@
  * 
  * @author Peter Gabriel <pgabriel@databay.de>
  * @package ilias-core
- * @version $Id: start.php 33447 2012-03-01 14:00:01Z jluetzen $
+ * @version $Id$
 */
 
 require_once "./Services/Utilities/classes/class.ilUtil.php";

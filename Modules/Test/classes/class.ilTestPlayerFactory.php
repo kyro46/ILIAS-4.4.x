@@ -5,7 +5,7 @@
  * Factory for test player
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilTestPlayerFactory.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/Test
  */

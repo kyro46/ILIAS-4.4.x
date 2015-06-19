@@ -4,7 +4,7 @@
 /**
  * Class ilOnlineTracking
  * @author  Stefan Meyer <meyer@leifos.com>
- * @version $Id: class.ilOnlineTracking.php 35709 2012-07-22 14:53:48Z mjansen $
+ * @version $Id$
  * @extends ilObjectGUI
  * @package ilias-core
  *          Stores total online time of users

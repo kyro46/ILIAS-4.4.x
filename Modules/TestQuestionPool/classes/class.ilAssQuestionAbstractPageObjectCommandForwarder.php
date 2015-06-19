@@ -5,7 +5,7 @@
  * abstract parent class for page object forwarders
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssQuestionAbstractPageObjectCommandForwarder.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

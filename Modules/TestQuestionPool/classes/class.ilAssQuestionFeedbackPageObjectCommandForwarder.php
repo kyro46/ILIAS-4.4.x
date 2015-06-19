@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionAbstractPageOb
  * class can be used as forwarder for feedback page object contexts
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssQuestionFeedbackPageObjectCommandForwarder.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

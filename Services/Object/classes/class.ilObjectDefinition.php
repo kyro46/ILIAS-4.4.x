@@ -7,7 +7,7 @@
 * it handles the xml-description of all ilias objects
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjectDefinition.php 46220 2013-11-14 20:35:27Z akill $
+* @version $Id$
 *
 * @externalTableAccess ilObjDefReader on il_object_def, il_object_subobj, il_object_group 
 */

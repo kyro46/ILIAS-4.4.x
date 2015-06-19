@@ -27,7 +27,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: inc.header.php 33438 2012-03-01 11:32:40Z jluetzen $
+* @version $Id$
 *
 * @package ilias-core
 */

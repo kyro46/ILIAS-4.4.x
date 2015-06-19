@@ -7,7 +7,7 @@ include_once './Services/WebServices/ECS/classes/Mapping/class.ilECSNodeMappingA
  * 
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSNodeMappingAssignments.php 36713 2012-09-03 19:10:17Z smeyer $
+ * $Id$
  */
 class ilECSNodeMappingAssignments
 {

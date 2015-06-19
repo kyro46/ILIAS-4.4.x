@@ -27,7 +27,7 @@
 * The ilSurveyCategory class encapsules a survey category
 *
 * @author		Helmut Schottmüller <ilias@aurealis.de>
-* @version	$Id: class.ilSurveyCategory.php 24717 2010-07-19 11:43:47Z hschottm $
+* @version	$Id$
 * @ingroup ModulesSurveyQuestionPool
 */
 class ilSurveyCategory 

@@ -8,7 +8,7 @@
 * 
 *
 * @author Stefan Meyer <smeyer@databay>
-* @version $Id: class.ilSaxParser.php 33499 2012-03-02 23:33:16Z akill $
+* @version $Id$
 *
 * @extends PEAR
 */

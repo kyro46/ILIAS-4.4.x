@@ -25,7 +25,7 @@
 * scorm learning module presentation script
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: sahs_server.php 35580 2012-07-17 06:56:35Z ukohnle $
+* @version $Id$
 *
 */
 

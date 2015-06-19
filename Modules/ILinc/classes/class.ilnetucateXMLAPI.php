@@ -9,7 +9,7 @@ require_once "./Services/Xml/classes/class.ilXmlWriter.php";
 *  
 * @author	Sascha Hofmann <saschahofmann@gmx.de>
 *
-* @version	$Id: class.ilnetucateXMLAPI.php 22967 2010-02-13 10:15:40Z akill $
+* @version	$Id$
 * 
 */
 class ilnetucateXMLAPI extends ilXmlWriter

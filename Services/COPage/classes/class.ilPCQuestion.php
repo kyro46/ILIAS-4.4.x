@@ -11,7 +11,7 @@ require_once("./Services/COPage/classes/class.ilPageContent.php");
 * Assessment Question of ilPageObject
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCQuestion.php 48980 2014-03-25 20:11:29Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

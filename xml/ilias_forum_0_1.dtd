@@ -1,6 +1,6 @@
 <!-- ilias_user.dtd for ILIAS mail import -->
 <!-- For comments refer to our mailing list: xml-ilias@uni-koeln.de -->
-<!-- $Id: ilias_forum_0_1.dtd 3866 2004-04-29 11:35:28Z smeyer $Id: ilias_forum_0_1.dtd,v 1.2 2004/04/15 11:11:53 smeyer Exp $ -->
+<!-- $Id$Id: ilias_forum_0_1.dtd,v 1.2 2004/04/15 11:11:53 smeyer Exp $ -->
 
 <!-- FORUM -->
 <!ELEMENT forum (title,description,moderator*,thread*)>

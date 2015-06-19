@@ -5,7 +5,7 @@
 * start page of ilias 
 *
 * @author Peter Gabriel <pgabriel@databay.de>
-* @version $Id: index.php 33447 2012-03-01 14:00:01Z jluetzen $
+* @version $Id$
 *
 * @package ilias
 */

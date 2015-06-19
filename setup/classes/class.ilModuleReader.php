@@ -29,7 +29,7 @@ include_once("./setup/classes/class.ilObjDefReader.php");
 * Reads reads module information of modules.xml files into db
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilModuleReader.php 43440 2013-07-16 10:35:39Z akill $
+* @version $Id$
 *
 */
 class ilModuleReader extends ilObjDefReader

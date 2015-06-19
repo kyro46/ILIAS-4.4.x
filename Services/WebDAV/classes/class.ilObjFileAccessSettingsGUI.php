@@ -26,7 +26,7 @@
 *
 * @author Werner Randelshofer, Hochschule Luzern, werner.randelshofer@hslu.ch
 *
-* @version $Id: class.ilObjFileAccessSettingsGUI.php 43415 2013-07-12 13:56:45Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjFileAccessSettingsGUI: ilPermissionGUI, ilFMSettingsGUI
 *

@@ -5,7 +5,7 @@
  * Reads and store cms tree in database
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSTreeReader.php 39161 2013-01-10 10:46:56Z smeyer $
+ * $Id$
  */
 class ilECSTreeReader
 {

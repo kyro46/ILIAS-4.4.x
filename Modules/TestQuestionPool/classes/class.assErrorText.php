@@ -14,11 +14,11 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoring
  * @author		Grégory Saive <gsaive@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version		$Id: class.assErrorText.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  *
  * @ingroup		ModulesTestQuestionPool
  */
-class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable, ilObjAnswerScoringAdjustable
+class assErrorText extends assQuestion //implements ilObjQuestionScoringAdjustable, ilObjAnswerScoringAdjustable
 {
 	protected $errortext;
 	protected $textsize;
@@ -428,6 +428,8 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 			include_once "./Modules/Test/classes/class.ilObjTest.php";
 			$pass = ilObjTest::_getPass($active_id);
 		}
+		
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
 
 		$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
 			array('integer','integer','integer'),
@@ -453,6 +455,9 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 			}
 			$entered_values = true;
 		}
+		
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+		
 		if ($entered_values)
 		{
 			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
@@ -680,6 +685,8 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 			$items = preg_split("/\s+/", $text);
 			foreach ($items as $idx => $item)
 			{
+				$img = '';
+
 				if(
 					($posHash = strpos($item, '#')) === 0 ||
 					($posOpeningBrackets = strpos($item, '((')) === 0 ||
@@ -779,7 +786,6 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 							}
 						}
 					}
-					
 
 					$item_stack = array();
 					$start_idx = $passage_start_idx;
@@ -800,7 +806,6 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 					}
 					if($graphicalOutput)
 					{
-						// @todo: Add images
 						if ($group_selected)
 						{
 							$img = ' <img src="' . ilUtil::getImagePath("icon_ok.png") . '" alt="' . $this->lng->txt("answer_is_right") . '" title="' . $this->lng->txt("answer_is_right") . '" /> ';
@@ -828,6 +833,7 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 					continue;
 				}
 
+				// Errors markes with #, group errors (()) are handled above
 				$class = '';
 				$img = '';
 				if($this->isTokenSelected($counter, $selections))
@@ -975,7 +981,7 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 						$errorobject = $this->errordata[$errorcounter];
 						if (is_object($errorobject))
 						{
-							$passages[$cur_pidx]['score'] = (int) $errorobject->points;
+							$passages[$cur_pidx]['score'] = $errorobject->points;
 							$passages[$cur_pidx]['isError'] = true;
 						}
 						
@@ -1061,7 +1067,7 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 						$errorobject = $this->errordata[$errorcounter];
 						if (is_object($errorobject))
 						{
-							$passages[$cur_pidx]['score'] = (int) $errorobject->points;
+							$passages[$cur_pidx]['score'] = $errorobject->points;
 						}
 						$errorcounter++;
 					}
@@ -1281,6 +1287,16 @@ class assErrorText extends assQuestion implements ilObjQuestionScoringAdjustable
 				if(substr($item, 0, 1) == "#")
 				{
 					$item = substr($item, 1);
+					
+					// #14115 - add position to correct answer 
+					foreach($result["correct_answers"] as $aidx => $answer)
+					{
+						if($answer["answertext_wrong"] == $item && !$answer["pos"])
+						{
+							$result["correct_answers"][$aidx]["pos"] = $textidx."_".($idx+1);
+							break;
+						}
+					}					
 				}
 				array_push($answers, array(
 					"answertext" => (string) ilUtil::prepareFormOutput($item),

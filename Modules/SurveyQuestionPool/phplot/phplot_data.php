@@ -1,5 +1,5 @@
 <?php
-/* $Id: phplot_data.php 6558 2005-01-26 16:20:31Z smeyer $
+/* $Id$
  * 
  * Copyright (C) 2000 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which

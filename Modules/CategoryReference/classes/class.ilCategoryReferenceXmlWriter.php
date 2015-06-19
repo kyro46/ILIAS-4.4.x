@@ -7,7 +7,7 @@ include_once './Services/ContainerReference/classes/class.ilContainerReferenceXm
  * Class for container reference export
  *
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilCategoryReferenceXmlWriter.php 35412 2012-07-06 10:28:29Z smeyer $
+ * $Id$
  */
 class ilCategoryReferenceXmlWriter extends ilContainerReferenceXmlWriter
 {

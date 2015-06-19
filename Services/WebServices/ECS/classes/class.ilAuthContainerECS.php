@@ -267,8 +267,8 @@ class ilAuthContainerECS extends Auth_Container
 		$userObj->setTimeLimitFrom(time() - 5);
 		$userObj->setTimeLimitUntil(time() + $ilClientIniFile->readVariable("session", "expire"));
 
-		$now = new ilDateTime(time(), IL_CAL_UNIX);
-		$userObj->setAgreeDate($now->get(IL_CAL_DATETIME));
+		#$now = new ilDateTime(time(), IL_CAL_UNIX);
+		#$userObj->setAgreeDate($now->get(IL_CAL_DATETIME));
 
 		// Create user in DB
 		$userObj->setOwner(6);
@@ -288,7 +288,8 @@ class ilAuthContainerECS extends Auth_Container
 
 		// Send Mail
 		#$this->sendNotification($userObj);
-
+		$this->resetMailOptions($userObj->getId());
+		
 		return $userObj->getLogin();
 	}
 	
@@ -326,9 +327,27 @@ class ilAuthContainerECS extends Auth_Container
 				true
 			);
 		}
+		
+		$this->resetMailOptions($a_local_user_id);
 
 		$ilLog->write(__METHOD__.': Finished update of remote user with usr_id: '.$user->getImportId());	
 		return $user_obj->getLogin();
+	}
+	
+	/**
+	 * Reset mail options to "local only"
+	 * 
+	 */
+	protected function resetMailOptions($a_usr_id)
+	{
+		include_once './Services/Mail/classes/class.ilMailOptions.php';
+		$options = new ilMailOptions($a_usr_id);
+		$options->updateOptions(
+				$options->getSignature(),
+				$options->getLinebreak(),
+				IL_MAIL_LOCAL,
+				$options->getCronjobNotification()
+		);
 	}
 	
 

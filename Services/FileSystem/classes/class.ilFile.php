@@ -7,7 +7,7 @@
 * This class is abstract and needs to be extended
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFile.php 33510 2012-03-04 11:59:59Z akill $
+* @version $Id$
 * 
 */
 class ilFile

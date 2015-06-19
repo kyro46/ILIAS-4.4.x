@@ -8,7 +8,7 @@ require_once 'Services/Mail/classes/class.ilMailBoxQuery.php';
 /**
  * @author  Jan Posselt <jposselt@databay.de>
  * @author  Michael Jansen <mjansen@databay.de>
- * @version $Id: class.ilMailFolderTableGUI.php 45114 2013-09-30 17:23:41Z mjansen $
+ * @version $Id$
  * @ingroup ServicesMail
  */
 class ilMailFolderTableGUI extends ilTable2GUI

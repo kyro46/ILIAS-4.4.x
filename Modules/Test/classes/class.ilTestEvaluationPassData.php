@@ -8,7 +8,7 @@ require_once('Modules/Test/exceptions/class.ilTestEvaluationException.php');
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
 * @author		Björn Heyser <bheyser@databay.de>
-* @version		$Id: class.ilTestEvaluationPassData.php 47010 2014-01-03 12:11:50Z mbecker $
+* @version		$Id$
 *
 * @throws		ilTestEvaluationException
 * 

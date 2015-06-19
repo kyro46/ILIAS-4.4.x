@@ -17,7 +17,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoring
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <bheyser@databay.de>
  *
- * @version		$Id: class.assMultipleChoice.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
@@ -633,6 +633,9 @@ class assMultipleChoice extends assQuestion implements ilObjQuestionScoringAdjus
 		}
 
 		$entered_values = 0;
+		
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
+		
 		$ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
 			array('integer','integer','integer'),
 			array($active_id, $this->getId(), $pass)
@@ -657,6 +660,9 @@ class assMultipleChoice extends assQuestion implements ilObjQuestionScoringAdjus
 				}
 			}
 		}
+
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+		
 		if ($entered_values)
 		{
 			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
@@ -1073,7 +1079,7 @@ class assMultipleChoice extends assQuestion implements ilObjQuestionScoringAdjus
 				$has_image = true;
 			}
 			array_push($answers, array(
-				"answertext" => (string) $answer_obj->getAnswertext(),
+				"answertext" => (string) $this->formatSAQuestion($answer_obj->getAnswertext(), "\<span class\=\"latex\">", "\<\/span>"),
 				"points_checked" => (float) $answer_obj->getPointsChecked(),
 				"points_unchecked" => (float) $answer_obj->getPointsUnchecked(),
 				"order" => (int) $answer_obj->getOrder(),

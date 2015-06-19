@@ -29,7 +29,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
 *
 * @author Alex Killing <alex.killing@gmx.de>
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* $Id: class.ilObjSurveyListGUI.php 43723 2013-07-29 11:19:02Z jluetzen $
+* $Id$
 *
 * @extends ilObjectListGUI
 * @ingroup ModulesSurvey

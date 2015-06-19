@@ -7,7 +7,7 @@ include_once "./Services/Object/classes/class.ilObjectGUI.php";
 * Class ilObjSurveyGUI
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version  $Id: class.ilObjSurveyGUI.php 48410 2014-03-08 10:19:16Z akill $
+* @version  $Id$
 *
 * @ilCtrl_Calls ilObjSurveyGUI: ilSurveyEvaluationGUI, ilSurveyExecutionGUI
 * @ilCtrl_Calls ilObjSurveyGUI: ilMDEditorGUI, ilPermissionGUI
@@ -1098,11 +1098,17 @@ class ilObjSurveyGUI extends ilObjectGUI
 	*/
 	function propertiesObject(ilPropertyFormGUI $a_form = null)
 	{
-		global $ilAccess, $ilTabs;
+		global $ilAccess, $ilTabs, $ilHelp;
 		
 		$this->handleWriteAccess();
 		
 		$ilTabs->activateTab("settings");
+
+
+		if ($this->object->get360Mode())
+		{
+			$ilHelp->setScreenId("settings_360");
+		}
 		
 		if(!$a_form)
 		{
@@ -1122,12 +1128,21 @@ class ilObjSurveyGUI extends ilObjectGUI
 		}
 	
 		$this->tpl->setContent($a_form->getHTML().$message);
+	}		
+	
+	function doAutoCompleteObject()
+	{
+		$fields = array('login','firstname','lastname','email');
+				
+		include_once './Services/User/classes/class.ilUserAutoComplete.php';
+		$auto = new ilUserAutoComplete();
+		$auto->setSearchFields($fields);
+		$auto->setResultField('login');
+		$auto->enableFieldSearchableCheck(true);
+		echo $auto->getList(ilUtil::stripSlashes($_REQUEST['term']));
+		exit();
 	}
-	
-	
-	
-	
-	
+					
 	/**
 	 * Enable all settings - Confirmation
 	 */
@@ -1335,11 +1350,11 @@ class ilObjSurveyGUI extends ilObjectGUI
 			$this->ctrl->redirect($this, "export");
 		}
 
+		$file = basename($_POST["file"][0]);
 
 		$export_dir = $this->object->getExportDirectory();
 		include_once "./Services/Utilities/classes/class.ilUtil.php";
-		ilUtil::deliverFile($export_dir."/".$_POST["file"][0],
-			$_POST["file"][0]);
+		ilUtil::deliverFile($export_dir."/".$file, $file);
 	}
 
 	/**
@@ -1402,6 +1417,8 @@ class ilObjSurveyGUI extends ilObjectGUI
 		$export_dir = $this->object->getExportDirectory();
 		foreach ($_POST["file"] as $file)
 		{
+			$file = basename($file);
+			
 			$exp_file = $export_dir."/".$file;
 			$exp_dir = $export_dir."/".substr($file, 0, strlen($file) - 4);
 			if (@is_file($exp_file))
@@ -1522,10 +1539,16 @@ class ilObjSurveyGUI extends ilObjectGUI
 			if ($anonymous_code)
 			{
 				$code_input = true;
-				if(!$this->object->isUnusedCode($anonymous_code, $ilUser->getId()))
+				// if(!$this->object->isUnusedCode($anonymous_code, $ilUser->getId()))
+				if(!$this->object->checkSurveyCode($anonymous_code)) // #15031 - valid as long survey is not finished
 				{
 					$anonymous_code = null;
-				}				
+				}	
+				else
+				{
+					// #15860
+					$this->object->bindSurveyCodeToUser($ilUser->getId(), $anonymous_code);
+				}
 			}
 			if ($anonymous_code)
 			{
@@ -1697,7 +1720,8 @@ class ilObjSurveyGUI extends ilObjectGUI
 			
 			if($this->object->get360Mode() &&
 				$this->object->get360SelfAppraisee() && 
-				!$this->object->isAppraisee($ilUser->getId()))
+				!$this->object->isAppraisee($ilUser->getId()) &&
+				$ilUser->getId() != ANONYMOUS_USER_ID) // #14968
 			{
 				$link = $this->ctrl->getLinkTargetByClass("ilsurveyparticipantsgui", "addSelfAppraisee");
 				$link = '<a href="'.$link.'">'.$this->lng->txt("survey_360_add_self_appraisee").'</a>';						

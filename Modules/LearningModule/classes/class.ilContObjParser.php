@@ -25,7 +25,7 @@ include_once("Services/MetaData/classes/class.ilMD.php");
 * Content Object Parser
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilContObjParser.php 47227 2014-01-14 11:07:23Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */
@@ -237,6 +237,10 @@ class ilContObjParser extends ilMDSaxParser
 				case "gdf":
 					include_once("./Modules/Glossary/classes/class.ilGlossaryDefPage.php");
 					$page_obj = new ilGlossaryDefPage($page_arr[1]);
+					break;
+
+				case "qpl":
+					$page_obj = new ilAssQuestionPage($page_arr[1]);
 					break;
 			}
 			$page_obj->buildDom();
@@ -1108,6 +1112,10 @@ case "InteractiveImage":
 								"il__qst_".$ids["pool"], $xml);
 							$page->setXMLContent($xmlcontent);
 							$page->updateFromXML();
+							if( $this->page_object->needsImportParsing() )
+							{
+								$this->pages_to_parse["qpl:".$page->getId()] = "qpl:".$page->getId();
+							}
 							unset($page);
 						}
 						if ($ids["test"] > 0)
@@ -1119,6 +1127,10 @@ case "InteractiveImage":
 								"il__qst_".$ids["test"], $xml);
 							$page->setXMLContent($xmlcontent);
 							$page->updateFromXML();
+							if( $this->page_object->needsImportParsing() )
+							{
+								$this->pages_to_parse["qpl:".$page->getId()] = "qpl:".$page->getId();
+							}
 							unset($page);
 						}
 					}
@@ -1387,7 +1399,10 @@ case "InteractiveImage":
 				break;
 
 			case "GlossaryTerm":
-				$this->glossary_term->setTerm(trim($this->chr_data));
+				$term = trim($this->chr_data);
+				$term = str_replace("&lt;", "<", $term);
+				$term = str_replace("&gt;", ">", $term);
+				$this->glossary_term->setTerm($term);
 				$this->glossary_term->create();
 				$iia = explode("_", $this->glossary_term->getImportId());
 				$this->glossary_term_map[(int) $iia[count($iia) - 1]] = $this->glossary_term->getId();

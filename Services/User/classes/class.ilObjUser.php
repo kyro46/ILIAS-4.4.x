@@ -17,7 +17,7 @@ require_once './Services/User/exceptions/class.ilUserException.php';
 * @author	Sascha Hofmann <saschahofmann@gmx.de>
 * @author	Stefan Meyer <meyer@leifos.com>
 * @author	Peter Gabriel <pgabriel@databay.de>
-* @version	$Id: class.ilObjUser.php 49028 2014-03-26 15:41:14Z mjansen $
+* @version	$Id$
 *
 * @ingroup ServicesUser
 */
@@ -510,7 +510,7 @@ class ilObjUser extends ilObject
 
         $this->syncActive();
 
-		if( !$this->active )
+		if( $this->getStoredActive($this->id) && !$this->active )
 		{
 			$this->setInactivationDate( ilUtil::now() );
 		}
@@ -1003,12 +1003,14 @@ class ilObjUser extends ilObject
 		{
 			return false;
 		}
+		
+		$former_login = self::_lookupLogin($this->getId());
 
 		// Update not necessary
-		if(0 == strcmp($a_login, self::_lookupLogin($this->getId())))
+		if(0 == strcmp($a_login, $former_login))
 		{
 			return false;
-		}		
+		}
 		
 		try
 		{
@@ -1045,7 +1047,7 @@ class ilObjUser extends ilObject
 			if((int)$ilSetting->get('allow_change_loginname') &&
 			   (int)$ilSetting->get('create_history_loginname'))
 			{
-				ilObjUser::_writeHistory($this->getId(), self::_lookupLogin($this->getId()));	
+				ilObjUser::_writeHistory($this->getId(), $former_login);
 			}
 
 			//update login
@@ -1055,9 +1057,12 @@ class ilObjUser extends ilObject
 				UPDATE usr_data
 				SET login = %s
 				WHERE usr_id = %s',
-				array('text', 'integer'), array($this->getLogin(), $this->getId()));			
+				array('text', 'integer'), array($this->getLogin(), $this->getId()));
+
+			include_once 'Services/Contact/classes/class.ilAddressbook.php';
+			ilAddressbook::onLoginNameChange($former_login, $this->getLogin());
 		}
-		
+
 		return true;
 	}
 
@@ -1396,7 +1401,9 @@ class ilObjUser extends ilObject
 		
 		// Reset owner
 		$this->resetOwner();
-		
+
+		include_once 'Services/Contact/classes/class.ilAddressbook.php';
+		ilAddressbook::onUserDeletion($this);
 
 		// Trigger deleteUser Event
 		global $ilAppEventHandler;
@@ -1497,7 +1504,17 @@ class ilObjUser extends ilObject
 	*/
 	function hasAcceptedUserAgreement()
 	{
-		if ($this->agree_date != null || $this->login == "root")
+		/**
+		 * @var ilRbacReview
+		 */
+		global $rbacreview;
+
+		if(
+			null != $this->agree_date ||
+			'root' == $this->login ||
+			in_array($this->getId(), array(ANONYMOUS_USER_ID, SYSTEM_USER_ID)) ||
+			$rbacreview->isAssigned($this->getId(), SYSTEM_ROLE_ID)
+		)
 		{
 			return true;
 		}
@@ -3261,6 +3278,8 @@ class ilObjUser extends ilObject
 
 		if ($a_types == "")
 		{
+			$is_nested_set = ($tree->getTreeImplementation() instanceof ilNestedSetTree);
+			
 			$item_set = $ilDB->queryF("SELECT obj.obj_id, obj.description, oref.ref_id, obj.title, obj.type ".
 				" FROM desktop_item it, object_reference oref ".
 					", object_data obj".
@@ -3268,7 +3287,7 @@ class ilObjUser extends ilObject
 				"it.item_id = oref.ref_id AND ".
 				"oref.obj_id = obj.obj_id AND ".
 				"it.user_id = %s", array("integer"), array($user_id));
-			$items = array();
+			$items = $all_parent_path = array();
 			while ($item_rec = $ilDB->fetchAssoc($item_set))
 			{
 				if ($tree->isInTree($item_rec["ref_id"])
@@ -3276,13 +3295,27 @@ class ilObjUser extends ilObject
 					&& $item_rec["type"] != "itgr")	// due to bug 11508
 				{
 					$parent_ref = $tree->getParentId($item_rec["ref_id"]);
-					$par_left = $tree->getLeftValue($parent_ref);
-					$par_left = sprintf("%010d", $par_left);
-
+					
+					if(!isset($all_parent_path[$parent_ref]))
+					{					
+						// #15746
+						if($is_nested_set)
+						{
+							$par_left = $tree->getLeftValue($parent_ref);
+							$all_parent_path[$parent_ref] = sprintf("%010d", $par_left);
+						}
+						else
+						{
+							$node = $tree->getNodeData($parent_ref);						
+							$all_parent_path[$parent_ref] = $node["path"];
+						}
+					}
+					
+					$parent_path = $all_parent_path[$parent_ref];
 
 					$title = ilObject::_lookupTitle($item_rec["obj_id"]);
 					$desc = ilObject::_lookupDescription($item_rec["obj_id"]);
-					$items[$par_left.$title.$item_rec["ref_id"]] =
+					$items[$parent_path.$title.$item_rec["ref_id"]] =
 						array("ref_id" => $item_rec["ref_id"],
 							"obj_id" => $item_rec["obj_id"],
 							"type" => $item_rec["type"],
@@ -5199,8 +5232,7 @@ class ilObjUser extends ilObject
 				'JOIN usr_data ud ON obj_id = usr_id '.
 				'WHERE '.$ilDB->in('obj_id',$a_usr_ids,false,'integer').' ';
 		$res = $ilDB->query($query);
-		$num_rows = $res->numRows();
-		
+		$num_rows =$res->fetchRow(DB_FETCHMODE_OBJECT)->num;
 		return $num_rows == count((array) $a_usr_ids);
 	}
 	// end-patch deleteProgress
@@ -5385,11 +5417,20 @@ class ilObjUser extends ilObject
 	 */
 	public function hasToAcceptTermsOfService()
 	{
+		/**
+		 * @var ilRbacReview
+		 */
+		global $rbacreview;
+
 		require_once 'Services/TermsOfService/classes/class.ilTermsOfServiceHelper.php';
 
-		if(ilTermsOfServiceHelper::isEnabled() && 
-		   null == $this->agree_date &&
-		   !in_array($this->getId(), array(ANONYMOUS_USER_ID, SYSTEM_USER_ID)))
+		if(
+			ilTermsOfServiceHelper::isEnabled() && 
+			null == $this->agree_date &&
+			'root' != $this->agree_date &&
+			!in_array($this->getId(), array(ANONYMOUS_USER_ID, SYSTEM_USER_ID)) &&
+			!$rbacreview->isAssigned($this->getId(), SYSTEM_ROLE_ID)
+		)
 		{
 			return true;
 		}

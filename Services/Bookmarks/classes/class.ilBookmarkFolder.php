@@ -8,7 +8,7 @@
 *
 * @author Alex Killing <alex.killing@gmx.de>
 * @author Manfred Thaler <manfred.thaler@endo7.com>
-* @version $Id: class.ilBookmarkFolder.php 35228 2012-06-26 22:27:00Z akill $
+* @version $Id$
 * @ingroup ServicesBookmarks
 */
 class ilBookmarkFolder

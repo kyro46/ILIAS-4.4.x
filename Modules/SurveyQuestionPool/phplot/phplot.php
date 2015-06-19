@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: phplot.php 18635 2009-01-20 17:20:06Z hschottm $ */
+/* $Id$ */
 
 /*
  * PHPLOT Version 5.0.5

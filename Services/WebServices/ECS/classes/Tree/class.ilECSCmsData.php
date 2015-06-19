@@ -5,7 +5,7 @@
  * 
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSCmsData.php 39298 2013-01-16 16:38:12Z smeyer $
+ * $Id$
  */
 class ilECSCmsData
 {

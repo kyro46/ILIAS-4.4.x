@@ -26,7 +26,7 @@
 * Meta Data class (element taxon_path)
 *
 * @package ilias-core
-* @version $Id: class.ilMDTaxonPath.php 19416 2009-03-20 07:44:07Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

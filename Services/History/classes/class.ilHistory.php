@@ -5,7 +5,7 @@
 * This class methods for maintain history enties for objects
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilHistory.php 40384 2013-03-06 13:08:21Z sborn $
+* @version $Id$
 */
 class ilHistory
 {

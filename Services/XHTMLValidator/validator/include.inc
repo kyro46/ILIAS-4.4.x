@@ -23,7 +23,7 @@
    |                     http://validator.aborla.net/                     |
    +----------------------------------------------------------------------+
 
-     $Id: include.inc 8377 2005-08-15 09:27:49Z akill $
+     $Id$
 */
 
 function common_header($title = '') {

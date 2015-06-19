@@ -1,7 +1,7 @@
 <?php
 
 // Translation: Aitor Gomez & Íñigo Goiri (twolf@telefonica.net)
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.5
 
 $error[0] = 'Ez baliodun URLa: <em>%s</em>!';

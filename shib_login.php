@@ -4,7 +4,7 @@
 /**
  * Shibboleth login script for ilias
  *
- * $Id: shib_login.php 41063 2013-04-03 13:29:26Z fschmid $
+ * $Id$
  * @author Lukas Haemmerle <haemmerle@switch.ch>
  * @package ilias-layout
  */

@@ -10,7 +10,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 *
 * @author		Helmut Schottmueller <helmut.schottmueller@mac.com>
 * @author 		Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjQuestionPoolAccess.php 48442 2014-03-10 11:33:06Z bheyser $
+* @version $Id$
 * @ingroup ModulesTestQuestionPool
 */
 class ilObjQuestionPoolAccess extends ilObjectAccess

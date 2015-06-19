@@ -5,7 +5,7 @@
 * class ilObjectDataCache
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjectDataCache.php 47611 2014-01-29 14:11:50Z jluetzen $
+* @version $Id$
 *
 * This class caches some properties of the object_data table. Like title description owner obj_id
 *

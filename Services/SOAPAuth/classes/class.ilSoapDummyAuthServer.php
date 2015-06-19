@@ -26,7 +26,7 @@
 * SOAP dummy authentication server
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSoapDummyAuthServer.php 11194 2006-06-20 22:17:46Z akill $
+* @version $Id$
 *
 * @package ilias
 */

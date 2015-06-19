@@ -9,7 +9,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjFileBasedLMAccess.php 37317 2012-10-03 12:57:24Z akill $
+* @version $Id$
 *
 * @ingroup ModulesHTMLLearningModule
 */

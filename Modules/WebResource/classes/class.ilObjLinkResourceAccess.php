@@ -9,7 +9,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
  *
  *
  * @author 		Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilObjLinkResourceAccess.php 41669 2013-04-23 10:50:14Z smeyer $
+ * @version $Id$
  *
  * @ingroup ModulesWebResource
  */

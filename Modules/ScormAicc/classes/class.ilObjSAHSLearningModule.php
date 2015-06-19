@@ -13,7 +13,7 @@ require_once "./Modules/ScormAicc/classes/class.ilObjSCORMValidator.php";
 * Class ilObjSCORMLearningModule
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjSAHSLearningModule.php 47211 2014-01-13 15:25:30Z ukohnle $
+* $Id$
 *
 * @ingroup ModulesScormAicc
 */
@@ -104,6 +104,8 @@ class ilObjSAHSLearningModule extends ilObject
 			$this->setCheck_values(ilUtil::yn2tf($lm_rec["check_values"]));
 			$this->setOfflineMode(ilUtil::yn2tf($lm_rec["offline_mode"]));
 			$this->setAutoSuspend(ilUtil::yn2tf($lm_rec["auto_suspend"]));
+			$this->setIe_compatibility(ilUtil::yn2tf($lm_rec["ie_compatibility"]));
+			$this->setIe_force_render(ilUtil::yn2tf($lm_rec["ie_force_render"]));
 			
 			include_once("./Services/Style/classes/class.ilObjStyleSheet.php");
 			if (ilObject::_lookupType($this->getStyleSheetId()) != "sty")
@@ -509,6 +511,32 @@ class ilObjSAHSLearningModule extends ilObject
 	}
 
 	/**
+	* set compatibility mode for Internet Exlorer manually
+	*/
+	function getIe_compatibility()
+	{
+		return $this->ie_compatibility;
+	}
+
+	function setIe_compatibility($a_ie_compatibility)
+	{
+		$this->ie_compatibility = $a_ie_compatibility;
+	}
+
+	/**
+	* force Internet Explorer to render again after some Milliseconds - useful for learning Modules with a lot of iframesor frames and IE >=10
+	*/
+	function getIe_force_render()
+	{
+		return $this->ie_force_render;
+	}
+
+	function setIe_force_render($a_ie_force_render)
+	{
+		$this->ie_force_render = $a_ie_force_render;
+	}
+
+	/**
 	* SCORM 2004 4th edition features
 	*/
 	function getFourth_Edition()
@@ -791,7 +819,16 @@ class ilObjSAHSLearningModule extends ilObject
 
 		$this->updateMetaData();
 		parent::update();
-
+		//Workaround for fields where Null is not allowed!
+		$uStyleSheetId = $this->getStyleSheetId();
+		if ($uStyleSheetId == null) $uStyleSheetId=0;
+		$uOpenMode = $this->getOpenMode();
+		if ($uOpenMode == null) $uOpenMode=0;
+		$uWidth = $this->getWidth();
+		if ($uWidth == null) $uWidth=950;
+		$uHeight = $this->getHeight();
+		if ($uHeight == null) $uHeight=650;
+		
 		$statement = $ilDB->manipulateF('
 			UPDATE sahs_lm  
 			SET c_online = %s, 
@@ -827,7 +864,9 @@ class ilObjSAHSLearningModule extends ilObject
 				auto_last_visited = %s,
 				check_values = %s,
 				offline_mode = %s,
-				auto_suspend = %s
+				auto_suspend = %s,
+				ie_compatibility = %s, 
+				ie_force_render = %s
 			WHERE id = %s', 
 		array(	'text',
 				'text',
@@ -863,6 +902,8 @@ class ilObjSAHSLearningModule extends ilObject
 				'text',
 				'text',
 				'text',
+				'text',
+				'text',
 				'integer'
 				), 
 		array(	ilUtil::tf2yn($this->getOnline()),
@@ -871,7 +912,7 @@ class ilObjSAHSLearningModule extends ilObject
 				$this->getAutoReviewChar(),
 				$this->getDefaultLessonMode(),
 				$this->getSubType(),
-				$this->getStyleSheetId(),
+				$uStyleSheetId,
 				$this->getEditable(),
 				$this->getMaxAttempt(),
 				$this->getModuleVersion(),
@@ -891,14 +932,16 @@ class ilObjSAHSLearningModule extends ilObject
 				$this->getLocalization(),
 				$this->getSequencingExpertMode(),
 				$this->getDebugPw(),
-				$this->getOpenMode(),
-				$this->getWidth(),
-				$this->getHeight(),
+				$uOpenMode,
+				$uWidth,
+				$uHeight,
 				ilUtil::tf2yn($this->getAutoContinue()),
 				ilUtil::tf2yn($this->getAuto_last_visited()),
 				ilUtil::tf2yn($this->getCheck_values()),
 				ilUtil::tf2yn($this->getOfflineMode()),
 				ilUtil::tf2yn($this->getAutoSuspend()),
+				ilUtil::tf2yn($this->getIe_compatibility()),
+				ilUtil::tf2yn($this->getIe_force_render()),
 				$this->getId())
 		);
 
@@ -1251,7 +1294,7 @@ class ilObjSAHSLearningModule extends ilObject
 		$new_obj->setDefaultLessonMode($this->getDefaultLessonMode());
 		$new_obj->setEditable($this->getEditable());
 		$new_obj->setMaxAttempt($this->getMaxAttempt());
-//		$new_obj->getModuleVersion($this->getModuleVersion());	??
+		$new_obj->setModuleVersion($this->getModuleVersion());
 		$new_obj->setModuleVersion(1);
 		$new_obj->setCreditMode($this->getCreditMode());
 		$new_obj->setAssignedGlossary($this->getAssignedGlossary());
@@ -1277,6 +1320,9 @@ class ilObjSAHSLearningModule extends ilObject
 		$new_obj->setCheck_values($this->getCheck_values());
 		$new_obj->setOfflineMode($this->getOfflineMode());
 		$new_obj->setAutoSuspend($this->getAutoSuspend());
+		$new_obj->setIe_compatibility($this->getIe_compatibility());
+		$new_obj->setIe_force_render($this->getIe_force_render());
+		$new_obj->setStyleSheetId($this->getStyleSheetId());
 		$new_obj->update();
 
 

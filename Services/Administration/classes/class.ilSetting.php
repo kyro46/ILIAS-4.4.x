@@ -27,7 +27,7 @@
 *
 * @author Alex Killing <alex.killing@databay.de>
 
-* @version $Id: class.ilSetting.php 46023 2013-11-05 15:33:10Z smeyer $
+* @version $Id$
 */
 class ilSetting
 {

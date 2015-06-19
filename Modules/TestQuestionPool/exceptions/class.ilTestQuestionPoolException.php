@@ -7,7 +7,7 @@ require_once 'Services/Exceptions/classes/class.ilException.php';
  * Base exception for all exceptions regarding to TestQuestionPool
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilTestQuestionPoolException.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

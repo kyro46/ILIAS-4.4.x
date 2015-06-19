@@ -30,7 +30,7 @@ include_once('./Services/Calendar/classes/class.ilDateTime.php');
  * Group Import Parser
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * @version $Id: class.ilCategoryXmlParser.php 35376 2012-07-04 12:59:59Z smeyer $
+ * @version $Id$
  *
  * @extends ilSaxParser
 

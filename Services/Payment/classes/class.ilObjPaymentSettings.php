@@ -5,7 +5,7 @@
 * Class ilObjPaymentSettings
 * 
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjPaymentSettings.php 35586 2012-07-17 10:28:34Z nkrzywon $
+* @version $Id$
 *
 * @extends ilObject
 * @package ilias-core

@@ -26,7 +26,7 @@
 * adapter class for nusoap server
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilSoapUserAdministrationAdapter.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 *
 * @package ilias
 */

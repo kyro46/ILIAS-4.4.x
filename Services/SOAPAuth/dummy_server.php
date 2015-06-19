@@ -27,7 +27,7 @@ exit;
  * dummy soap authentication server
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: dummy_server.php 24616 2010-07-14 08:15:21Z akill $
+ * @version $Id$
  *
  */
 chdir('../..');

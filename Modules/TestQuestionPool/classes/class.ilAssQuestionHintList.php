@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionHint.php';
  * Model class for managing lists of hints for a question
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssQuestionHintList.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

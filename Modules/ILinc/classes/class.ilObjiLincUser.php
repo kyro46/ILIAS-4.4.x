@@ -28,7 +28,7 @@
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
 *
-* @version $Id: class.ilObjiLincUser.php 20430 2009-07-06 09:33:20Z nkrzywon $
+* @version $Id$
 *
 */
 

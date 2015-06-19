@@ -9,7 +9,7 @@ require_once("./Modules/LearningModule/classes/class.ilObjContentObject.php");
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* @version $Id: class.ilContObjectManifestBuilder.php 25629 2010-09-09 13:04:01Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

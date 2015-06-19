@@ -26,7 +26,7 @@
 * Class ilObjLanguageGUI
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* $Id: class.ilObjLanguageGUI.php 33501 2012-03-03 11:11:05Z akill $Id: class.ilObjLanguageGUI.php,v 1.3 2003/05/16 13:39:22 smeyer Exp $
+* $Id$Id: class.ilObjLanguageGUI.php,v 1.3 2003/05/16 13:39:22 smeyer Exp $
 * 
 * @extends ilObjectGUI
 */

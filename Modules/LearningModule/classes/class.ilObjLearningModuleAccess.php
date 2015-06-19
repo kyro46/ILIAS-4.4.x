@@ -9,7 +9,7 @@ include_once("./Modules/LearningModule/classes/class.ilObjContentObjectAccess.ph
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjLearningModuleAccess.php 37317 2012-10-03 12:57:24Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

@@ -6,7 +6,7 @@
 * or for users for whom no password has been assigned yet.
 *
 * @author Werner Randelshofer <wrandels@hsw.fhz.ch>
-* @version $Id: pwassist.php 33447 2012-03-01 14:00:01Z jluetzen $
+* @version $Id$
 *
 * @package ilias-core
 */

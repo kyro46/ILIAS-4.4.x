@@ -6,7 +6,7 @@
 * class ilcourseobjective
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilCourseObjective.php 27157 2011-01-04 11:10:33Z jluetzen $
+* @version $Id$
 * 
 * @extends Object
 */

@@ -10,7 +10,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * ASS_AnswerImagemap is a class for true/false or yes/no answers used for example in multiple choice tests.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assAnswerImagemap.php 44251 2013-08-18 13:51:09Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 * @see ASS_AnswerSimple
 * @see ASS_AnswerTrueFalse

@@ -8,7 +8,7 @@
 * install, uninstall, checkfiles ....
 * 
 * @author	Sascha Hofmann <shofmann@databay.de>
-* @version	$Id: class.ilObjLanguageFolder.php 33501 2012-03-03 11:11:05Z akill $
+* @version	$Id$
 *
 * @extends	ilObject
 */

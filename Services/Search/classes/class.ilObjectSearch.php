@@ -27,7 +27,7 @@
 * GUI class for 'simple' search
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjectSearch.php 35804 2012-07-27 08:19:43Z smeyer $
+* @version $Id$
 * 
 * @package ilias-search
 *

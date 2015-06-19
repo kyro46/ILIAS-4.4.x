@@ -5,7 +5,7 @@
 * This class represents a single choice wizard property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilAnswerWizardInputGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilAnswerWizardInputGUI extends ilTextInputGUI
@@ -14,7 +14,34 @@ class ilAnswerWizardInputGUI extends ilTextInputGUI
 	protected $allowMove = false;
 	protected $singleline = true;
 	protected $qstObject = null;
-	
+	protected $minvalue = false;
+	protected $minvalueShouldBeGreater = false;
+
+	protected $disable_actions;
+	protected $disable_text;
+
+	/**
+	 * @param mixed $disable_actions
+	 *
+	 * @return $this
+	 */
+	public function setDisableActions($disable_actions)
+	{
+		$this->disable_actions = $disable_actions;
+		return $this;
+	}
+
+	/**
+	 * @param mixed $disable_text
+	 *
+	 * @return $this
+	 */
+	public function setDisableText($disable_text)
+	{
+		$this->disable_text = $disable_text;
+		return $this;
+	}
+
 	/**
 	* Constructor
 	*
@@ -131,6 +158,44 @@ class ilAnswerWizardInputGUI extends ilTextInputGUI
 	}
 
 	/**
+	 * Set minvalueShouldBeGreater
+	 *
+	 * @param	boolean	$a_bool	true if the minimum value should be greater than minvalue
+	 */
+	function setMinvalueShouldBeGreater($a_bool)
+	{
+		$this->minvalueShouldBeGreater = $a_bool;
+	}
+
+	/**
+	 * Get minvalueShouldBeGreater
+	 *
+	 * @return	boolean	true if the minimum value should be greater than minvalue
+	 */
+	function minvalueShouldBeGreater()
+	{
+		return $this->minvalueShouldBeGreater;
+	}
+	/**
+	 * Set Minimum Value.
+	 *
+	 * @param	float	$a_minvalue	Minimum Value
+	 */
+	function setMinValue($a_minvalue)
+	{
+		$this->minvalue = $a_minvalue;
+	}
+
+	/**
+	 * Get Minimum Value.
+	 *
+	 * @return	float	Minimum Value
+	 */
+	function getMinValue()
+	{
+		return $this->minvalue;
+	}
+	/**
 	* Check input, strip slashes etc. set alert, if input is not ok.
 	*
 	* @return	boolean		Input ok, true/false
@@ -165,6 +230,29 @@ class ilAnswerWizardInputGUI extends ilTextInputGUI
 					{
 						$this->setAlert($lng->txt("form_msg_numeric_value_required"));
 						return FALSE;
+					}
+					if ($this->minvalueShouldBeGreater())
+					{
+						if (trim($points) != "" &&
+							$this->getMinValue() !== false &&
+							$points <= $this->getMinValue())
+						{
+							$this->setAlert($lng->txt("form_msg_value_too_low"));
+
+							return false;
+						}
+					}
+					else
+					{
+						if (trim($points) != "" &&
+							$this->getMinValue() !== false &&
+							$points < $this->getMinValue())
+						{
+							$this->setAlert($lng->txt("form_msg_value_too_low"));
+
+							return false;
+
+						}
 					}
 				}
 			}
@@ -213,7 +301,7 @@ class ilAnswerWizardInputGUI extends ilTextInputGUI
 				$tpl->setVariable("SINGLELINE_ROW_NUMBER", $i);
 				$tpl->setVariable("SINGLELINE_POST_VAR", $this->getPostVar());
 				$tpl->setVariable("MAXLENGTH", $this->getMaxLength());
-				if ($this->getDisabled())
+				if ($this->getDisabled() || $this->disable_text)
 				{
 					$tpl->setVariable("DISABLED_SINGLELINE", " disabled=\"disabled\"");
 				}
@@ -243,7 +331,7 @@ class ilAnswerWizardInputGUI extends ilTextInputGUI
 				$tpl->setCurrentBlock("move");
 				$tpl->setVariable("CMD_UP", "cmd[up" . $this->getFieldId() . "][$i]");
 				$tpl->setVariable("CMD_DOWN", "cmd[down" . $this->getFieldId() . "][$i]");
-				$tpl->setVariable("ID", $this->getPostVar() . "[$i]");
+				$tpl->setVariable("MOVE_ID", $this->getPostVar() . "[$i]");
 				$tpl->setVariable("UP_BUTTON", ilUtil::getImagePath('a_up.png'));
 				$tpl->setVariable("DOWN_BUTTON", ilUtil::getImagePath('a_down.png'));
 				$tpl->parseCurrentBlock();
@@ -255,16 +343,22 @@ class ilAnswerWizardInputGUI extends ilTextInputGUI
 			$tpl->setVariable("ROW_CLASS", $class);
 			$tpl->setVariable("POST_VAR", $this->getPostVar());
 			$tpl->setVariable("ROW_NUMBER", $i);
-			$tpl->setVariable("ID", $this->getPostVar() . "[answer][$i]");
-			$tpl->setVariable("POINTS_ID", $this->getPostVar() . "[points][$i]");
-			$tpl->setVariable("CMD_ADD", "cmd[add" . $this->getFieldId() . "][$i]");
-			$tpl->setVariable("CMD_REMOVE", "cmd[remove" . $this->getFieldId() . "][$i]");
+			if(!$this->disable_actions)
+			{
+				$tpl->setVariable( "ID", $this->getPostVar() . "[answer][$i]" );
+				$tpl->setVariable( "POINTS_ID", $this->getPostVar() . "[points][$i]" );
+				$tpl->setVariable( "CMD_ADD", "cmd[add" . $this->getFieldId() . "][$i]" );
+				$tpl->setVariable( "CMD_REMOVE", "cmd[remove" . $this->getFieldId() . "][$i]" );
+			}
 			if ($this->getDisabled())
 			{
 				$tpl->setVariable("DISABLED_POINTS", " disabled=\"disabled\"");
 			}
-			$tpl->setVariable("ADD_BUTTON", ilUtil::getImagePath('edit_add.png'));
-			$tpl->setVariable("REMOVE_BUTTON", ilUtil::getImagePath('edit_remove.png'));
+			if(!$this->disable_actions)
+			{
+				$tpl->setVariable( "ADD_BUTTON", ilUtil::getImagePath( 'edit_add.png' ) );
+				$tpl->setVariable( "REMOVE_BUTTON", ilUtil::getImagePath( 'edit_remove.png' ) );
+			}
 			$tpl->parseCurrentBlock();
 			$i++;
 		}
@@ -272,7 +366,10 @@ class ilAnswerWizardInputGUI extends ilTextInputGUI
 		$tpl->setVariable("ELEMENT_ID", $this->getPostVar());
 		$tpl->setVariable("ANSWER_TEXT", $lng->txt('answer_text'));
 		$tpl->setVariable("POINTS_TEXT", $lng->txt('points'));
-		$tpl->setVariable("COMMANDS_TEXT", $lng->txt('actions'));
+		if(!$this->disable_actions)
+		{
+			$tpl->setVariable("COMMANDS_TEXT", $lng->txt('actions'));
+		}
 
 		$a_tpl->setCurrentBlock("prop_generic");
 		$a_tpl->setVariable("PROP_GENERIC", $tpl->get());

@@ -8,7 +8,7 @@ include_once ("./Services/COPage/classes/class.ilPageObjectGUI.php");
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* @version $Id: class.ilPageEditorGUI.php 45481 2013-10-15 13:53:59Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilPageEditorGUI: ilPCParagraphGUI, ilPCTableGUI, ilPCTableDataGUI
 * @ilCtrl_Calls ilPageEditorGUI: ilPCMediaObjectGUI, ilPCListGUI, ilPCListItemGUI

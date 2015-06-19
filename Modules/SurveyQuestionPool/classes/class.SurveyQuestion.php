@@ -28,7 +28,7 @@
 * for survey question types to be used for all parent classes.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.SurveyQuestion.php 48481 2014-03-11 10:00:50Z jluetzen $
+* @version	$Id$
 * @ingroup ModulesSurveyQuestionPool
 */
 class SurveyQuestion
@@ -1926,7 +1926,9 @@ class SurveyQuestion
 				$mob_obj =& new ilObjMediaObject($mob);
 				$imgattrs = array(
 					"label" => "il_" . IL_INST_ID . "_mob_" . $mob,
-					"uri" => "objects/" . "il_" . IL_INST_ID . "_mob_" . $mob . "/" . $mob_obj->getTitle()
+					"uri" => "objects/" . "il_" . IL_INST_ID . "_mob_" . $mob . "/" . $mob_obj->getTitle(),
+					"type" => "spl:html",
+					"id" => $this->getId()
 				);
 				$a_xml_writer->xmlElement("matimage", $imgattrs, NULL);
 			}
@@ -2412,6 +2414,12 @@ class SurveyQuestion
 	public function hasCopies()
 	{
 		return (bool)sizeof($this->getCopyIds());						
+	}
+	
+	public function getSkippedValue()
+	{
+		include_once "Modules/Survey/classes/class.ilObjSurvey.php";
+		return ilObjSurvey::getSurveySkippedValue();
 	}
 }
 ?>

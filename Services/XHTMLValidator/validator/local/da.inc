@@ -1,7 +1,7 @@
 <?php
 
 // Translation: AlleyKat (translations@phpbb2.dk) (http://phpbb2.dk)
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.13
 
 $error[0] = 'Ugyldig URL: <em>%s</em>!';

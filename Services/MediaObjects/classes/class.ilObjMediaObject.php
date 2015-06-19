@@ -19,7 +19,7 @@ include_once "./Services/Object/classes/class.ilObject.php";
 * ILIAS Media Object
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjMediaObject.php 48980 2014-03-25 20:11:29Z akill $
+* @version $Id$
 *
 * @ingroup ServicesMediaObjects
 */
@@ -494,7 +494,19 @@ class ilObjMediaObject extends ilObject
 	}
 	
 	protected static function handleQuotaUpdate(ilObjMediaObject $a_mob)
-	{				
+	{
+		global $ilSetting;
+
+		// if neither workspace nor portfolios are activated, we skip
+		// the quota update here. this due to performance reasons on installations
+		// that do not use workspace/portfolios, but heavily copy content.
+		// in extreme cases (media object in pool and personal blog, deactivate workspace, change media object,
+		// this may lead to incorrect data in the quota calculation)
+		if ($ilSetting->get("disable_personal_workspace") && !$ilSetting->get('user_portfolios'))
+		{
+			return;
+		}
+
 		$parent_obj_ids = array();
 		foreach($a_mob->getUsages() as $item)
 		{										
@@ -1308,6 +1320,12 @@ class ilObjMediaObject extends ilObject
 								include_once("./Modules/LearningModule/classes/class.ilLMObject.php");
 								$obj_id = ilLMObject::_lookupContObjID($pinfo["page_id"]);
 							}
+							$pinfo = ilPCQuestion::_getPageForQuestionId($id, "sahs");
+							if ($pinfo && $pinfo["parent_type"] == "sahs")
+							{
+								include_once("./Modules/SCORM2004/classes/class.ilSCORM2004Node.php");
+								$obj_id = ilSCORM2004Node::_lookupSLMID($pinfo["page_id"]);
+							}
 						}
 						break;
 						
@@ -1356,6 +1374,10 @@ class ilObjMediaObject extends ilObject
 						include_once('./Services/COPage/classes/class.ilPageObject.php');
 						$obj_id = ilPageObject::lookupParentId($id, 'blp');
 						break;
+					
+					case "impr":
+						// imprint page - always id 1
+						// fallthrough
 						
 					case "crs":
 					case "grp":
@@ -1528,6 +1550,10 @@ class ilObjMediaObject extends ilObject
 			return true;
 		}
 		if ($lpath["extension"] == "flv")
+		{
+			return true;
+		}
+		if (in_array($a_format, array("video/mp4", "video/webm")))
 		{
 			return true;
 		}
@@ -1819,7 +1845,7 @@ class ilObjMediaObject extends ilObject
 			{
 				if(ilUtil::isConvertVersionAtLeast("6.3.8-3"))
 				{
-					ilUtil::execConvert($file."[0] -geometry ".$a_width."x".$a_height."^ -gravity center -extent ".$a_width."x".$a_height." PNG:".$dir."/mob_vpreview.png");
+					ilUtil::execConvert(ilUtil::escapeShellArg($file)."[0] -geometry ".$a_width."x".$a_height."^ -gravity center -extent ".$a_width."x".$a_height." PNG:".$dir."/mob_vpreview.png");
 				}
 				else
 				{

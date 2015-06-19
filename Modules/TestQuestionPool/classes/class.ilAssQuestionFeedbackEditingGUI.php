@@ -5,7 +5,7 @@
  * GUI class for feedback editing of assessment questions
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssQuestionFeedbackEditingGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  * 
@@ -19,6 +19,7 @@ class ilAssQuestionFeedbackEditingGUI
 	 */
 	const CMD_SHOW = 'show';
 	const CMD_SAVE = 'save';
+	const CMD_SHOW_SYNC = 'showSync';
 	
 	/**
 	 * gui instance of current question
@@ -266,11 +267,16 @@ class ilAssQuestionFeedbackEditingGUI
 			return false;
 		}
 		
-		if( !assQuestion::_isWriteable($this->object->original_id, $ilUser->getId()) )
+		if( !assQuestion::_isWriteable($this->questionOBJ->original_id, $ilUser->getId()) )
 		{
 			return false;
 		}
 		
 		return true;
+	}
+	
+	public function showSyncCmd()
+	{
+		$this->questionGUI->originalSyncForm('','true');
 	}
 }

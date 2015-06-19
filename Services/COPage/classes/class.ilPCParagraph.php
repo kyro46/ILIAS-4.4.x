@@ -9,7 +9,7 @@ require_once("./Services/COPage/classes/class.ilPageContent.php");
 * Paragraph of ilPageObject
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCParagraph.php 46922 2013-12-18 20:03:46Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */
@@ -152,7 +152,7 @@ class ilPCParagraph extends ilPageContent
 			DOMXML_LOAD_PARSING, $error);*/
 		$temp_dom = domxml_open_mem('<?xml version="1.0" encoding="UTF-8"?><Paragraph>'.$check.'</Paragraph>',
 			DOMXML_LOAD_PARSING, $error);
-			
+
 		//$this->text = $a_text;
 		// remove all childs
 		if(empty($error))

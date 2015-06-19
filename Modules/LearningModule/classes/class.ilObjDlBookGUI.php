@@ -26,7 +26,7 @@
 *
 * @author Databay AG <ay@databay.de>
 *
-* @version $Id: class.ilObjDlBookGUI.php 35056 2012-06-13 15:54:23Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjDlBookGUI: ilLMPageObjectGUI, ilStructureObjectGUI, ilObjStyleSheetGUI, ilMDEditorGUI
 * @ilCtrl_Calls ilObjDlBookGUI: ilLearningProgressGUI, ilPermissionGUI, ilInfoScreenGUI

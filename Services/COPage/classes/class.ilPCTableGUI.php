@@ -10,7 +10,7 @@ require_once("./Services/COPage/classes/class.ilPageContentGUI.php");
  * User Interface for Table Editing
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilPCTableGUI.php 43464 2013-07-17 09:18:27Z akill $
+ * @version $Id$
  *
  * @ingroup ServicesCOPage
  */

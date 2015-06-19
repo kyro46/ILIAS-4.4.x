@@ -6,7 +6,7 @@
 * Class ilObjRoleGUI
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* $Id: class.ilRoleDesktopItem.php 24095 2010-06-08 10:53:56Z smeyer $
+* $Id$
 *
 *
 * 

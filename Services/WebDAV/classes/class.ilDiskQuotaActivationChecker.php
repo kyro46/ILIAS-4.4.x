@@ -26,7 +26,7 @@
 * DiskQuota is deactivated.
 *
 * @author Werner Randelshofer, Hochschule Luzern, werner.randelshofer@hslu.ch
-* @version $Id: class.ilDiskQuotaActivationChecker.php 42282 2013-05-21 09:05:53Z jluetzen $
+* @version $Id$
 *
 * @ingroup webdav
 */

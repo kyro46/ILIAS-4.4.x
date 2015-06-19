@@ -8,7 +8,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
 * Class ilObjStyleSheet
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjStyleSheet.php 39210 2013-01-12 00:49:35Z akill $
+* $Id$
 *
 * @extends ilObject
 */

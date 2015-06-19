@@ -8,7 +8,7 @@ include_once './Services/WebServices/ECS/classes/class.ilECSConnectorException.p
  * 
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSCourseConnector.php 43812 2013-07-31 14:21:46Z smeyer $
+ * $Id$
  */
 class ilECSCourseConnector extends ilECSConnector
 {

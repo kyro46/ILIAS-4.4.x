@@ -7,7 +7,7 @@
 * Sends e-mail to users who have exceeded their disk quota.
 *
 * @author Werner Randelshofer <werner.randelshofer@hslu.ch>
-* @version $Id: class.ilDiskQuotaReminderMail.php 34069 2012-04-06 07:21:57Z mjansen $
+* @version $Id$
 *
 */
 class ilDiskQuotaReminderMail

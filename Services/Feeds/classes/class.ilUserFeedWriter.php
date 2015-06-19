@@ -92,11 +92,7 @@ class ilUserFeedWriter extends ilFeedWriter
 					$item["agg_ref_id"], $item["aggregation"]);
 
 				// path
-				include_once("./Services/Locator/classes/class.ilLocatorGUI.php");
-				$cont_loc = new ilLocatorGUI();
-				$cont_loc->addContextItems($item["ref_id"], true);
-				$cont_loc->setTextOnly(true);
-				$loc = "[".$cont_loc->getHTML()."]";
+				$loc = $this->getContextPath($item["ref_id"]);
 				
 				// title
 				if ($news_set->get("rss_title_format") == "news_obj")
@@ -129,7 +125,7 @@ class ilUserFeedWriter extends ilFeedWriter
 					include_once("./Modules/Wiki/classes/class.ilWikiPage.php");
 					$wptitle = ilWikiPage::lookupTitle($item["context_sub_obj_id"]);
 					$feed_item->setLink(ILIAS_HTTP_PATH."/goto.php?client_id=".CLIENT_ID.
-						"&amp;target=".$item["context_obj_type"]."_".$item["ref_id"]."_".$wptitle);
+						"&amp;target=".$item["context_obj_type"]."_".$item["ref_id"]."_".urlencode($wptitle)); // #14629
 				}
 				else if (in_array($item["context_obj_type"], array("frm")) && $item["context_sub_obj_type"] == "pos"
 					&& $item["context_sub_obj_id"] > 0)
@@ -154,6 +150,7 @@ class ilUserFeedWriter extends ilFeedWriter
 						"&amp;target=".$item["context_obj_type"]."_".$item["ref_id"]);
 				}
 				$feed_item->setAbout($feed_item->getLink()."&amp;il_about_feed=".$item["id"]);
+				$feed_item->setDate($item["creation_date"]);
 				$this->addItem($feed_item);
 			}
 		}

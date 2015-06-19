@@ -32,7 +32,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilUserFilterGUI.php 41545 2013-04-19 09:56:15Z smeyer $
+* @version $Id$
 *
 * @package ilias-tracking
 *

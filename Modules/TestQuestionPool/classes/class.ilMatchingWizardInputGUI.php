@@ -9,7 +9,7 @@ require_once './Modules/TestQuestionPool/classes/class.ilSingleChoiceWizardInput
  * @author Helmut Schottmüller <ilias@aurealis.de> 
  * @author Maximilian Becker <mbecker@databay.de> 
  * 
- * @version $Id: class.ilMatchingWizardInputGUI.php 44048 2013-08-09 14:58:01Z mbecker $
+ * @version $Id$
  *
  * @ingroup ModulesTestQuestionPool
  */
@@ -22,6 +22,10 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 	protected $qstObject = null;
 	protected $suffixes = array();
 	protected $hideImages = false;
+
+	protected $disable_text = false;
+	protected $disable_upload = false;
+	protected $disable_actions = false;
 
 	/**
 	 * Constructor
@@ -41,7 +45,31 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 		$this->text_name = $lng->txt('answer_text');
 		$this->image_name = $lng->txt('answer_image');
 	}
-	
+
+	/**
+	 * @param boolean $disable_upload
+	 */
+	public function setDisableUpload($disable_upload)
+	{
+		$this->disable_upload = $disable_upload;
+	}
+
+	/**
+	 * @param boolean $disable_actions
+	 */
+	public function setDisableActions($disable_actions)
+	{
+		$this->disable_actions = $disable_actions;
+	}
+
+	/**
+	 * @param boolean $disable_text
+	 */
+	public function setDisableText($disable_text)
+	{
+		$this->disable_text = $disable_text;
+	}
+
 	/**
 	* Set Accepted Suffixes.
 	*
@@ -316,6 +344,10 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 					$tpl->setVariable("TXT_DELETE_EXISTING", $lng->txt("delete_existing_file"));
 					$tpl->setVariable("IMAGE_ROW_NUMBER", $i);
 					$tpl->setVariable("IMAGE_POST_VAR", $this->getPostVar());
+					if($this->disable_upload)
+					{
+						$tpl->setVariable('DISABLED_UPLOAD', 'type="hidden" disabled="disabled"');
+					}
 					$tpl->parseCurrentBlock();
 				}
 				$tpl->setCurrentBlock('addimage');
@@ -323,6 +355,10 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 				$tpl->setVariable("IMAGE_SUBMIT", $lng->txt("upload"));
 				$tpl->setVariable("IMAGE_ROW_NUMBER", $i);
 				$tpl->setVariable("IMAGE_POST_VAR", $this->getPostVar());
+				if($this->disable_upload)
+				{
+					$tpl->setVariable('DISABLED_UPLOAD', 'type="hidden" disabled="disabled"');
+				}
 				$tpl->parseCurrentBlock();
 			}
 
@@ -334,6 +370,11 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 			}
 			// this block does not exist in the template
 //			$tpl->setCurrentBlock('singleline');
+			if($this->disable_text)
+			{
+				$tpl->setVariable("DISABLED_SINGLELINE", 'readonly="readonly"');
+				$tpl->setVariable("DISABLED_SINGLELINE_BTN", 'readonly="readonly"');
+			}
 			$tpl->setVariable("SIZE", $this->getSize());
 			$tpl->setVariable("SINGLELINE_ID", $this->getPostVar() . "[answer][$i]");
 			$tpl->setVariable("SINGLELINE_ROW_NUMBER", $i);
@@ -349,7 +390,7 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 				$tpl->setCurrentBlock("move");
 				$tpl->setVariable("CMD_UP", "cmd[up" . $this->getFieldId() . "][$i]");
 				$tpl->setVariable("CMD_DOWN", "cmd[down" . $this->getFieldId() . "][$i]");
-				$tpl->setVariable("ID", $this->getPostVar() . "[$i]");
+				$tpl->setVariable("MOVE_ID", $this->getPostVar() . "[$i]");
 				$tpl->setVariable("UP_BUTTON", ilUtil::getImagePath('a_up.png'));
 				$tpl->setVariable("DOWN_BUTTON", ilUtil::getImagePath('a_down.png'));
 				$tpl->parseCurrentBlock();
@@ -362,11 +403,20 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 			$tpl->setVariable("POST_VAR", $this->getPostVar());
 			$tpl->setVariable("ROW_NUMBER", $i+1);
 			$tpl->setVariable("ROW_IDENTIFIER", $value->identifier);
-			$tpl->setVariable("ID", $this->getPostVar() . "[answer][$i]");
-			$tpl->setVariable("CMD_ADD", "cmd[add" . $this->getFieldId() . "][$i]");
-			$tpl->setVariable("CMD_REMOVE", "cmd[remove" . $this->getFieldId() . "][$i]");
-			$tpl->setVariable("ADD_BUTTON", ilUtil::getImagePath('edit_add.png'));
-			$tpl->setVariable("REMOVE_BUTTON", ilUtil::getImagePath('edit_remove.png'));
+			
+			
+			if($this->disable_actions)
+			{
+				//$tpl->setVariable( 'DISABLE_ACTIONS', 'disabled="disabled"' );
+			}
+			else
+			{
+				$tpl->setVariable("ID", $this->getPostVar() . "[answer][$i]");
+				$tpl->setVariable("CMD_ADD", "cmd[add" . $this->getFieldId() . "][$i]");
+				$tpl->setVariable("CMD_REMOVE", "cmd[remove" . $this->getFieldId() . "][$i]");
+				$tpl->setVariable("ADD_BUTTON", ilUtil::getImagePath('edit_add.png'));
+				$tpl->setVariable("REMOVE_BUTTON", ilUtil::getImagePath('edit_remove.png'));
+			}
 			$tpl->parseCurrentBlock();
 			$i++;
 		}
@@ -398,7 +448,10 @@ class ilMatchingWizardInputGUI extends ilTextInputGUI
 		$tpl->setVariable("DELETE_IMAGE_QUESTION", $lng->txt('delete_image_question'));
 		$tpl->setVariable("ANSWER_TEXT", $this->text_name);
 		$tpl->setVariable("NUMBER_TEXT", $lng->txt('row'));
-		$tpl->setVariable("COMMANDS_TEXT", $lng->txt('actions'));
+		if(!$this->disable_actions)
+		{
+			$tpl->setVariable("COMMANDS_TEXT", $lng->txt('actions'));
+		}
 
 		$a_tpl->setCurrentBlock("prop_generic");
 		$a_tpl->setVariable("PROP_GENERIC", $tpl->get());

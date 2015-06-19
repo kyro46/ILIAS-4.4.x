@@ -154,6 +154,13 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$type->setRequired(true);
 		$a_form->addItem($type);
 		
+		// #14478
+		include_once "Modules/BookingManager/classes/class.ilBookingObject.php";
+		if(sizeof(ilBookingObject::getList($this->object->getId())))
+		{
+			$type->setDisabled(true);
+		}
+		
 		$fixed = new ilRadioOption($this->lng->txt("book_schedule_type_fixed"), ilObjBookingPool::TYPE_FIX_SCHEDULE);
 		$fixed->setInfo($this->lng->txt("book_schedule_type_fixed_info"));
 		$type->addOption($fixed);
@@ -464,6 +471,11 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 	
 	protected function buildDatesBySchedule($week_start, array $hours, $schedule, array $object_ids, $seed, array &$dates)
 	{
+		global $ilUser;
+		
+		include_once 'Services/Calendar/classes/class.ilCalendarUserSettings.php';			
+		$user_settings = ilCalendarUserSettings::_getInstanceByUserId($ilUser->getId());
+		
 		$map = array('mo', 'tu', 'we', 'th', 'fr', 'sa', 'su');
 		$definition = $schedule->getDefinition();
 		
@@ -491,6 +503,39 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 				$dates[$hour][0] = $period;
 				
 				$period = explode("-", $period);
+				
+				// #13738
+				if($user_settings->getTimeFormat() == ilCalendarSettings::TIME_FORMAT_12)
+				{					
+					if(stristr($period[0], "pm"))
+					{
+						$period[0] = (int)$period[0]+12;
+					}
+					else
+					{
+						$period[0] = (int)$period[0];
+						if($period[0] == 12)
+						{
+							$period[0] = 0;
+						}
+					}					
+					if(sizeof($period) == 2)
+					{
+						if(stristr($period[1], "pm"))
+						{
+							$period[1] = (int)$period[1]+12;
+						}
+						else
+						{
+							$period[1] = (int)$period[1];
+							if($period[1] == 12)
+							{
+								$period[1] = 0;
+							}
+						}
+					}					
+				}
+				
 				if(sizeof($period) == 1)
 				{
 					$period_from = (int)substr($period[0], 0, 2)."00";

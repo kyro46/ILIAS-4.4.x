@@ -7,7 +7,7 @@
 * This class manages the test session for a participant
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilTestSession.php 48816 2014-03-21 11:47:08Z bheyser $
+* @version	$Id$
 * @ingroup ModulesTest
 */
 class ilTestSession
@@ -78,7 +78,7 @@ class ilTestSession
 	*
 	* @access public
 	*/
-	function ilTestSession()
+	public function __construct()
 	{
 		$this->active_id = 0;
 		$this->user_id = 0;
@@ -444,6 +444,34 @@ class ilTestSession
 	public function getLastFinishedPass()
 	{
 		return $this->lastFinishedPass;
+	}
+	
+	public function persistTestStartLock($testStartLock)
+	{
+		global $ilDB;
+
+		$ilDB->update(
+			'tst_active',
+			array('start_lock' => array('text', $testStartLock)),
+			array('active_id' => array('integer', $this->getActiveId()))
+		);
+	}
+
+	public function lookupTestStartLock()
+	{
+		global $ilDB;
+		
+		$res = $ilDB->queryF(
+			"SELECT start_lock FROM tst_active WHERE active_id = %s",
+			array('integer'), array($this->getActiveId())
+		);
+		
+		while($row = $ilDB->fetchAssoc($res))
+		{
+			return $row['start_lock'];
+		}
+		
+		return null;
 	}
 }
 

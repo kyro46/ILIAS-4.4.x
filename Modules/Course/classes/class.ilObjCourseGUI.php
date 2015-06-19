@@ -8,7 +8,7 @@ require_once "./Services/Container/classes/class.ilContainerGUI.php";
 * Class ilObjCourseGUI
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de> 
-* $Id: class.ilObjCourseGUI.php 49368 2014-04-11 08:55:45Z jluetzen $
+* $Id$
 *
 * @ilCtrl_Calls ilObjCourseGUI: ilCourseRegistrationGUI, ilShopPurchaseGUI, ilCourseObjectivesGUI
 * @ilCtrl_Calls ilObjCourseGUI: ilObjCourseGroupingGUI, ilMDEditorGUI, ilInfoScreenGUI, ilLearningProgressGUI, ilPermissionGUI
@@ -222,9 +222,12 @@ class ilObjCourseGUI extends ilContainerGUI
 		ilMDUtils::_fillHTMLMetaTags($this->object->getId(),$this->object->getId(),'crs');
 		
 		// Trac access
-		include_once 'Services/Tracking/classes/class.ilLearningProgress.php';
-		ilLearningProgress::_tracProgress($ilUser->getId(),$this->object->getId(),
-			$this->object->getRefId(),'crs');
+		if ($ilCtrl->getNextClass() != "ilcolumngui")
+		{
+			include_once 'Services/Tracking/classes/class.ilLearningProgress.php';
+			ilLearningProgress::_tracProgress($ilUser->getId(),$this->object->getId(),
+				$this->object->getRefId(),'crs');
+		}
 		
 		if(!$this->checkAgreement())
 		{
@@ -1690,8 +1693,10 @@ class ilObjCourseGUI extends ilContainerGUI
 				include_once 'Services/Mail/classes/class.ilMail.php';
 				$mail = new ilMail($ilUser->getId());
 				if(
-					$this->object->getMailToMembersType() == ilCourseConstants::MAIL_ALLOWED_ALL and
-					$rbacsystem->checkAccess('internal_mail',$mail->getMailObjectReferenceId()))
+					($this->object->getMailToMembersType() == ilCourseConstants::MAIL_ALLOWED_ALL ||
+					$ilAccess->checkAccess('write','',$this->object->getRefId())) &&
+					$rbacsystem->checkAccess('internal_mail',$mail->getMailObjectReferenceId())
+				)
 				{
 					$this->tabs_gui->addSubTabTarget("mail_members",
 													 $this->ctrl->getLinkTarget($this,'mailMembers'),
@@ -2531,7 +2536,11 @@ class ilObjCourseGUI extends ilContainerGUI
 	{
 		$this->checkPermission('write');
 		
-		$participants = array_unique(array_merge((array) $_POST['admins'],(array) $_POST['tutors'],(array) $_POST['members'], (array) $_POST['roles']));
+		$post_participants = array_unique(array_merge((array) $_POST['admins'],(array) $_POST['tutors'],(array) $_POST['members'], (array) $_POST['roles']));
+		$real_participants = ilCourseParticipants::_getInstanceByObjId($this->object->getId())->getParticipants();
+		$participants = array_intersect((array) $post_participants, (array) $real_participants);
+		
+		
 		
 		if(!count($participants))
 		{

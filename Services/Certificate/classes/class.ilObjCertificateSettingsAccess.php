@@ -28,7 +28,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilObjCertificateSettingsAccess.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 */
 class ilObjCertificateSettingsAccess extends ilObjectAccess

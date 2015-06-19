@@ -1,4 +1,4 @@
-// Build: 2014113161648 
+// Build: 2015420172023 
 /*
 	+-----------------------------------------------------------------------------+
 	| ILIAS open source                                                           |
@@ -12145,8 +12145,10 @@ function sendJSONRequest (url, data, callback, user, password, headers)
 	var r = sendAndLoad(url, toJSONString(data), callback, user, password, headers);
 	
 	if (r.content) {
-		if (r.content.indexOf("login.php")>-1) {
-			window.location.href = "./Modules/Scorm2004/templates/default/session_timeout.html";
+		if (r.content.indexOf("login.php")>-1 || r.content.indexOf("formlogin")>-1) {
+			var thref=window.location.href;
+			thref=thref.substring(0,thref.indexOf('ilias.php'))+"Modules/Scorm2004/templates/default/session_timeout.html";
+			window.location.href = thref;
 		}
 	}
 	
@@ -12342,7 +12344,7 @@ function launchTarget(target, isJump) {
    
 	if (mlaunch.mSeqNonContent == null) {
 		//throw away API from previous sco and sync CMI and ADLTree
-		onItemDeliver(activities[mlaunch.mActivityID], false);
+		onItemDeliver(activities[mlaunch.mActivityID]);
 	} else {
 	  //call specialpage
 	  	loadPage(gConfig.specialpage_url+"&page="+mlaunch.mSeqNonContent);
@@ -12455,7 +12457,7 @@ function launchNavType(navType, isUserCurrentlyInteracting) {
 	}
 	
 	if (mlaunch.mActivityID) {
-		onItemDeliver(activities[mlaunch.mActivityID], false);
+		onItemDeliver(activities[mlaunch.mActivityID]);
 	} else {
   		//call specialpage
   		loadPage(gConfig.specialpage_url+"&page="+mlaunch.mSeqNonContent);
@@ -12492,14 +12494,14 @@ function onDocumentClick (e)
 		{
 			//throw away API from previous sco and sync CMI and ADLTree
 			//onItemUndeliver();
-			mlaunch = msequencer.navigateStr( target.id.substr(3));
+			mlaunch = msequencer.navigateStr( target.id.substr(3).replace(/_____/g,'.'));
 
  			if (mlaunch.mSeqNonContent == null) {
 				//alert(activities[mlaunch.mActivityID]);
 				//throw away API from previous sco and sync CMI and ADLTree
 				onItemUndeliver();
 				//statusHandler(mlaunch.mActivityID,"completion","unknown");
-				onItemDeliver(activities[mlaunch.mActivityID], false);
+				onItemDeliver(activities[mlaunch.mActivityID]);
 			//	setTimeout("updateNav()",2000);  //temporary fix for timing problems
 			} else {
 			  //call specialpage
@@ -12555,8 +12557,9 @@ function loadPage(src) {
 		var resContainer = window.document.getElementById("res");
 		resContainer.src=src;
 		resContainer.name=RESOURCE_NAME;
-		onWindowResize();	
-		
+		onWindowResize();
+		ieForceRender();
+
 		if (treeView==true && mlaunch.mSeqNonContent!="_TOC_" && mlaunch.mSeqNonContent!="_SEQABANDON_" && mlaunch.mSeqNonContent!="_SEQABANDONALL_") {
 			toggleView();
 		}
@@ -12599,8 +12602,11 @@ function updateControls(controlState)
 }
 
 
-function setResource(id, url, base) 
+function setResource() 
 {
+	var id  = openedResource[0];
+	var url = openedResource[1];
+	var base= openedResource[2];
 	if (url.substring(0,4) != "http") url= base + url;
 //IE11 problem
 	// if (!top.frames[RESOURCE_NAME])
@@ -12624,24 +12630,8 @@ function setResource(id, url, base)
 		// open(url, RESOURCE_NAME);
 	// } 
 	
-	if (guiItem) 
-	{
-		removeClass(guiItem, "ilc_rte_tlink_RTETreeCurrent");
-		removeClass(guiItem.parentNode, "ilc_rte_status_RTERunning");
-		
-	}
-	guiItem = all(ITEM_PREFIX + id);
-	if (guiItem)
-	{
-		removeClass(guiItem.parentNode,"ilc_rte_status_RTENotAttempted",1);
-		removeClass(guiItem.parentNode,"ilc_rte_status_RTEIncomplete",1);
-		removeClass(guiItem.parentNode,"ilc_rte_status_RTECompleted",1);
-		removeClass(guiItem.parentNode,"ilc_rte_status_RTEFailed",1);
-		removeClass(guiItem.parentNode,"ilc_rte_status_RTEPassed",1);
-		addClass(guiItem, "ilc_rte_tlink_RTETreeCurrent");
-		addClass(guiItem.parentNode,"ilc_rte_status_RTERunning");
-	}
 	onWindowResize();
+	ieForceRender();
 	//reset
 	adlnavreq=false;
 	sclogdump("Launched: "+id,"info");
@@ -12650,6 +12640,7 @@ function setResource(id, url, base)
 
 function removeResource(callback) 
 {
+	guiItem = all(guiItemId);
 	if (guiItem) 
 	{
 		removeClass(guiItem, "ilc_rte_tlink_RTETreeCurrent");
@@ -12708,6 +12699,14 @@ function onWindowResize()
 	$('#tdResource').css('top', tbh + "px");
 }
 
+function ieForceRender() {
+	if(this.config.ie_force_render && ((navigator.userAgent.indexOf("MSIE") > -1 && navigator.userAgent.indexOf("MSIE 6") == -1) || navigator.userAgent.indexOf("like Gecko") > -1)) {
+		window.setTimeout("window.resizeBy(1, 1)",10000);
+		window.setTimeout("window.resizeBy(-1, -1)",10010);
+		window.setTimeout("window.resizeBy(1, 1)",20000);
+		window.setTimeout("window.resizeBy(-1, -1)",20010);
+	}
+}
 
 function buildNavTree(rootAct,name,tree){
 	
@@ -12721,9 +12720,10 @@ function buildNavTree(rootAct,name,tree){
 	if (mlaunch.mNavState.mChoice!=null)
 	{
 		var id=rootAct.id;
-		if (rootAct.isvisible==true && typeof(mlaunch.mNavState.mChoice[id])=="object") {	
-			il.NestedList.addNode('rte_tree', par_id, ITEM_PREFIX + rootAct.id,
-				"<a href='#this' id='" + ITEM_PREFIX + rootAct.id + "' target='_self'>" + rootAct.title + "</a>",
+		if (rootAct.isvisible==true && typeof(mlaunch.mNavState.mChoice[id])=="object") {
+			var it_id=(ITEM_PREFIX + rootAct.id).replace(/\./g,"_____");
+			il.NestedList.addNode('rte_tree', (""+par_id).replace(/\./g,"_____"), it_id,
+				"<a href='#this' id='" + it_id + "' target='_self'>" + rootAct.title + "</a>",
 				true);
 			par_id = ITEM_PREFIX + rootAct.id;
 		}	
@@ -12736,9 +12736,9 @@ function buildNavTree(rootAct,name,tree){
 				var id=rootAct.item[i].id;
 				if (mlaunch.mNavState.mChoice!=null) {
 					if (rootAct.item[i].isvisible==true && typeof(mlaunch.mNavState.mChoice[id])=="object") {
-						
-						il.NestedList.addNode('rte_tree', par_id, ITEM_PREFIX + rootAct.item[i].id,
-							"<a href='#this' id='" + ITEM_PREFIX + rootAct.item[i].id + "' target='_self'>" + rootAct.item[i].title + "</a>",
+						var it_id=(ITEM_PREFIX + rootAct.item[i].id).replace(/\./g,"_____");
+						il.NestedList.addNode('rte_tree', (""+par_id).replace(/\./g,"_____"), it_id,
+							"<a href='#this' id='" + it_id + "' target='_self'>" + rootAct.item[i].title + "</a>",
 							true);
 						var next_par_id = ITEM_PREFIX + rootAct.item[i].id;
 					}	
@@ -13166,7 +13166,7 @@ function init(config)
 	} else {
 
 		if (mlaunch.mSeqNonContent == null) {
-			onItemDeliver(activities[mlaunch.mActivityID], wasSuspended);
+			onItemDeliverDo(activities[mlaunch.mActivityID], wasSuspended);
 		} else {
 			if (count==1 && tolaunch!=null) {
 				launchTarget(tolaunch);
@@ -13464,14 +13464,7 @@ function save()
 				totalTimeCentisec+=ISODurationToCentisec(item.total_time);
 			}
 			if (item.dirty===0)  {continue;}
-			if (item.options) {
-				if (item.options.notracking === true) 
-				{
-					b_statusUpdate = false;
-					continue;
-				}
-			}
-			 if(type=="node") item.dirty=0;//notice as in progress to be saved
+			if(type=="node") item.dirty=0;//notice as in progress to be saved
 			if (type == "objective") {
 				if (item.id == null) {
 					continue;
@@ -13515,7 +13508,7 @@ function save()
 			if (item.dirty!==2 && type=="node") {continue;}
 		}
 	}
-	var b_statusFailed=false, i_numCompleted=0, b_statusUpdate=true, totalTimeCentisec=0;
+	var b_statusFailed=false, i_numCompleted=0, totalTimeCentisec=0;
 	var result = {};
 	for (var k in remoteMapping) 
 	{
@@ -13581,7 +13574,6 @@ function save()
 		if (satisfied=="notSatisfied") now_global_status = LP_STATUS_FAILED_NUM;
 		if(!isNaN(measure)) percentageCompleted=Math.round(measure*100);
 	}
-	if (b_statusUpdate == false) now_global_status=config.status.saved_global_status;
 	result["saved_global_status"]=config.status.saved_global_status;
 	result["now_global_status"]=now_global_status;
 	result["percentageCompleted"]=percentageCompleted;
@@ -13591,7 +13583,7 @@ function save()
 	result["totalTimeCentisec"]=totalTimeCentisec;
 	var to_saved_result = toJSONString(result);
 	if (saved_result == to_saved_result) {
-//		alert("no difference");
+		//updateNavForSequencing();
 		return true;
 	} else {
 //		alert("difference: saved_result:\n"+saved_result+"\nresult:\n"+toJSONString(result));
@@ -13600,6 +13592,8 @@ function save()
 		if (typeof SOP!="undefined" && SOP==true) result=saveRequest(result);
 		else result = this.config.store_url ? sendJSONRequest(this.config.store_url, result): {};
 		
+		// added to synchronize the new data. it might update the navigation
+		updateNavForSequencing();
 
 		// set successful updated elements to clean
 		if(typeof result == "object") {
@@ -13878,13 +13872,29 @@ function onWindowUnload ()
 	//try{windowOpenerLoc.reload();} catch(e){}
 }
 
-function onItemDeliver(item, wasSuspendAll) // onDeliver called from sequencing process (deliverSubProcess)
+function onItemDeliver(item){
+	removeResource();
+	onItemDeliver_item=item;
+	onItemDeliverWait(0);
+}
+function onItemDeliverWait(deliverCounter){
+	if(currentAPI==null || SCOterminated==true || deliverCounter==30) {
+		onItemDeliverDo(onItemDeliver_item,false);
+	} else {
+		deliverCounter++;
+		setTimeout('onItemDeliverWait('+deliverCounter+');',100);
+	}
+}
+
+function onItemDeliverDo(item, wasSuspendAll) // onDeliver called from sequencing process (deliverSubProcess)
 {
 	var url = item.href, v;
+	currentAPI = window[Runtime.apiname] = null;
 	// create api if associated resouce is of adl:scormType=sco
 	if (item.sco)
 	{
 
+		SCOterminated = false;
 		// get data in cmi-1.3 format
 		var data = getAPI(item.foreignId);
 		if (this.config.fourth_edition) loadSharedData(item.cp_node_id);
@@ -13919,7 +13929,7 @@ function onItemDeliver(item, wasSuspendAll) // onDeliver called from sequencing 
 			//data.adl.nav.request_valid['choice'];
 		}
 		//TODO:JP - add valid jump requests?
-		
+		item.accesscount++;
 		// add some global values for all sco's in package
 		data.cmi.learner_name = globalAct.learner_name;
 		data.cmi.learner_id = this.config.cmi_learner_id;
@@ -13965,10 +13975,8 @@ function onItemDeliver(item, wasSuspendAll) // onDeliver called from sequencing 
 				}	
 			}
 		}
-
+		window.document.getElementById("noCredit").style.display='none';
 		//support for auto-review
-		item.options = new Object();
-		item.options.notracking = false;
 		if (globalAct.auto_review != 'n') {
 			if (
 				(globalAct.auto_review == 'r' && ((item.completion_status == 'completed' && item.success_status != 'failed') || item.success_status == 'passed') ) ||
@@ -13981,11 +13989,7 @@ function onItemDeliver(item, wasSuspendAll) // onDeliver called from sequencing 
 				data.cmi.mode = "review";
 			}
 		}
-		if (data.cmi.mode == "review") {
-			data.cmi.credit = "no-credit";
-			item.options.notracking = true;//UK: no better score for example!
-		} else {
-
+		if (data.cmi.mode != "review") {
 			if (item.exit!="suspend") {
 				//provide us with a clean data set - UK not really clean!
 				//data.cmi=Runtime.models.cmi;
@@ -13996,9 +14000,13 @@ function onItemDeliver(item, wasSuspendAll) // onDeliver called from sequencing 
 				data.cmi.suspend_data = null;
 				data.cmi.total_time="PT0H0M0S"; //UK: not in specification but required by test suite
 			} 
-
 			//set resume manually if suspendALL happened before
 			if (item.exit=="suspend" || wasSuspendAll) data.cmi.entry="resume";
+		}
+		if (config.mode=="browse") data.cmi.mode = "browse";
+		if (data.cmi.mode=="review" || data.cmi.mode=="browse" || config.credit=="no_credit") {
+			data.cmi.credit = "no-credit";
+			window.document.getElementById("noCredit").style.display='inline';
 		}
 
 		//RTE-4-45: If there are additional learner sessions within a learner attempt, the cmi.exit becomes uninitialized (i.e., reinitialized to its default value of (“”) - empty characterstring) at the beginning of each additional learner session within the learner attempt.
@@ -14010,13 +14018,9 @@ function onItemDeliver(item, wasSuspendAll) // onDeliver called from sequencing 
 	// customize GUI
 	
 	syncSharedCMI(item);
-	
-	
-	updateNav();
-	updateControls();
-		
+
 	scoStartTime = currentTime();
-	
+
 	var envEditor = this.config.envEditor;
 	var randNumber="";
 	if (envEditor==1) {
@@ -14030,7 +14034,11 @@ function onItemDeliver(item, wasSuspendAll) // onDeliver called from sequencing 
 	    && envEditor==false) {
 		item.parameters = "?"+ item.parameters;
 	} 
-	setResource(item.id, item.href+randNumber+item.parameters, this.config.package_url);
+	openedResource=[item.id, item.href+randNumber+item.parameters, this.config.package_url];
+	guiItemId = (ITEM_PREFIX + item.id).replace(/\./g,"_____");
+	updateNav();
+	updateControls();
+	setResource();
 }
 
 
@@ -14456,6 +14464,7 @@ function onCommit(data)
 
 function onTerminate(data) 
 {
+	SCOterminated = true;
 	var navReq;
 	switch (data.cmi.exit)
 	{
@@ -14496,15 +14505,9 @@ function onTerminate(data)
 		}
 	}
 	
-	// this will update the UI tree 
-	var valid = new ADLValidRequests();
-	valid = msequencer.getValidRequests(valid);
-	msequencer.mSeqTree.setValidRequests(valid);
-	mlaunch.mNavState = msequencer.mSeqTree.getValidRequests();
-//check if better without updateNav and updateControls
-//	updateNav(false);
-	updateControls();
-	
+	updateNavForSequencing();
+	if (!this.config.sequencing_enabled) updateNav(); //because could come later - change in 4.5
+	//setResource(); - was workaround for IE Mantis 13522, but problem with sending terminate before onunload
 	return true;
 }
 
@@ -14527,6 +14530,22 @@ var apiIndents = // for mapping internal to api representaiton
 
 
 function updateNav(ignore) {
+
+	function signActNode() {
+		if(elm && activities[tree[i].mActivityID].href && guiItemId == elm.id) {
+			removeClass(elm.parentNode,"ilc_rte_status_RTENotAttempted",1);
+			removeClass(elm.parentNode,"ilc_rte_status_RTEIncomplete",1);
+			removeClass(elm.parentNode,"ilc_rte_status_RTECompleted",1);
+			removeClass(elm.parentNode,"ilc_rte_status_RTEFailed",1);
+			removeClass(elm.parentNode,"ilc_rte_status_RTEPassed",1);
+			toggleClass(elm, "ilc_rte_tlink_RTETreeCurrent",1);
+			toggleClass(elm.parentNode,"ilc_rte_status_RTERunning",1);
+		} else {
+			removeClass(elm, "ilc_rte_tlink_RTETreeCurrent");
+			removeClass(elm.parentNode, "ilc_rte_status_RTERunning");
+		}
+	}
+
 	//check for tree
 	if (!all("treeView")) {
 		return;
@@ -14553,13 +14572,18 @@ function updateNav(ignore) {
 				disabled_str="Disabled";
 			}
 		}
-		if (guiItem && ignore==true) {
-			if (guiItem.id ==ITEM_PREFIX + tree[i].mActivityID)
-			{
-				continue;
-			}
-		}
-		var elm = all(ITEM_PREFIX + tree[i].mActivityID);
+		// if (guiItem && ignore==true) {
+			// if (guiItem.id ==ITEM_PREFIX + tree[i].mActivityID)
+			// {
+				// continue;
+			// }
+		// }
+		var elm = all(ITEM_PREFIX + tree[i].mActivityID.replace(/\./g,"_____"));
+		// if (guiItem && ignore==true) {
+			// signActNode();
+			// continue;
+		// }
+
 	//	if (!elm) {return;}
 //console.log("-" + ITEM_PREFIX + tree[i].mActivityID + "-" + disable + "-");
 		if (disable)
@@ -14628,7 +14652,6 @@ function updateNav(ignore) {
 					}
 				}
 			}
-
 			if (elm != null && elm.parentNode)
 			{
 				toggleClass(elm.parentNode,"ilc_rte_node_RTESco" + disabled_str,1);
@@ -14654,9 +14677,23 @@ function updateNav(ignore) {
 				}
 			}
 		}
-		
+		//added to sign actual node
+		// if (ignore!=true) 
+		signActNode();
 		//toggleClass(elm.parentNode, 'hidden', item.hidden);
 		first = false;
+	}
+}
+
+function updateNavForSequencing() {
+	if (this.config.sequencing_enabled) {
+		// this will update the UI tree 
+		var valid = new ADLValidRequests();
+		valid = msequencer.getValidRequests(valid);
+		msequencer.mSeqTree.setValidRequests(valid);
+		mlaunch.mNavState = msequencer.mSeqTree.getValidRequests();
+		updateNav(false);
+		updateControls();
 	}
 }
 
@@ -14807,7 +14844,7 @@ var RESOURCE_NAME = "frmResource";
 var RESOURCE_TOP = "mainTable";
 
 // GUI Variables 
-var guiItem;
+var guiItemId;
 var guiState; // loading, playing, paused, stopped, buffering
 var gConfig;
 
@@ -14841,6 +14878,8 @@ var saved={
 var currentAPI; // reference to API during runtime of a SCO
 var scoStartTime = null;
 
+var openedResource = new Array();
+
 var treeView=true;
 
 // Logging active
@@ -14858,8 +14897,9 @@ var toleratedFailure=false;
 //course wide variables
 //var pubAPI=null;
 var statusArray = new Object(); //just used for visual feedback
-//var isSaving = true;
 
+var SCOterminated = true;
+var onItemDeliver_item;
 var saved_shared_data = "";
 var saveOnCommit = true;
 // Public interface
@@ -15068,16 +15108,21 @@ function Runtime(cmiItem, onCommit, onTerminate, onDebug)
 				}
 				//auto suspend
 				if (config.auto_suspend==true) cmiItem.cmi.exit="suspend";
-				//store correct status in DB; returnValue1 because of IE;
-				var statusValues=syncCMIADLTree();
-				//statusHandler(cmiItem.scoid,"completion",statusValues[0]);
-				//statusHandler(cmiItem.scoid,"success",statusValues[1]);
-				var returnValue = onCommit(cmiItem);
-				if (returnValue && saveOnCommit == true) {
-					if (config.fourth_edition) {
-						var sgo=saveSharedData(cmiItem);
+
+				//store correct status in DB; returnValue because of IE;
+				var returnValue=false;
+				if(cmiItem.cmi.credit=="no-credit") {returnValue=true;}
+				else {
+					var statusValues=syncCMIADLTree();
+					//statusHandler(cmiItem.scoid,"completion",statusValues[0]);
+					//statusHandler(cmiItem.scoid,"success",statusValues[1]);
+					returnValue = onCommit(cmiItem);
+					if (returnValue && saveOnCommit == true) {
+						if (config.fourth_edition) {
+							var sgo=saveSharedData(cmiItem);
+						}
+						returnValue = save();
 					}
-					returnValue = save();
 				}
 				if (returnValue) 
 				{

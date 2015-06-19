@@ -9,7 +9,7 @@ include_once("Services/Payment/classes/class.ilPaymentObject.php");
 * Class ilRepositoryGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilRepositoryGUI.php 45104 2013-09-30 14:15:54Z mjansen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilRepositoryGUI: ilObjGroupGUI, ilObjFolderGUI, ilObjFileGUI, ilObjCourseGUI, ilCourseObjectivesGUI
 * @ilCtrl_Calls ilRepositoryGUI: ilObjSAHSLearningModuleGUI, ilObjChatroomGUI, ilObjForumGUI

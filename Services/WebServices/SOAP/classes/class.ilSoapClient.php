@@ -33,7 +33,7 @@ include_once './webservice/soap/lib/nusoap.php';
 * Wrapper class for NuSOAP soap_client
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilSoapClient.php 42143 2013-05-10 12:55:00Z smeyer $
+* @version $Id$
 *
 * @package ilias
 */

@@ -5,7 +5,7 @@
 * Test results to XML class
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilTestResultsToXML.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 * @ingroup ModulesTest
 */
 include_once './Services/Xml/classes/class.ilXmlWriter.php';

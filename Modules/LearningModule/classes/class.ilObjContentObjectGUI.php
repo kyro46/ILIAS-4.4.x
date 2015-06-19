@@ -14,7 +14,7 @@ require_once 'Services/LinkChecker/interfaces/interface.ilLinkCheckerGUIRowHandl
  * @author Stefan Meyer <meyer@leifos.com>
  * @author Sascha Hofmann <saschahofmann@gmx.de>
  *
- * $Id: class.ilObjContentObjectGUI.php 48264 2014-03-01 14:14:00Z akill $
+ * $Id$
  *
  * @ingroup ModulesLearningModule
  */
@@ -464,6 +464,7 @@ class ilObjContentObjectGUI extends ilObjectGUI implements ilLinkCheckerGUIRowHa
 
 		$title = $this->object->getTitle();
 		$description = $this->object->getDescription();
+		include_once("./Services/Object/classes/class.ilObjectTranslation.php");
 		$ot = ilObjectTranslation::getInstance($this->object->getId());
 		if ($ot->getContentActivated())
 		{
@@ -509,10 +510,13 @@ class ilObjContentObjectGUI extends ilObjectGUI implements ilLinkCheckerGUIRowHa
 	*/
 	function saveProperties()
 	{
+		global $lng;
+
 		$valid = false;
 		$this->initPropertiesForm();
 		if ($this->form->checkInput())
 		{
+			include_once("./Services/Object/classes/class.ilObjectTranslation.php");
 			$ot = ilObjectTranslation::getInstance($this->object->getId());
 			if ($ot->getContentActivated())
 			{
@@ -564,8 +568,12 @@ class ilObjContentObjectGUI extends ilObjectGUI implements ilLinkCheckerGUIRowHa
 		}
 		else
 		{
+			$lng->loadLanguageModule("style");
+			$this->setTabs("settings");
+			$this->setSubTabs("cont_general_properties");
+
 			$this->form->setValuesByPost();
-			$tpl->setContent($this->form->getHTML());
+			$this->tpl->setContent($this->form->getHTML());
 		}
 	}
 
@@ -2097,8 +2105,10 @@ class ilObjContentObjectGUI extends ilObjectGUI implements ilLinkCheckerGUIRowHa
 
 
 		$export_dir = $this->object->getOfflineDirectory();
-		ilUtil::deliverFile($export_dir."/".$_POST["file"][0],
-			$_POST["file"][0]);
+	
+		$file = basename($_POST["file"][0]);
+		
+		ilUtil::deliverFile($export_dir."/".$file, $file);
 	}
 
 
@@ -2139,8 +2149,9 @@ class ilObjContentObjectGUI extends ilObjectGUI implements ilLinkCheckerGUIRowHa
 		$a_active = "content", $a_use_global_tabs = false, $a_as_subtabs = false,
 		$a_cur_page = 0)
 	{
-		global $ilCtrl,$ilUser, $ilAccess, $ilTabs, $rbacsystem, $ilPluginAdmin;
+		global $ilCtrl,$ilUser, $ilAccess, $ilTabs, $rbacsystem, $ilPluginAdmin, $ilHelp;
 
+		$ilHelp->setScreenIdComponent("lm");
 		
 		if ($a_as_subtabs)
 		{
@@ -2198,6 +2209,11 @@ class ilObjContentObjectGUI extends ilObjectGUI implements ilLinkCheckerGUIRowHa
 			$tabs_gui->$addcmd("content",
 				$ilCtrl->getLinkTargetByClass("illmpresentationgui", "layout"),
 				"", "", $buttonTarget,  $active["content"]);
+			if ($active["content"])
+			{
+				$ilHelp->setScreenId("content");
+				$ilHelp->setSubScreenId("content");
+			}
 		}
 
 		// table of contents
@@ -2267,8 +2283,10 @@ class ilObjContentObjectGUI extends ilObjectGUI implements ilLinkCheckerGUIRowHa
 		}
 		
 		include_once './Services/Tracking/classes/class.ilLearningProgressAccess.php';
-		if(ilLearningProgressAccess::checkAccess($_GET["ref_id"]))
-		{			
+		if(!$a_offline &&
+			$ilAccess->checkAccess("read", "", $_GET["ref_id"]) && // #14075
+			ilLearningProgressAccess::checkAccess($_GET["ref_id"])) 
+		{				
 			include_once './Services/Object/classes/class.ilObjectLP.php';
 			$olp = ilObjectLP::getInstance($this->object->getId());			
 			if($olp->getCurrentMode() == ilLPObjSettings::LP_MODE_COLLECTION_MANUAL)
@@ -2882,7 +2900,9 @@ $tabs_gui = $ilTabs;
 		
 		$toolbar = new ilToolbarGUI();
 		
-		if((bool)$ilias->getSetting('cron_web_resource_check'))
+		// #13684
+		include_once "Services/Cron/classes/class.ilCronManager.php";
+		if(ilCronManager::isJobActive("lm_link_check"))
 		{
 			include_once './Services/LinkChecker/classes/class.ilLinkCheckNotify.php';
 			include_once 'Services/Form/classes/class.ilPropertyFormGUI.php';
@@ -3669,13 +3689,20 @@ $tabs_gui = $ilTabs;
 		$tt_id = ilUtil::stripSlashes($_POST["tooltip_id"]);
 		if (trim($tt_id) != "")
 		{
-			include_once("./Services/Help/classes/class.ilHelp.php");
-			ilHelp::addTooltip(trim($tt_id), "");
-			ilUtil::sendSuccess($lng->txt("msg_obj_modified"), true);
-			
-			$fu = strpos($tt_id, "_");
-			$comp = substr($tt_id, 0, $fu);
-			ilSession::set("help_tt_comp", ilUtil::stripSlashes($comp));
+			if (is_int(strpos($tt_id, "_")))
+			{
+				include_once("./Services/Help/classes/class.ilHelp.php");
+				ilHelp::addTooltip(trim($tt_id), "");
+				ilUtil::sendSuccess($lng->txt("msg_obj_modified"), true);
+
+				$fu = strpos($tt_id, "_");
+				$comp = substr($tt_id, 0, $fu);
+				ilSession::set("help_tt_comp", ilUtil::stripSlashes($comp));
+			}
+			else
+			{
+				ilUtil::sendFailure($lng->txt("cont_help_no_valid_tooltip_id"), true);
+			}
 		}
 		$ilCtrl->redirect($this, "showTooltipList");
 	}

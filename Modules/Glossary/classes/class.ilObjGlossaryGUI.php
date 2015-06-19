@@ -15,7 +15,7 @@ require_once("./Services/COPage/classes/class.ilPCParagraph.php");
 * GUI class for ilGlossary
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjGlossaryGUI.php 49368 2014-04-11 08:55:45Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjGlossaryGUI: ilGlossaryTermGUI, ilMDEditorGUI, ilPermissionGUI
 * @ilCtrl_Calls ilObjGlossaryGUI: ilInfoScreenGUI, ilCommonActionDispatcherGUI, ilObjStyleSheetGUI

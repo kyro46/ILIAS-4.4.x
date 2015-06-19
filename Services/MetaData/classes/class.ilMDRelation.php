@@ -26,7 +26,7 @@
 * Meta Data class (element relation)
 *
 * @package ilias-core
-* @version $Id: class.ilMDRelation.php 19262 2009-03-04 10:32:30Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

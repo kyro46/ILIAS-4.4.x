@@ -8,7 +8,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssQuestionFeedb
  * with multiple answer options (mc, sc, ...)
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssMultiOptionQuestionFeedback.php 48523 2014-03-12 08:12:24Z akill $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  * 

@@ -9,7 +9,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * exportQuestion is a basis class question exports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assQuestionExport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assQuestionExport

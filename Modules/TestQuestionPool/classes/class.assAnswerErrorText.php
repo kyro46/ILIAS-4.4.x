@@ -9,7 +9,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author	Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author	Maximilian Becker <mbecker@databay.de>
  *
- * @version	$Id: class.assAnswerErrorText.php 44252 2013-08-18 19:01:34Z mbecker $
+ * @version	$Id$
  *
  * @ingroup ModulesTestQuestionPool
  *

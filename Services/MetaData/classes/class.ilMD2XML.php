@@ -26,7 +26,7 @@
 * Meta Data to XML class
 *
 * @package ilias-core
-* @version $Id: class.ilMD2XML.php 22967 2010-02-13 10:15:40Z akill $
+* @version $Id$
 */
 include_once './Services/Xml/classes/class.ilXmlWriter.php';
 include_once 'Services/MetaData/classes/class.ilMD.php';

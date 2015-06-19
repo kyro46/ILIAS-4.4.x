@@ -7,7 +7,7 @@
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjectListGUIFactory.php 30046 2011-07-27 14:23:49Z smeyer $
+* $Id$
 *
 */
 class ilObjectListGUIFactory

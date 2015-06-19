@@ -6,7 +6,7 @@
  * Class ilObjLanguageFolderGUI
  *
  * @author	Stefan Meyer <meyer@leifos.com>
- * @version	$Id: class.ilObjLanguageFolderGUI.php 33501 2012-03-03 11:11:05Z akill $
+ * @version	$Id$
  * 
  * @ilCtrl_Calls ilObjLanguageFolderGUI: ilPermissionGUI
  *

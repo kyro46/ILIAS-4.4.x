@@ -7,7 +7,7 @@
 * This class manages the sequence settings for a given user
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilTestSequence.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTest
 */
 class ilTestSequence
@@ -90,7 +90,7 @@ class ilTestSequence
 	/**
 	* Loads the question mapping
 	*/
-	public function loadQuestions()
+	public function loadQuestions(ilTestQuestionSetConfig $testQuestionSetConfig = null, $taxonomyFilterSelection = array())
 	{
 		global $ilDB;
 
@@ -567,19 +567,6 @@ class ilTestSequence
 		}
 	}
 	
-	public function handleQuestionVisibility(ilObjTest $testOBJ, $crsShowResultParam)
-	{
-		if( $crsShowResultParam )
-		{
-			$this->hideCorrectAnsweredQuestions($testOBJ, $this->active_id, $this->pass);
-		}
-		elseif( $this->hasHiddenQuestions() )
-		{
-			$this->clearHiddenQuestions();
-			$this->saveToDb();
-		}
-	}
-	
 	public function hasStarted(ilTestSession $testSession)
 	{
 		if( $testSession->getLastSequence() < 1 )
@@ -587,12 +574,23 @@ class ilTestSequence
 			return false;
 		}
 		
+		// WTF ?? heard about tests with only one question !?
 		if( $testSession->getLastSequence() == $this->getFirstSequence() )
 		{
 			return false;
 		}
 				
 		return true;
+	}
+	
+	public function openQuestionExists()
+	{
+		return $this->getFirstSequence() !== false;
+	}
+
+	public function questionExists($questionId)
+	{
+		return in_array($questionId, $this->questions);
 	}
 }
 

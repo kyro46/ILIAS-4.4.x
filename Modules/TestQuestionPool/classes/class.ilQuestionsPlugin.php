@@ -7,7 +7,7 @@ include_once ("./Services/Component/classes/class.ilPlugin.php");
  * Abstract parent class for all question plugin classes.
  *
  * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
- * @version $Id: class.ilQuestionsPlugin.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version $Id$
  *
  * @ingroup ServicesEventHandling
  */

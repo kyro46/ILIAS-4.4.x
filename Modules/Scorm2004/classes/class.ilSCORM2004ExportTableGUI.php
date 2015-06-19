@@ -26,7 +26,7 @@ include_once('./Services/Table/classes/class.ilTable2GUI.php');
 /**
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilSCORM2004ExportTableGUI.php 31386 2011-11-01 11:28:08Z akill $
+* @version $Id$
 *
 * @ingroup ModulesSurveyQuestionPool
 */

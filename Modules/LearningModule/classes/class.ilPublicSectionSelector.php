@@ -28,7 +28,7 @@ require_once("./Modules/LearningModule/classes/class.ilLMObject.php");
 * Public Section Explorer
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: class.ilPublicSectionSelector.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

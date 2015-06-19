@@ -22,7 +22,7 @@ define ("IL_NO_HEADER", "none");
 * methods for the handling of page objects in learning modules.
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMPageObject.php 48272 2014-03-03 13:40:13Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */
@@ -500,7 +500,8 @@ class ilLMPageObject extends ilLMObject
 			//$struct_obj =& new ilStructureObject($pred_node["obj_id"]);
 			//return $struct_obj->getTitle();
 			return ilStructureObject::_getPresentationTitle($pred_node["obj_id"],
-				$a_include_numbers).$cnt_str;
+				$a_include_numbers, false, 0, $a_lang).$cnt_str;
+
 			//return $pred_node["title"].$cnt_str;
 		}
 		else

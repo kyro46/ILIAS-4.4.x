@@ -1,6 +1,6 @@
 <?php
 
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 
 $error[0] = 'Invalid URL: <em>%s</em>!';
 $error[1] = "Couldn't connect to <em>%s</em>!";

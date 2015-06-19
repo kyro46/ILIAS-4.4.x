@@ -13,11 +13,11 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjFileHandlingQ
  * @author		Björn Heyser <bheyser@databay.de> 
  * @author		Maximilian Becker <mbecker@databay.de> 
  * 
- * @version		$Id: class.assFileUpload.php 48918 2014-03-24 15:55:51Z mjansen $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
-class assFileUpload extends assQuestion implements ilObjQuestionScoringAdjustable, ilObjFileHandlingQuestionType
+class assFileUpload extends assQuestion implements ilObjFileHandlingQuestionType // ilObjQuestionScoringAdjustable
 {
 	protected $maxsize;
 	
@@ -586,6 +586,16 @@ class assFileUpload extends assQuestion implements ilObjQuestionScoringAdjustabl
 			$pass = ilObjTest::_getPass($active_id);
 		}
 
+		if( $_POST['cmd']['handleQuestionAction'] != $this->lng->txt('delete')
+			&& strlen($_FILES["upload"]["tmp_name"]) )
+		{
+			$checkUploadResult = $this->checkUpload();
+		}
+		else
+		{
+			$checkUploadResult = false;
+		}
+		
 		$result = $ilDB->queryF("SELECT test_fi FROM tst_active WHERE active_id = %s",
 			array('integer'),
 			array($active_id)
@@ -597,8 +607,10 @@ class assFileUpload extends assQuestion implements ilObjQuestionScoringAdjustabl
 			$test_id = $row["test_fi"];
 		}
 
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
+
 		$entered_values = false;
-		if (strcmp($_POST['cmd']['handleQuestionAction'], $this->lng->txt('delete')) == 0)
+		if( $_POST['cmd']['handleQuestionAction'] == $this->lng->txt('delete') )
 		{
 			if (is_array($_POST['deletefiles']) && count($_POST['deletefiles']) > 0)
 			{
@@ -609,32 +621,29 @@ class assFileUpload extends assQuestion implements ilObjQuestionScoringAdjustabl
 				ilUtil::sendInfo($this->lng->txt('no_checkbox'), true);
 			}
 		}
-		else
+		elseif( $checkUploadResult )
 		{
-			if (strlen($_FILES["upload"]["tmp_name"]))
-			{
-				if ($this->checkUpload())
-				{
-					if (!@file_exists($this->getFileUploadPath($test_id, $active_id))) ilUtil::makeDirParents($this->getFileUploadPath($test_id, $active_id));
-					$version = time();
-					$filename_arr = pathinfo($_FILES["upload"]["name"]);
-					$extension = $filename_arr["extension"];
-					$newfile = "file_" . $active_id . "_" . $pass . "_" . $version . "." . $extension;
-					ilUtil::moveUploadedFile($_FILES["upload"]["tmp_name"], $_FILES["upload"]["name"], $this->getFileUploadPath($test_id, $active_id) . $newfile);
-					$next_id = $ilDB->nextId('tst_solutions');
-					$affectedRows = $ilDB->insert("tst_solutions", array(
-						"solution_id" => array("integer", $next_id),
-						"active_fi" => array("integer", $active_id),
-						"question_fi" => array("integer", $this->getId()),
-						"value1" => array("clob", $newfile),
-						"value2" => array("clob", $_FILES['upload']['name']),
-						"pass" => array("integer", $pass),
-						"tstamp" => array("integer", time())
-					));
-					$entered_values = true;
-				}
-			}
+			if (!@file_exists($this->getFileUploadPath($test_id, $active_id))) ilUtil::makeDirParents($this->getFileUploadPath($test_id, $active_id));
+			$version = time();
+			$filename_arr = pathinfo($_FILES["upload"]["name"]);
+			$extension = $filename_arr["extension"];
+			$newfile = "file_" . $active_id . "_" . $pass . "_" . $version . "." . $extension;
+			ilUtil::moveUploadedFile($_FILES["upload"]["tmp_name"], $_FILES["upload"]["name"], $this->getFileUploadPath($test_id, $active_id) . $newfile);
+			$next_id = $ilDB->nextId('tst_solutions');
+			$affectedRows = $ilDB->insert("tst_solutions", array(
+				"solution_id" => array("integer", $next_id),
+				"active_fi" => array("integer", $active_id),
+				"question_fi" => array("integer", $this->getId()),
+				"value1" => array("clob", $newfile),
+				"value2" => array("clob", $_FILES['upload']['name']),
+				"pass" => array("integer", $pass),
+				"tstamp" => array("integer", time())
+			));
+			$entered_values = true;
 		}
+		
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+
 		if ($entered_values)
 		{
 			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");

@@ -10,7 +10,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjGlossaryAccess.php 46207 2013-11-14 09:11:00Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesGlossary
 */

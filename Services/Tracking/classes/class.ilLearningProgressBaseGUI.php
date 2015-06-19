@@ -13,7 +13,7 @@ include_once 'Services/Tracking/classes/class.ilObjUserTracking.php';
  *
  * @author Stefan Meyer <meyer@leifos.com>
  *
- * @version $Id: class.ilLearningProgressBaseGUI.php 48015 2014-02-19 09:41:27Z jluetzen $
+ * @version $Id$
  *
  * @package ilias-tracking
  *
@@ -432,6 +432,9 @@ class ilLearningProgressBaseGUI
 	function __appendUserInfo(&$info, $a_user)
 	{
 		global $ilUser;
+		
+		// #13525 - irrelevant personal data is not to be presented
+		return;
 
 		if(!is_object($a_user))
 		{

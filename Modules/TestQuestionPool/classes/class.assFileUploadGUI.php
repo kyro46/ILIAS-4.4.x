@@ -12,14 +12,14 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilGuiQuestionScori
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version	$Id: class.assFileUploadGUI.php 48918 2014-03-24 15:55:51Z mjansen $
+ * @version	$Id$
  *
  * @ingroup ModulesTestQuestionPool
  *
  * @ilctrl_iscalledby assFileUploadGUI: ilObjQuestionPoolGUI
  * 
  */
-class assFileUploadGUI extends assQuestionGUI implements ilGuiQuestionScoringAdjustable
+class assFileUploadGUI extends assQuestionGUI //implements ilGuiQuestionScoringAdjustable
 {
 	/**
 	 * assFileUploadGUI constructor

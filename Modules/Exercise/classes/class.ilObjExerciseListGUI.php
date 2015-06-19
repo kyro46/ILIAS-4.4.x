@@ -7,7 +7,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
 * ListGUI class for exercise objects.
 *
 * @author 	Alex Killing <alex.killing@gmx.de>
-* @version	$Id: class.ilObjExerciseListGUI.php 46851 2013-12-16 08:47:31Z jluetzen $
+* @version	$Id$
 *
 * @ingroup ModulesExercise
 */

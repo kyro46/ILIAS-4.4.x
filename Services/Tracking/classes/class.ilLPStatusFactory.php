@@ -11,7 +11,7 @@ include_once 'Services/Tracking/classes/class.ilLPObjSettings.php';
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilLPStatusFactory.php 48230 2014-02-27 11:08:27Z jluetzen $
+* @version $Id$
 *
 * @ingroup ServicesTracking
 *

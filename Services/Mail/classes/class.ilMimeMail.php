@@ -19,7 +19,7 @@
  *  echo "the mail below has been sent:<br><pre>", $m->Get(), "</pre>";
  * 
  * @author	Leo West - lwest@free.fr  
- * @version $Id: class.ilMimeMail.php 46278 2013-11-19 13:27:05Z jluetzen $
+ * @version $Id$
  * 
  *
  */

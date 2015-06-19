@@ -9,7 +9,7 @@ require_once("Services/MediaObjects/classes/class.ilMapArea.php");
 * Media Item, component of a media object (file or reference)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilMediaItem.php 37237 2012-09-28 11:42:38Z akill $
+* @version $Id$
 *
 * @ingroup ServicesMediaObjects
 */

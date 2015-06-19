@@ -7,7 +7,7 @@ include_once './Services/UIComponent/Explorer/classes/class.ilExplorer.php';
  * Explorer for ILIAS tree
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSNodeMappingLocalExplorer.php 46060 2013-11-06 16:03:47Z smeyer $
+ * $Id$
  */
 class ilECSNodeMappingLocalExplorer extends ilExplorer
 {

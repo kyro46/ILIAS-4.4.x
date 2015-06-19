@@ -25,7 +25,7 @@
 * This class represents a text wizard property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilTextWizardInputGUI.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilTextWizardInputGUI extends ilTextInputGUI

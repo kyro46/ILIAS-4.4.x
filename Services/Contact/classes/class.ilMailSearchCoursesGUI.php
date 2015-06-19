@@ -9,7 +9,7 @@ require_once "Services/Contact/classes/class.ilAddressbook.php";
 
 /**
 * @author Jens Conze
-* @version $Id: class.ilMailSearchCoursesGUI.php 45582 2013-10-17 12:58:09Z mjansen $
+* @version $Id$
 *
 * @ingroup ServicesMail
 */
@@ -455,6 +455,11 @@ class ilMailSearchCoursesGUI
 		{
 			$_POST["search_crs"] = explode(",", $_SESSION["search_crs"]);
 			$_SESSION["search_crs"] = "";
+		}
+
+		if(is_array($_POST['search_crs']))
+		{
+			$_POST['search_crs'] = array_filter(array_map('intval', $_POST['search_crs']));
 		}
 
 		if (!is_array($_POST["search_crs"]) ||

@@ -68,7 +68,7 @@ abstract class ilTestQuestionSetConfig
 	 *
 	 * @param $testId
 	 */
-	abstract public function saveToDbByTestId($testId);
+	abstract public function cloneToDbForTestId($testId);
 
 	/**
 	 * deletes the question set config for current test from the database
@@ -94,7 +94,17 @@ abstract class ilTestQuestionSetConfig
 	{
 		return '';
 	}
-
+	
+	public function isValidRequestOnBrokenQuestionSetDepencies($nextClass, $cmd)
+	{
+		return true;
+	}
+	
+	public function getHiddenTabsOnBrokenDepencies()
+	{
+		return array();
+	}
+		
 	abstract public function isQuestionSetConfigured();
 	
 	/**

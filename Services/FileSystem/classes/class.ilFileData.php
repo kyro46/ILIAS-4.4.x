@@ -6,7 +6,7 @@
 * This class handles all operations on files in directory /ilias_data/
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFileData.php 33510 2012-03-04 11:59:59Z akill $
+* @version $Id$
 * 
 */
 require_once("./Services/FileSystem/classes/class.ilFile.php");

@@ -4,7 +4,7 @@
 *
 * @module		inc.db_pwassist_session_handler.php
 * @modulegroup	iliascore
-* @version		$Id: inc.pwassist_session_handler.php 21763 2009-09-21 08:43:08Z smeyer $
+* @version		$Id$
 */
 
 

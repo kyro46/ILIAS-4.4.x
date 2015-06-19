@@ -26,7 +26,7 @@
 * Class ilObjRootFolder
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjRootFolder.php 40450 2013-03-08 10:11:11Z jluetzen $Id: class.ilObjRootFolder.php,v 1.12 2003/11/20 17:04:19 shofmann Exp $
+* @version $Id$Id: class.ilObjRootFolder.php,v 1.12 2003/11/20 17:04:19 shofmann Exp $
 *
 * @extends ilObject
 */

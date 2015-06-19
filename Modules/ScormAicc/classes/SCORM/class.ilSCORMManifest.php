@@ -27,7 +27,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMObject.php");
 * SCORM Manifest
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMManifest.php 20408 2009-07-03 10:13:22Z nkrzywon $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

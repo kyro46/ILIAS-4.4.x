@@ -38,11 +38,20 @@ class ilSurveyEditorGUI
 		
 		$cmd = $this->ctrl->getCmd("questions");
 									
-		if($cmd == "questions" && $_REQUEST["pgov"])
+		if($_REQUEST["pgov"])
 		{
-			$this->ctrl->setCmdClass("ilsurveypagegui");
-			$this->ctrl->setCmd("renderpage");
-		}						
+			if($cmd == "questions")
+			{
+				$this->ctrl->setCmdClass("ilsurveypagegui");
+				$this->ctrl->setCmd("renderpage");
+			}
+			else if($cmd == "confirmRemoveQuestions")
+			{
+				// #14324
+				$this->ctrl->setCmdClass("ilsurveypagegui");
+				$this->ctrl->setCmd("confirmRemoveQuestions");
+			}
+		}									
 		
 		$next_class = $this->ctrl->getNextClass($this);	
 		switch($next_class)
@@ -62,7 +71,12 @@ class ilSurveyEditorGUI
 					$this->ctrl->saveParameter($this, array("new_for_survey"));
 					
 					include_once "./Modules/SurveyQuestionPool/classes/class.SurveyQuestionGUI.php";
-					$q_gui = SurveyQuestionGUI::_getQuestionGUI(null, $_REQUEST["q_id"]);					
+					$q_gui = SurveyQuestionGUI::_getQuestionGUI(null, $_REQUEST["q_id"]);
+					if (is_object($q_gui->object))
+					{
+						global $ilHelp;
+						$ilHelp->setScreenIdComponent("spl_qt".$q_gui->object->getQuestionTypeId());
+					}
 					// $q_gui->object->setObjId($this->object->getId());
 					$q_gui->setBackUrl($this->ctrl->getLinkTarget($this, "questions"));
 					$q_gui->setQuestionTabs();									
@@ -954,7 +968,7 @@ class ilSurveyEditorGUI
 	{
 		$block_id = (int)$_REQUEST["bl_id"];		
 		$this->ctrl->setParameter($this, "bl_id", $block_id);
-		
+	
 		if(!$a_form)
 		{
 			$a_form = $this->initQuestionblockForm($block_id);
@@ -988,7 +1002,7 @@ class ilSurveyEditorGUI
 	}
 	
 	protected function initQuestionblockForm($a_block_id = null, $a_question_ids = null)
-	{
+	{		
 		include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->ctrl->getFormAction($this, "saveDefineQuestionblock"));
@@ -1044,10 +1058,18 @@ class ilSurveyEditorGUI
 	public function saveDefineQuestionblockObject()
 	{
 		$block_id = (int)$_REQUEST["bl_id"];
+		$q_ids = $_POST["qids"];
+				
+		$this->ctrl->setParameter($this, "bl_id", $block_id);
+					
+		if(!$block_id && !is_array($q_ids))
+		{
+			$this->ctrl->redirect($this, "questions");
+		}
 		
 		$form = $this->initQuestionblockForm($block_id);
 		if($form->checkInput())
-		{								
+		{				
 			$title = $form->getInput("title");
 			$show_questiontext = $form->getInput("show_questiontext");
 			$show_blocktitle = $form->getInput("show_blocktitle") ;
@@ -1057,10 +1079,10 @@ class ilSurveyEditorGUI
 				$this->object->modifyQuestionblock($block_id, $title, 
 					$show_questiontext, $show_blocktitle);
 			}
-			else
+			else if($q_ids)
 			{
 				$this->object->createQuestionblock($title, $show_questiontext, 
-					$show_blocktitle, $_POST["qids"]);
+					$show_blocktitle, $q_ids);
 			}
 			
 			ilUtil::sendSuccess($this->lng->txt('msg_obj_modified'), true);
@@ -1127,11 +1149,14 @@ class ilSurveyEditorGUI
 
 	public function addHeadingObject(ilPropertyFormGUI $a_form = null)
 	{		
+		$q_id = $_REQUEST["q_id"];
+		$this->ctrl->setParameter($this, "q_id", $q_id);
+		
 		$this->questionsSubtabs("questions");
 
 		if(!$a_form)
 		{
-			$a_form = $this->initHeadingForm();
+			$a_form = $this->initHeadingForm($q_id);
 		}
 			
 		$this->tpl->setContent($a_form->getHTML());
@@ -1154,7 +1179,11 @@ class ilSurveyEditorGUI
 
 	public function saveHeadingObject()
 	{
-		$form = $this->initHeadingForm((int)$_REQUEST["q_id"]);		
+		// #15474
+		$q_id = (int)$_REQUEST["q_id"];		
+		$this->ctrl->setParameter($this, "q_id", $q_id);
+		
+		$form = $this->initHeadingForm($q_id);		
 		if ($form->checkInput())
 		{			
 			include_once "./Services/AdvancedEditing/classes/class.ilObjAdvancedEditing.php";
@@ -1257,8 +1286,8 @@ class ilSurveyEditorGUI
 						$template->parseCurrentBlock();
 					}
 				}
-				if (count($page) > 1)
-				{
+				if (count($page) > 1 && $page[0]["questionblock_show_blocktitle"])
+				{					
 					$template->setCurrentBlock("page");
 					$template->setVariable("BLOCKTITLE", $page[0]["questionblock_title"]);
 					$template->parseCurrentBlock();

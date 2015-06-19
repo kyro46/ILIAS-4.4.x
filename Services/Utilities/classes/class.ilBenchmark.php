@@ -7,7 +7,7 @@
 *
 * Author: Alex Killing <Alex.Killing@gmx.de>
 *
-* @version	$Id: class.ilBenchmark.php 33484 2012-03-02 17:23:45Z akill $
+* @version	$Id$
 */
 class ilBenchmark
 {

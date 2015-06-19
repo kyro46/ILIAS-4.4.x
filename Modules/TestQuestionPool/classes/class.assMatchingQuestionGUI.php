@@ -16,7 +16,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version	$Id: class.assMatchingQuestionGUI.php 49154 2014-04-03 09:13:59Z gvollbach $
+ * @version	$Id$
  * 
  * @ingroup ModulesTestQuestionPool
  */
@@ -254,8 +254,7 @@ class assMatchingQuestionGUI extends assQuestionGUI implements ilGuiQuestionScor
 			$form->setValuesByPost();
 			$errors = !$form->checkInput();
 			$form->setValuesByPost(); // again, because checkInput now performs the whole stripSlashes handling and we need this if we don't want to have duplication of backslashes
-			if ((!$errors) && (count($this->object->getTerms()) < (count($this->object->getDefinitions())))
-				&& !$this->object->getSelfAssessmentEditingMode())
+			if( !$errors && !$this->isValidTermAndDefinitionAmount($form) && !$this->object->getSelfAssessmentEditingMode() )
 			{
 				$errors = true;
 				$terms = $form->getItemByPostVar('terms');
@@ -267,6 +266,23 @@ class assMatchingQuestionGUI extends assQuestionGUI implements ilGuiQuestionScor
 
 		if (!$checkonly) $this->tpl->setVariable("QUESTION_DATA", $form->getHTML());
 		return $errors;
+	}
+
+	/**
+	 * @param ilPropertyFormGUI $form
+	 * @return bool
+	 */
+	private function isValidTermAndDefinitionAmount(ilPropertyFormGUI $form)
+	{
+		$numTerms = count($form->getItemByPostVar('terms')->getValues());
+		$numDefinitions = count($form->getItemByPostVar('definitions')->getValues());
+		
+		if($numTerms >= $numDefinitions)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	public function populateAnswerSpecificFormPart(\ilPropertyFormGUI $form)
@@ -342,7 +358,7 @@ class assMatchingQuestionGUI extends assQuestionGUI implements ilGuiQuestionScor
 				3 => $this->lng->txt( "matching_shuffle_definitions" )
 			);
 			$shuffle->setOptions( $shuffle_options );
-			$shuffle->setValue( $this->object->getShuffle() );
+			$shuffle->setValue($this->object->getShuffle() != null ? $this->object->getShuffle() : 1);
 			$shuffle->setRequired( FALSE );
 			$form->addItem( $shuffle );
 
@@ -428,6 +444,7 @@ class assMatchingQuestionGUI extends assQuestionGUI implements ilGuiQuestionScor
 		}
 
 		$i = 0;
+		
 		foreach ($solutions as $solution)
 		{
 			$definition = $this->object->getDefinitionWithIdentifier($solution['value2']);
@@ -482,11 +499,15 @@ class assMatchingQuestionGUI extends assQuestionGUI implements ilGuiQuestionScor
 				if ($graphicalOutput)
 				{
 					// output of ok/not ok icons for user entered solutions
-					$ok = FALSE;
+					$ok = false;
 					foreach ($this->object->getMatchingPairs() as $pair)
 					{
-						if (is_object($term)) if (($pair->definition->identifier == $definition->identifier) && ($pair->term->identifier == $term->identifier)) $ok = true;
+						if( $this->isCorrectMatching($pair, $definition, $term) )
+						{
+							$ok = true;
+						}
 					}
+					
 					if ($ok)
 					{
 						$template->setCurrentBlock("icon_ok");
@@ -1336,7 +1357,27 @@ class assMatchingQuestionGUI extends assQuestionGUI implements ilGuiQuestionScor
 	 */
 	public function getAfterParticipationSuppressionQuestionPostVars()
 	{
-		return array();
+		return array('shuffle', 'element_height', 'thumb_geometry');
+	}
+
+	public function resetFormValuesForSuppressedPostvars($form)
+	{
+		$element = $form->getItemByPostvar('thumb_geometry');
+		$_POST['thumb_geometry'] = $this->object->getThumbGeometry();
+		$element->setValue(	$this->object->getThumbGeometry() );
+	}
+
+	public function reworkFormForCorrectionMode(ilPropertyFormGUI $form)
+	{
+		foreach(array('definitions','terms') as $postvar)
+		{
+			/** @var ilMatchingWizardInputGUI $matching_wizardinputgui */
+			$matching_wizardinputgui = $form->getItemByPostVar($postvar);
+			$matching_wizardinputgui->setDisableUpload(true);
+			$matching_wizardinputgui->setDisableActions(true);
+			$matching_wizardinputgui->setDisableText(true);
+		}
+		return $form;
 	}
 
 	/**
@@ -1349,6 +1390,131 @@ class assMatchingQuestionGUI extends assQuestionGUI implements ilGuiQuestionScor
 	 */
 	public function getAggregatedAnswersView($relevant_answers)
 	{
-		return ''; //print_r($relevant_answers,true);
+		$passes = array();
+		foreach($relevant_answers as $pass)
+		{
+			$passes[$pass['active_fi'].'-'.$pass['pass']] = '-';
+		}
+		$passcount = count($passes);
+		
+		foreach($relevant_answers as $pass)
+		{
+			$actives[$pass['active_fi']] = $pass['active_fi'];
+		}
+		$usercount = count($actives);
+		$tpl = new ilTemplate('tpl.il_as_aggregated_answers_header.html', true, true, "Modules/TestQuestionPool");
+		$tpl->setVariable('HEADERTEXT', $this->lng->txt('overview'));
+		$tpl->setVariable('NUMBER_OF_USERS_INFO', $this->lng->txt('number_of_users'));
+		$tpl->setVariable('NUMBER_OF_USERS', $usercount);
+		$tpl->setVariable('NUMBER_OF_PASSES_INFO', $this->lng->txt('number_of_passes'));
+		$tpl->setVariable('NUMBER_OF_PASSES', $passcount);
+
+		$header = $tpl->get();
+
+		$variants = $this->renderVariantsView(
+			$this->aggregateAnswerVariants($relevant_answers, $this->object->getTerms(), $this->object->getDefinitions())
+		)->get();
+
+		return  $header . $variants ;
+	}
+
+	public function aggregateAnswerVariants($relevant_answers_chosen, $terms, $definitions)
+	{
+		$variants = array();
+		$passdata = array();
+		foreach ($relevant_answers_chosen as $relevant_answer)
+		{
+			$pass_ident = $relevant_answer['active_fi'].$relevant_answer['pass'];
+			$answer = $passdata[$pass_ident];
+			if (strlen($answer))
+			{
+				$answer_elements = explode(',', $answer);
+			} else {
+				$answer_elements = array();
+			}
+			$answer_elements[] = $relevant_answer['value1'].'.'.$relevant_answer['value2'];
+			$passdata[$pass_ident] = implode(',',$answer_elements);
+		}
+		foreach($passdata as $passident => $behaviour)
+		{
+			$variants[$behaviour]++;
+		}
+		arsort($variants);
+		return $variants;
+	}
+
+	public function renderVariantsView($aggregate)
+	{
+		$tpl = new ilTemplate( 'tpl.il_as_aggregated_answers_table.html', true, true, "Modules/TestQuestionPool" );
+		$tpl->setVariable( 'OPTION_HEADER', $this->lng->txt( 'answer_variant' ) );
+		$tpl->setVariable( 'COUNT_HEADER', $this->lng->txt( 'count' ) );
+		$tpl->setVariable( 'AGGREGATION_HEADER', $this->lng->txt( 'aggregated_answers_variants' ) );
+		foreach ($aggregate as $options => $count)
+		{
+			$tpl->setCurrentBlock( 'aggregaterow' );
+			$optionstext = array();
+			foreach (explode( ',', $options ) as $option)
+			{
+				$pair = explode('.',$option);
+				if($pair[0] == -1 || $pair[1] == -1)
+				{
+					continue;
+				}
+
+				$term = $this->object->getTermWithIdentifier($pair[0]);
+				$term_rep = $term->text;
+				if($term->picture)
+				{
+					$term_rep .= '&nbsp;<img src="' 
+						. $this->object->getImagePathWeb() 
+						. $this->object->getThumbPrefix() 
+						. $term->picture 
+						. '" />';
+				}
+
+				$definition = $this->object->getDefinitionWithIdentifier($pair[1]);
+				$definition_rep = $definition->text;
+				if($definition->picture)
+				{
+					$definition_rep .= '&nbsp;<img src="' 
+						. $this->object->getImagePathWeb() 
+						. $this->object->getThumbPrefix() 
+						. $definition->picture 
+						. '" />';
+				}
+
+				$optionstext[] = $definition_rep. '&nbsp;-&gt;&nbsp;'. $term_rep;
+			}
+			$tpl->setVariable( 'OPTION', implode( '<br />', $optionstext ) );
+			$tpl->setVariable( 'COUNT', $count );
+			$tpl->parseCurrentBlock();
+		}
+
+		return $tpl;
+	}
+	
+	private function isCorrectMatching($pair, $definition, $term)
+	{
+		if( !($pair->points > 0) )
+		{
+			return false;
+		}
+		
+		if( !is_object($term) )
+		{
+			return false;
+		}
+
+		if( $pair->definition->identifier != $definition->identifier )
+		{
+			return false;
+		}
+
+		if( $pair->term->identifier != $term->identifier )
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }

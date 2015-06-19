@@ -12,7 +12,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * indicator (checked/unchecked, set/unset) and an image file
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assAnswerMultipleResponseImage.php 44250 2013-08-18 13:39:51Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 * @see ASS_AnswerSimple
 */

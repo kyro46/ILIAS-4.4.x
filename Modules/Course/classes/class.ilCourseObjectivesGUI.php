@@ -26,7 +26,7 @@
 * class ilobjcourseobjectivesgui
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de> 
-* @version $Id: class.ilCourseObjectivesGUI.php 38401 2012-11-26 15:39:37Z jluetzen $
+* @version $Id$
 * 
 * @extends Object
 */

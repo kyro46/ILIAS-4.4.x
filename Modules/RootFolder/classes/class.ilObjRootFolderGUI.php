@@ -7,7 +7,7 @@
 * Class ilObjRootFolderGUI
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjRootFolderGUI.php 47418 2014-01-22 09:01:31Z akill $Id: class.ilObjRootFolderGUI.php,v 1.13 2006/03/10 09:22:58 akill Exp $
+* @version $Id$Id: class.ilObjRootFolderGUI.php,v 1.13 2006/03/10 09:22:58 akill Exp $
 *
 * @ilCtrl_Calls ilObjRootFolderGUI: ilPermissionGUI, ilContainerPageGUI, ilContainerLinkListGUI, 
 * @ilCtrl_Calls ilObjRootFolderGUI: ilColumnGUI, ilObjectCopyGUI, ilObjStyleSheetGUI
@@ -239,7 +239,7 @@ class ilObjRootFolderGUI extends ilContainerGUI
 			{
 				if ($this->object->getDescription() != "")
 				{
-					$this->tpl->setTitle($this->object->getDescription());
+					$this->tpl->setDescription($this->object->getDescription()); // #13479
 				}
 			}
 		}

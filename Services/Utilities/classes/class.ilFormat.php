@@ -10,7 +10,7 @@
 *
 * @author Sascha Hofmann <shofmann@databay.de>
 * @author Peter Gabriel <pgabriel@databay.de> 
-* @version $Id: class.ilFormat.php 39191 2013-01-11 10:56:39Z mjansen $
+* @version $Id$
 * @deprecated since version 3.10 - 05.03.2009
 *
 */
@@ -538,28 +538,48 @@ class ilFormat
 	}
 
 	/**
-	* converts seconds to string:
-	* Long: 7 days 4 hour(s) ...
-	*
-	* @param	string	datetime
-	* @return	integer	unix timestamp  
-	*/
-	function _secondsToString($seconds, $force_with_seconds = false)
+	 * converts seconds to string:
+	 * Long: 7 days 4 hour(s) ...
+	 *
+	 * @param int $seconds seconds
+	 * @param bool $force_with_seconds
+	 * @param ilLanguage $a_lng
+	 * @return string
+	 */
+	function _secondsToString($seconds, $force_with_seconds = false, $a_lng = null)
 	{
 		global $lng;
 
+		if($a_lng)
+		{
+			$lng = $a_lng;
+		}
+
 		$seconds = $seconds ? $seconds : 0;
+		
+		// #13625
+		if($seconds > 0)
+		{
+			$days = floor($seconds / 86400);
+			$rest = $seconds % 86400;
 
-		global $lng;
+			$hours = floor($rest / 3600);
+			$rest = $rest % 3600;
 
-		$days = floor($seconds / 86400);
-		$rest = $seconds % 86400;
+			$minutes = floor($rest / 60);
+			$seconds = $rest % 60;
+		}
+		else
+		{
+			$days = ceil($seconds / 86400);
+			$rest = $seconds % 86400;
 
-		$hours = floor($rest / 3600);
-		$rest = $rest % 3600;
+			$hours = ceil($rest / 3600);
+			$rest = $rest % 3600;
 
-		$minutes = floor($rest / 60);
-		$seconds = $rest % 60;
+			$minutes = ceil($rest / 60);
+			$seconds = $rest % 60;
+		}
 
 		if($days)
 		{

@@ -12,11 +12,14 @@ include_once 'Modules/Course/classes/class.ilCourseParticipant.php';
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjCourseAccess.php 46349 2013-11-21 11:38:07Z akill $
+* @version $Id$
 *
 */
 class ilObjCourseAccess extends ilObjectAccess
 {
+
+	protected static $using_code = false;
+
 	/**
 	* checks wether a user may invoke a command or not
 	* (this method is called by ilAccessHandler::checkAccess)
@@ -81,6 +84,15 @@ class ilObjCourseAccess extends ilObjectAccess
 					return true;
 				}
 				break;
+
+			case 'join':
+
+				include_once './Modules/Course/classes/class.ilCourseWaitingList.php';
+				if(ilCourseWaitingList::_isOnList($a_user_id, $a_obj_id))
+				{
+					return false;
+				}
+				break;
 		}
 		
 		switch ($a_permission)
@@ -120,12 +132,6 @@ class ilObjCourseAccess extends ilObjectAccess
 				
 			case 'join':				
 				if(!self::_registrationEnabled($a_obj_id))
-				{
-					return false;
-				}
-				
-				include_once './Modules/Course/classes/class.ilCourseWaitingList.php';
-				if(ilCourseWaitingList::_isOnList($a_user_id, $a_obj_id))
 				{
 					return false;
 				}
@@ -206,6 +212,7 @@ class ilObjCourseAccess extends ilObjectAccess
 		// registration codes
 		if(substr($t_arr[2],0,5) == 'rcode' and $ilUser->getId() != ANONYMOUS_USER_ID)
 		{
+			self::$using_code = true;
 			return true;
 		}
 		
@@ -468,6 +475,16 @@ class ilObjCourseAccess extends ilObjectAccess
 		
 		include_once "./Modules/Course/classes/class.ilCourseCertificateAdapter.php";
 		ilCourseCertificateAdapter::_preloadListData($ilUser->getId(), $a_obj_ids); 		
+	}
+
+	/**
+	 * Using Registration code
+	 *
+	 * @return bool
+	 */
+	public static function _usingRegistrationCode()
+	{
+		return self::$using_code;
 	}
 
 }

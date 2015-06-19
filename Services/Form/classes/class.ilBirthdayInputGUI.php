@@ -7,7 +7,7 @@ include_once("./Services/Form/classes/class.ilDateTimeInputGUI.php");
 * This class represents a text property in a property form.
 *
 * @author Alex Killing <alex.killing@gmx.de> 
-* @version $Id: class.ilBirthdayInputGUI.php 39192 2013-01-11 11:36:27Z jluetzen $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilBirthdayInputGUI extends ilDateTimeInputGUI

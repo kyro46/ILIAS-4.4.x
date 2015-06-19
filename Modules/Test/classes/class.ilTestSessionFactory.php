@@ -5,7 +5,7 @@
  * Factory for test session
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilTestSessionFactory.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/Test
  */
@@ -68,7 +68,6 @@ class ilTestSessionFactory
 			
 			self::$testSession->setRefId($this->testOBJ->getRefId());
 			self::$testSession->setTestId($this->testOBJ->getTestId());
-			
 			if($activeId)
 			{
 				self::$testSession->loadFromDb($activeId);

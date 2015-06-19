@@ -7,7 +7,7 @@ include_once './Services/Tracking/classes/class.ilLPStatus.php';
  * LP handler class for plugins 
  * 
  * @author Jörg Lützenkirchen <luetzenkirchen@leifos.com>
- * @version $Id: class.ilLPStatusPlugin.php 44362 2013-08-22 08:36:03Z jluetzen $
+ * @version $Id$
  * @package ServicesTracking
  */
 class ilLPStatusPlugin extends ilLPStatus

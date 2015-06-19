@@ -29,7 +29,7 @@ include_once 'Services/Search/classes/class.ilSearchSettings.php';
 * It depends on the search administration setting which class is instantiated
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilObjectSearchFactory.php 22371 2009-11-17 10:31:47Z smeyer $
+* @version $Id$
 * 
 * @package ServicesSearch
 */

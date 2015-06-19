@@ -11,7 +11,7 @@ include_once('Modules/File/classes/class.ilFSStorageFile.php');
 * Class ilObjFile
 *
 * @author Sascha Hofmann <shofmann@databay.de> 
-* @version $Id: class.ilObjFile.php 47240 2014-01-14 14:39:29Z akill $
+* @version $Id$
 *
 * @ingroup ModulesFile
 */

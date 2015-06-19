@@ -8,7 +8,7 @@
 * init user authentification & error handler, load object type definitions
 *
 * @author Sascha Hofmann <shofmann@databay.de>
-* @version $Id: class.ilias.php 33507 2012-03-04 09:13:56Z akill $
+* @version $Id$
 *
 * @todo review the concept how the object type definition is loaded. We need a concept to
 * edit the definitions via webfrontend in the admin console.

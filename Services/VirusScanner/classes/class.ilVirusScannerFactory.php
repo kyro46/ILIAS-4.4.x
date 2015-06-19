@@ -6,7 +6,7 @@
 * Factory for virus scanner class(es)
 *  
 * @author	Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilVirusScannerFactory.php 33990 2012-03-29 11:24:28Z jluetzen $
+* @version $Id$
 * 
 */
 

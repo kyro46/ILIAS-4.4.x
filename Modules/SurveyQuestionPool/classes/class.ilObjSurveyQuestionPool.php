@@ -25,7 +25,7 @@
 * Class ilObjSurveyQuestionPool
 * 
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilObjSurveyQuestionPool.php 44329 2013-08-21 09:02:02Z jluetzen $
+* @version $Id$
 *
 * @extends ilObject
 * @defgroup ModulesSurveyQuestionPool Modules/SurveyQuestionPool
@@ -1168,6 +1168,26 @@ class ilObjSurveyQuestionPool extends ilObject
 		}
 		ilUtil::sendSuccess($this->lng->txt("spl_paste_success"), true);
 		unset($_SESSION["spl_clipboard"]);
+	}
+	
+	/**
+	* Sets the obligatory states for questions in a survey from the questions form
+	*
+	* @param array $obligatory_questions The questions which should be set obligatory from the questions form, the remaining questions should be setted not obligatory
+	* @access public
+	*/
+	function setObligatoryStates($obligatory_questions)
+	{				
+		global $ilDB;
+		
+		foreach($this->getQuestions() as $question_id)
+		{
+			$status = (int)(in_array($question_id, $obligatory_questions));
+			
+			$ilDB->manipulate("UPDATE svy_question".
+				" SET obligatory = ".$ilDB->quote($status, "integer").
+				" WHERE question_id = ".$ilDB->quote($question_id, "integer"));				
+		}		
 	}
 } // END class.ilSurveyObjQuestionPool
 ?>

@@ -24,7 +24,7 @@
 /*
 * Explorer View for AICC Learning Modules
 *
-* @version $Id: class.ilAICCExplorer.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

@@ -5,7 +5,7 @@
 * Class ilQuestionEditGUI
 *
 * @author		Alex Killing <alex.killing@gmx.de>
-* @version  $Id: class.ilQuestionEditGUI.php 45955 2013-11-04 11:30:47Z mjansen $
+* @version  $Id$
 *
 * @ilCtrl_Calls ilQuestionEditGUI: assMultipleChoiceGUI, assClozeTestGUI, assMatchingQuestionGUI
 * @ilCtrl_Calls ilQuestionEditGUI: assOrderingQuestionGUI, assImagemapQuestionGUI, assJavaAppletGUI

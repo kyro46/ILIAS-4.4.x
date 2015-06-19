@@ -25,7 +25,7 @@
 * header include for ilias setup
 *
 * @author	Sascha Hofmann <shofmann@databay.de>
-* @version	$Id: inc.setup_header.php 34575 2012-05-10 13:53:49Z akill $
+* @version	$Id$
 * @package	ilias-setup
 */
 

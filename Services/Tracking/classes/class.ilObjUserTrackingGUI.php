@@ -8,7 +8,7 @@ include_once "./Services/Object/classes/class.ilObjectGUI.php";
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* @version $Id: class.ilObjUserTrackingGUI.php 46565 2013-12-03 14:53:45Z jluetzen $
+* @version $Id$
 *
 * @extends ilObjectGUI
 * @package ilias-core
@@ -124,11 +124,14 @@ class ilObjUserTrackingGUI extends ilObjectGUI
 			}
 			
 			// session statistics
-			$tabs_gui->addTarget("session_statistics",
-				$this->ctrl->getLinkTargetByClass("ilsessionstatisticsgui",
-												""),
-				"",
-				"ilsessionstatisticsgui");							
+			if (ilObjUserTracking::_enabledSessionStatistics())
+			{
+				$tabs_gui->addTarget("session_statistics",
+					$this->ctrl->getLinkTargetByClass("ilsessionstatisticsgui",
+													""),
+					"",
+					"ilsessionstatisticsgui");			
+			}
 		}
 		
 		if ($rbacsystem->checkAccess("edit_permission",$this->object->getRefId()))
@@ -244,6 +247,14 @@ class ilObjUserTrackingGUI extends ilObjectGUI
 			$objstat->setChecked(true);
 		}
 		$activate->addSubItem($objstat);
+		
+		// session statistics
+		$sessstat = new ilCheckboxInputGUI($this->lng->txt('session_statistics'), 'session_statistics');
+		if($this->object->enabledSessionStatistics())
+		{
+			$sessstat->setChecked(true);
+		}
+		$activate->addSubItem($sessstat);		
 			
 		// Anonymized
 		$user = new ilCheckboxInputGUI($this->lng->txt('trac_anonymized'), 'user_related');
@@ -333,8 +344,8 @@ class ilObjUserTrackingGUI extends ilObjectGUI
 			$this->object->setValidTimeSpan($form->getInput('valid_request'));						
 			// $this->object->setLearningProgressDesktop($form->getInput('lp_desktop'));
 			$this->object->setLearningProgressLearner($form->getInput('lp_learner'));
-			$this->object->setLearningProgressListGUI($form->getInput('lp_list'));
-							
+			$this->object->enableSessionStatistics($form->getInput('session_statistics'));
+			$this->object->setLearningProgressListGUI($form->getInput('lp_list'));							
 			$this->object->updateSettings();
 			
 			ilUtil::sendSuccess($this->lng->txt("msg_obj_modified"), true);

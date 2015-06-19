@@ -15,11 +15,11 @@ include_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version	$Id: class.assJavaAppletGUI.php 44885 2013-09-20 11:28:43Z mbecker $
+ * @version	$Id$
  * 
  * @ingroup ModulesTestQuestionPool
 */
-class assJavaAppletGUI extends assQuestionGUI implements ilGuiQuestionScoringAdjustable
+class assJavaAppletGUI extends assQuestionGUI //implements ilGuiQuestionScoringAdjustable
 {
 	/**
 	 * assJavaAppletGUI constructor

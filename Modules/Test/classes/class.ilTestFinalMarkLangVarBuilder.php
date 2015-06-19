@@ -8,7 +8,7 @@
  *
  * @author	Björn Heyser <bheyser@databay.de>
  *         
- * @version	$Id: class.ilTestFinalMarkLangVarBuilder.php 44218 2013-08-16 08:36:24Z mbecker $
+ * @version	$Id$
  *
  * @ingroup ModulesTest
  */

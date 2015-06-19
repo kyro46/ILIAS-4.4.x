@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/export/qti12/class.assQuestionE
 * assJavaAppletExport is a class for java applet question exports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assJavaAppletExport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assJavaAppletExport extends assQuestionExport

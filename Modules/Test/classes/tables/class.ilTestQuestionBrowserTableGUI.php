@@ -7,7 +7,7 @@ require_once './Services/Table/classes/class.ilTable2GUI.php';
  *
  * @author Helmut Schottmüller <ilias@aurealis.de>
  * 
- * @version $Id: class.ilTestQuestionBrowserTableGUI.php 44085 2013-08-13 07:55:26Z mbecker $
+ * @version $Id$
  *
  * @ingroup ModulesGroup
  */

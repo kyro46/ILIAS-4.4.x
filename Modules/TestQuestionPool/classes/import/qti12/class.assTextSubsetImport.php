@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * assTextSubsetImport is a class for text subset question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assTextSubsetImport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assTextSubsetImport extends assQuestionImport
@@ -164,7 +164,7 @@ class assTextSubsetImport extends assQuestionImport
 		$this->object->setEstimatedWorkingTime($duration["h"], $duration["m"], $duration["s"]);
 		$textrating = $item->getMetadataEntry("textrating");
 		if (strlen($textrating) == 0) $textrating = "ci";
-		$this->object->setTextRating($textgap_rating);
+		$this->object->setTextRating($textrating);
 		$this->object->setCorrectAnswers($item->getMetadataEntry("correctanswers"));
 		$response = current($responses);
 		$counter = 0;

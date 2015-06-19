@@ -25,7 +25,7 @@
 * Class ilObjSurveyAdministration
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilObjSurveyAdministration.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @ingroup ModulesSurvey
 * @extends ilObject

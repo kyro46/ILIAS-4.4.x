@@ -7,7 +7,7 @@ require_once("./Services/FileSystem/classes/class.ilFileData.php");
 * This class handles all operations on files for the exercise object
 *
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFileDataExercise.php 44392 2013-08-22 20:05:28Z akill $
+* @version $Id$
 *
 * @ingroup	ModulesExercise
 */

@@ -5,7 +5,7 @@
 * Administration Explorer
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilAdministrationExplorer.php 46111 2013-11-08 09:14:48Z akill $
+* @version $Id$
 *
 */
 

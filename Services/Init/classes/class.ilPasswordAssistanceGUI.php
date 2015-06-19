@@ -6,7 +6,7 @@
  * or for users for whom no password has been assigned yet.
  * @author  Werner Randelshofer <wrandels@hsw.fhz.ch>
  * @author  Michael Jansen <mjansen@databay.de>
- * @version $Id: class.ilPasswordAssistanceGUI.php 45443 2013-10-14 14:28:19Z mjansen $
+ * @version $Id$
  * @ingroup ServicesInit
  */
 class ilPasswordAssistanceGUI
@@ -451,6 +451,7 @@ class ilPasswordAssistanceGUI
 		if(!$form->checkInput())
 		{
 			$form->setValuesByPost();
+			$this->showAssistanceForm($form);
 			return;
 		}
 

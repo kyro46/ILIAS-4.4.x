@@ -8,7 +8,7 @@ require_once("./Modules/LearningModule/classes/class.ilObjContentObject.php");
 * Class ilObjLearningModule
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjLearningModule.php 29794 2011-07-07 09:36:58Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

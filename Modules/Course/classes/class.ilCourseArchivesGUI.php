@@ -25,7 +25,7 @@
 * Class ilCourseArchivesGUI
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilCourseArchivesGUI.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilCourseArchivesGUI: ilObjectCopyGUI
 * 

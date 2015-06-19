@@ -12,7 +12,7 @@ require_once("./Modules/LearningModule/classes/class.ilLMObject.php");
 * User Interface for Structure Objects Editing
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilStructureObjectGUI.php 45246 2013-10-04 16:26:40Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilStructureObjectGUI: ilConditionHandlerInterface, ilMDEditorGUI
 *

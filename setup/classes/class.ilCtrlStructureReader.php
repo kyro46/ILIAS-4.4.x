@@ -7,7 +7,7 @@
 * Reads call structure of classes into db
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilCtrlStructureReader.php 33412 2012-02-28 20:31:47Z mjansen $
+* @version $Id$
 *
 */
 class ilCtrlStructureReader

@@ -11,7 +11,7 @@ include_once 'Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvance
 * GUI class for personal desktop
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPersonalDesktopGUI.php 45104 2013-09-30 14:15:54Z mjansen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilPersonalDesktopGUI: ilPersonalProfileGUI, ilBookmarkAdministrationGUI
 * @ilCtrl_Calls ilPersonalDesktopGUI: ilObjUserGUI, ilPDNotesGUI, ilLearningProgressGUI

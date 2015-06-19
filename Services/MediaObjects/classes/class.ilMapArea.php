@@ -29,7 +29,7 @@ define("IL_TF_NEW", "New");
 * Map Area of an Image Map, subobject of Media Item
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilMapArea.php 37237 2012-09-28 11:42:38Z akill $
+* @version $Id$
 *
 * @ingroup ServicesMediaObjects
 */

@@ -8,7 +8,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
 * contains all functions to manage mail settings of ILIAS3
 * 
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version	$Id: class.ilObjMail.php 34068 2012-04-06 07:08:36Z mjansen $
+* @version	$Id$
 *
 * @extends	ilObject
 */

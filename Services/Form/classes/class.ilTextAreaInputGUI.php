@@ -84,7 +84,7 @@ class ilTextAreaInputGUI extends ilSubEnabledFormPropertyGUI
 	protected $root_block_element = null;
 	
 	protected $rte_tag_set = array(
-		"mini" => array("strong", "em", "u", "ol", "li", "ul", "blockquote", "a", "p"),
+		"mini" => array("strong", "em", "u", "ol", "li", "ul", "blockquote", "a", "p", "span"), // #13286
 		"standard" => array ("strong", "em", "u", "ol", "li", "ul", "p", "div",
 			"i", "b", "code", "sup", "sub", "pre", "strike", "gap"),
 		"extended" => array (
@@ -468,8 +468,12 @@ class ilTextAreaInputGUI extends ilSubEnabledFormPropertyGUI
 				{					
 					// disable all plugins for mini-tagset
 					if(!array_diff($this->getRteTags(), $this->getRteTagSet("mini")))
-					{
+					{						
 						$rte->removeAllPlugins();
+						
+						// #13603 - "paste from word" is essential
+						$rte->addPlugin("paste"); 
+						
 						// #11980 - p-tag is mandatory but we do not want the icons it comes with
 						$rte->disableButtons(array("anchor", "justifyleft", "justifycenter", 
 							"justifyright", "justifyfull", "formatselect", "removeformat",

@@ -12,7 +12,7 @@ include_once 'Services/Search/classes/class.ilUserFilterGUI.php';
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
 *
-* @version $Id: class.ilLPListOfObjectsGUI.php 44366 2013-08-22 09:15:10Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilLPListOfObjectsGUI: ilUserFilterGUI, ilTrUserObjectsPropsTableGUI, ilTrSummaryTableGUI, ilTrObjectUsersPropsTableGUI, ilTrMatrixTableGUI
 *

@@ -10,7 +10,7 @@ require_once("./Services/MediaObjects/classes/class.ilObjMediaObjectGUI.php");
 * Clipboard for editing
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilEditClipboardGUI.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 * @ilCtrl_Calls ilEditClipboardGUI: ilObjMediaObjectGUI
 *
 * @ingroup ServicesClipboard

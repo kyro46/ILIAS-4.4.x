@@ -30,7 +30,7 @@ include_once "./Modules/SurveyQuestionPool/classes/class.SurveyQuestion.php";
 * for multiple choice survey question types.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.SurveyMultipleChoiceQuestion.php 46245 2013-11-18 13:38:02Z jluetzen $
+* @version	$Id$
 * @extends SurveyQuestion
 * @ingroup ModulesSurveyQuestionPool
 */
@@ -772,7 +772,7 @@ class SurveyMultipleChoiceQuestion extends SurveyQuestion
 		}
 		else
 		{
-			array_push($a_array, $this->lng->txt("skipped"));
+			array_push($a_array, $this->getSkippedValue());
 			for ($index = 0; $index < $this->categories->getCategoryCount(); $index++)
 			{
 				array_push($a_array, "");

@@ -32,7 +32,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMPresentationGUI.php
 * GUI class for aicc learning module presentation
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilAICCPresentationGUI.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

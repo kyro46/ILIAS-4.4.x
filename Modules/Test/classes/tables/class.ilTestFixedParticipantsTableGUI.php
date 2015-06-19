@@ -7,7 +7,7 @@ include_once('./Services/Table/classes/class.ilTable2GUI.php');
 /**
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilTestFixedParticipantsTableGUI.php 44318 2013-08-20 15:16:24Z bheyser $
+* @version $Id$
 *
 * @ingroup ModulesTest
 */
@@ -26,6 +26,7 @@ class ilTestFixedParticipantsTableGUI extends ilTable2GUI
 	 */
 	public function __construct($a_parent_obj, $a_parent_cmd, $testQuestionSetDepenciesBroken, $anonymity, $nrOfDatasets)
 	{
+		$this->setId('tst_fixed_participants_' . $a_parent_obj->object->getRefId());
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 
 		global $lng, $ilCtrl;
@@ -89,7 +90,6 @@ class ilTestFixedParticipantsTableGUI extends ilTable2GUI
 			$this->setDefaultOrderField("access");
 		}
 		$this->setDefaultOrderDirection("asc");
-		$this->setPrefix('chbUser');
 		$this->setSelectAllCheckbox('chbUser');
 		
 		$this->setShowRowsSelector(true);
@@ -129,7 +129,7 @@ class ilTestFixedParticipantsTableGUI extends ilTable2GUI
 		
 		if( $data['active_id'] > 0 && !$this->testQuestionSetDepenciesBroken )
 		{
-			$this->tpl->setCurrentBlock('results');
+			$this->tpl->setCurrentBlock('action_results');
 			$this->tpl->setVariable("RESULTS", $data['result']);
 			$this->tpl->setVariable("RESULTS_TEXT", ilUtil::prepareFormOutput($this->lng->txt('tst_show_results')));
 			$this->tpl->parseCurrentBlock();

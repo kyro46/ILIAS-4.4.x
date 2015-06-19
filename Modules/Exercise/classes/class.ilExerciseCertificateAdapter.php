@@ -27,7 +27,7 @@ include_once "./Services/Certificate/classes/class.ilCertificateAdapter.php";
 * Exercise certificate adapter
 *
 * @author	Jörg Lützenkirchen <luetzenkirchen@leifos.com>
-* @version	$Id: class.ilExerciseCertificateAdapter.php 44095 2013-08-13 09:51:12Z jluetzen $
+* @version	$Id$
 * @ingroup ModulesExercise
 */
 class ilExerciseCertificateAdapter extends ilCertificateAdapter

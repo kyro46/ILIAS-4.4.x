@@ -140,6 +140,50 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 		return true;
 	}
 	
+	public function cloneCollection($a_target_id, $a_copy_id)
+	{	
+		parent::cloneCollection($a_target_id, $a_copy_id);
+		
+		include_once('Services/CopyWizard/classes/class.ilCopyWizardOptions.php');
+		$cwo = ilCopyWizardOptions::_getInstance($a_copy_id);
+		$mappings = $cwo->getMappings();
+		
+		$target_obj_id = ilObject::_lookupObjId($a_target_id);
+		$target_collection = new static($target_obj_id, $this->mode);
+		
+		// clone (active) groupings
+		foreach($this->getGroupedItemsForLPStatus() as $grouping_id => $group)
+		{			
+			$target_item_ids = array();
+			foreach($group["items"] as $item)
+			{
+				if(!isset($mappings[$item]) or !$mappings[$item])
+				{
+					continue;
+				}
+
+				$target_item_ids[] = $mappings[$item];	 	
+			}
+			
+			// grouping - if not only single item left after copy?
+			if($grouping_id && sizeof($target_item_ids) > 1)
+			{
+				// should not be larger than group
+				$num_obligatory = min(sizeof($target_item_ids), $group["num_obligatory"]);
+				
+				$target_collection->createNewGrouping($target_item_ids, $num_obligatory);
+			}
+			else
+			{
+				// #15487 - single items
+				foreach($target_item_ids as $item_id)
+				{
+					$this->addEntry($item_id);
+				}				
+			}
+		}
+	}	
+	
 	
 	//
 	// CRUD
@@ -182,8 +226,12 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 	{
 		global $ilDB;
 		
+		// only active entries are assigned!
 		if(!$this->isAssignedEntry($a_item_id))
 		{
+			// #13278 - because of grouping inactive items may exist
+			$this->deleteEntry($a_item_id);
+			
 			$query = "INSERT INTO ut_lp_collections".
 				" (obj_id, lpmode, item_id, grouping_id, num_obligatory, active)".
 				" VALUES (".$ilDB->quote($this->obj_id , "integer").
@@ -257,7 +305,8 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 		{
 			$query = "UPDATE ut_lp_collections".
 				" SET active = ".$ilDB->quote(0, "integer").
-				" WHERE ".$ilDB->in("grouping_id", $grouping_ids, false, "integer");
+				" WHERE ".$ilDB->in("grouping_id", $grouping_ids, false, "integer").
+				" AND obj_id = ".$ilDB->quote($this->obj_id, "integer");
 			$ilDB->manipulate($query);			
 		}
 	}
@@ -273,12 +322,13 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 		{
 			$query = "UPDATE ut_lp_collections".
 				" SET active = ".$ilDB->quote(1, "integer").
-				" WHERE ".$ilDB->in("grouping_id", $grouping_ids, false, "integer");
+				" WHERE ".$ilDB->in("grouping_id", $grouping_ids, false, "integer").
+				" AND obj_id = ".$ilDB->quote($this->obj_id, "integer");
 			$ilDB->manipulate($query);
 		}
 	}
 
-	public function createNewGrouping(array $a_item_ids)
+	public function createNewGrouping(array $a_item_ids, $a_num_obligatory = 1)
 	{
 		global $ilDB;
 
@@ -312,7 +362,7 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 
 		$query = "UPDATE ut_lp_collections SET".
 			" grouping_id = ".$ilDB->quote($grp_id, "integer").
-			", num_obligatory = ".$ilDB->quote(1, "integer").
+			", num_obligatory = ".$ilDB->quote($a_num_obligatory, "integer").
 			", active = ".$ilDB->quote(1, "integer").
 			" WHERE obj_id = ".$ilDB->quote($this->obj_id, "integer").
 			" AND ".$ilDB->in("item_id", $all_item_ids, false, "integer");
@@ -390,8 +440,9 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 			if(count((array)$grouped_items['items']) > 1)
 			{
 				foreach($grouped_items['items'] as $grouped_item_id)
-				{
-					if($grouped_item_id == $item_id)
+				{					
+					if($grouped_item_id == $item_id ||
+						!is_array($items[$grouped_item_id])) // #15498
 					{
 						continue;
 					}

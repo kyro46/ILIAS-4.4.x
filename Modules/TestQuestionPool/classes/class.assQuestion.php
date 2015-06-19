@@ -13,7 +13,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
  * 
  * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.assQuestion.php 47600 2014-01-29 11:07:59Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
@@ -223,6 +223,11 @@ abstract class assQuestion
 	 * @var array[ilQuestionChangeListener]
 	 */
 	protected $questionChangeListeners = array();
+
+	/**
+	 * @var ilAssQuestionProcessLocker
+	 */
+	protected $processLocker;
 	
 	/**
 	* assQuestion constructor
@@ -274,6 +279,22 @@ abstract class assQuestion
 		$this->outputType = OUTPUT_HTML;
 		$this->arrData = array();
 		$this->setExternalId('');
+	}
+
+	/**
+	 * @param \ilAssQuestionProcessLocker $processLocker
+	 */
+	public function setProcessLocker($processLocker)
+	{
+		$this->processLocker = $processLocker;
+	}
+
+	/**
+	 * @return \ilAssQuestionProcessLocker
+	 */
+	public function getProcessLocker()
+	{
+		return $this->processLocker;
 	}
 
 	/**
@@ -747,7 +768,12 @@ abstract class assQuestion
 					array_push($output, '<a href="' . assQuestion::_getInternalLinkHref($solution["internal_link"]) . '">' . $this->lng->txt("solution_hint") . '</a>');
 					break;
 				case "file":
-					array_push($output, '<a href="' . $this->getSuggestedSolutionPathWeb() . $solution["value"]["name"] . '">' . ((strlen($solution["value"]["filenme"])) ? ilUtil::prepareFormOutput($solution["value"]["filenme"]) : $this->lng->txt("solution_hint")) . '</a>');
+					$possible_texts = array_values(array_filter(array(
+						ilUtil::prepareFormOutput($solution['value']['filename']),
+						ilUtil::prepareFormOutput($solution['value']['name']),
+						$this->lng->txt('tst_show_solution_suggested')
+					)));
+					array_push($output, '<a href="' . $this->getSuggestedSolutionPathWeb() . $solution["value"]["name"] . '">' . $possible_texts[0] . '</a>');
 					break;
 				case "text":
 					array_push($output, $this->prepareTextareaOutput($solution["value"]));
@@ -924,6 +950,8 @@ abstract class assQuestion
 		
 		if( is_null($reached_points) ) $reached_points = 0;
 
+		$this->getProcessLocker()->requestUserQuestionResultUpdateLock();
+		
 		$query = "
 			DELETE FROM		tst_test_result
 			
@@ -949,6 +977,8 @@ abstract class assQuestion
 			'hint_points'		=> array('float', $requestsStatisticData->getRequestsPoints()),
 			'answered'			=> array('integer', $isAnswered)
 		));
+
+		$this->getProcessLocker()->releaseUserQuestionResultUpdateLock();
 		
 		include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
 		
@@ -967,7 +997,7 @@ abstract class assQuestion
 		}
 
 		// update test pass results
-		$this->_updateTestPassResults($active_id, $pass, $obligationsEnabled);
+		$this->_updateTestPassResults($active_id, $pass, $obligationsEnabled, $this->getProcessLocker());
 
 		// Update objective status
 		include_once 'Modules/Course/classes/class.ilCourseObjectiveResult.php';
@@ -990,11 +1020,15 @@ abstract class assQuestion
 			$pass = ilObjTest::_getPass($active_id);
 		}
 		
+		$this->getProcessLocker()->requestPersistWorkingStateLock();
+		
 		$saveStatus = $this->saveWorkingData($active_id, $pass);
 		
 		$this->calculateResultsFromSolution($active_id, $pass, $obligationsEnabled);
 		
 		$this->reworkWorkingData($active_id, $pass, $obligationsEnabled);
+
+		$this->getProcessLocker()->releasePersistWorkingStateLock();
 		
 		return $saveStatus;
 	}
@@ -1022,7 +1056,7 @@ abstract class assQuestion
 	abstract protected function reworkWorkingData($active_id, $pass, $obligationsAnswered);
 
 	/** @TODO Move this to a proper place. */
-	function _updateTestResultCache($active_id)
+	function _updateTestResultCache($active_id, ilAssQuestionProcessLocker $processLocker = null)
 	{
 		global $ilDB;
 
@@ -1058,6 +1092,11 @@ abstract class assQuestion
 		$isPassed = (  $mark["passed"] ? 1 : 0 );
 		$isFailed = ( !$mark["passed"] ? 1 : 0 );
 		
+		if( is_object($processLocker) )
+		{
+			$processLocker->requestUserTestResultUpdateLock();
+		}
+		
 		$query = "
 			DELETE FROM		tst_result_cache
 			WHERE			active_fi = %s
@@ -1081,10 +1120,15 @@ abstract class assQuestion
 			'hint_points'=> array('float', $row['hint_points']),
 			'obligations_answered' => array('integer', $obligationsAnswered)
 		));
+
+		if( is_object($processLocker) )
+		{
+			$processLocker->releaseUserTestResultUpdateLock();
+		}
 	}
 
 	/** @TODO Move this to a proper place. */
-	function _updateTestPassResults($active_id, $pass, $obligationsEnabled = false)
+	function _updateTestPassResults($active_id, $pass, $obligationsEnabled = false, ilAssQuestionProcessLocker $processLocker = null)
 	{
 		global $ilDB;
 		
@@ -1099,7 +1143,7 @@ abstract class assQuestion
 			SELECT		SUM(points) reachedpoints,
 						SUM(hint_count) hint_count,
 						SUM(hint_points) hint_points,
-						COUNT(question_fi) answeredquestions
+						COUNT(DISTINCT(question_fi)) answeredquestions
 			FROM		tst_test_result
 			WHERE		active_fi = %s
 			AND			pass = %s
@@ -1150,7 +1194,12 @@ abstract class assQuestion
 			if( $row['hint_count'] === null ) $row['hint_count'] = 0;
 			if( $row['hint_points'] === null ) $row['hint_points'] = 0;
 
-			$exam_identifier = self::getExamId( $active_id, $pass );
+			$exam_identifier = ilObjTest::buildExamId( $active_id, $pass );
+			
+			if( is_object($processLocker) )
+			{
+				$processLocker->requestUserPassResultUpdateLock();
+			}
 			
 			/*
 			$query = "
@@ -1199,9 +1248,14 @@ abstract class assQuestion
 			    'exam_id'				=> array('text', $exam_identifier)
 			));
 			*/
+
+			if( is_object($processLocker) )
+			{
+				$this->getProcessLocker()->releaseUserPassResultUpdateLock();
+			}
 		}
 		
-		assQuestion::_updateTestResultCache($active_id);
+		assQuestion::_updateTestResultCache($active_id, $processLocker);
 		
 		return array(
 			'active_fi' => $active_id,
@@ -1217,34 +1271,6 @@ abstract class assQuestion
 			'obligations_answered' => $obligations_answered,
 			'exam_id' => $exam_identifier
 		);
-	}
-
-	/**
-	 * @deprecated Use method in ilObjTest.
-	 * @param $active_id
-	 * @param $pass
-	 * @return array
-	 */
-	public function getExamId($active_id, $pass)
-	{
-		/** @TODO Move this to a proper place. */
-		global $ilDB, $ilSetting;
-
-		$exam_id_query  = 'SELECT exam_id FROM tst_pass_result WHERE active_fi = %s AND pass = %s';
-		$exam_id_result = $ilDB->queryF( $exam_id_query, array( 'integer', 'integer' ), array( $active_id, $pass ) );
-		if ($ilDB->numRows( $exam_id_result ) == 1)
-		{
-			$exam_id_row = $ilDB->fetchAssoc( $exam_id_result );
-			
-			if ($exam_id_row['exam_id'] != null)
-			{
-				return $exam_id_row['exam_id'];
-			}
-		}
-
-		$inst_id = $ilSetting->get( 'inst_id', null );
-		$obj_id  = $this->obj_id;
-		return 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
 	}
 
 	/**
@@ -2744,6 +2770,7 @@ abstract class assQuestion
 		$this->syncXHTMLMediaObjectsOfQuestion();
 
 		$this->onSyncWithOriginal($original, $this->getId());
+		$this->syncHints();
 	}
 
 	function createRandomSolution($test_id, $user_id)
@@ -2815,8 +2842,14 @@ abstract class assQuestion
 	 *
 	 * @param integer $question_id The question id
 	 * @return assQuestion The question instance
+	 * @deprecated use assQuestion::_instantiateQuestion() instead.
 	 */
-	public function &_instanciateQuestion($question_id) 
+	public static function _instanciateQuestion($question_id)
+	{
+		return self::_instantiateQuestion($question_id);
+	}
+	
+	public static function _instantiateQuestion($question_id)
 	{
 		global $ilCtrl, $ilDB, $lng;
 		
@@ -3313,7 +3346,42 @@ abstract class assQuestion
 		}
 		return 0;
 	}
-		
+
+	public function syncHints()
+	{
+		global $ilDB;
+
+		// delete hints of the original
+		$ilDB->manipulateF("DELETE FROM qpl_hints WHERE qht_question_fi = %s",
+			array('integer'),
+			array($this->original_id)
+		);
+
+		// get hints of the actual question
+		$result = $ilDB->queryF("SELECT * FROM qpl_hints WHERE qht_question_fi = %s",
+			array('integer'),
+			array($this->getId())
+		);
+
+		// save hints to the original
+		if ($result->numRows())
+		{
+			while ($row = $ilDB->fetchAssoc($result))
+			{
+				$next_id = $ilDB->nextId('qpl_hints');
+				/** @var ilDB $ilDB */
+				$ilDB->insert('qpl_hints', array(
+						'qht_hint_id'     => array('integer', $next_id),
+						'qht_question_fi' => array('integer', $this->original_id),
+						'qht_hint_index'  => array('integer', $row["qht_hint_index"]),
+						'qht_hint_points' => array('integer', $row["qht_hint_points"]),
+						'qht_hint_text'   => array('text', $row["qht_hint_text"]),
+					)
+				);
+			}
+		}
+	}
+	
 	/**
 	* Collects all text in the question which could contain media objects
 	* which were created with the Rich Text Editor
@@ -3576,7 +3644,7 @@ abstract class assQuestion
 	 */
 	public static function instantiateQuestionGUI($a_question_id)
 	{
-		global $ilCtrl, $ilDB, $lng;
+		global $ilCtrl, $ilDB, $lng, $ilUser;
 
 		if (strcmp($a_question_id, "") != 0)
 		{
@@ -3590,6 +3658,15 @@ abstract class assQuestion
 
 			$feedbackObjectClassname = self::getFeedbackClassNameByQuestionType($question_type);
 			$question_gui->object->feedbackOBJ = new $feedbackObjectClassname($question_gui->object, $ilCtrl, $ilDB, $lng);
+
+			$assSettings = new ilSetting('assessment');
+			require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionProcessLockerFactory.php';
+			$processLockerFactory = new ilAssQuestionProcessLockerFactory($assSettings, $ilDB);
+			$processLockerFactory->setQuestionId($question_gui->object->getId());
+			$processLockerFactory->setUserId($ilUser->getId());
+			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
+			$processLockerFactory->setAssessmentLogEnabled(ilObjAssessmentFolder::_enabledAssessmentLogging());
+			$question_gui->object->setProcessLocker($processLockerFactory->getLocker());
 		}
 		else 
 		{
@@ -3790,14 +3867,14 @@ abstract class assQuestion
 	 * @param
 	 * @return
 	 */
-	function formatSAQuestion($a_q)
+	function formatSAQuestion($a_q, $a_latex_start_delimiter = "\[tex\]", $a_latex_end_delimiter = "\[\/tex\]")
 	{
 		include_once("./Services/RTE/classes/class.ilRTE.php");
-		$a_q = nl2br((string) ilRTE::_replaceMediaObjectImageSrc($this->getQuestion(), 0));
+		$a_q = nl2br((string) ilRTE::_replaceMediaObjectImageSrc($a_q, 0));
 		$a_q = str_replace("</li><br />", "</li>", $a_q);
 		$a_q = str_replace("</li><br>", "</li>", $a_q);
 		
-		$a_q = ilUtil::insertLatexImages($a_q);
+		$a_q = ilUtil::insertLatexImages($a_q, $a_latex_start_delimiter, $a_latex_end_delimiter);
 		
 		return $a_q;
 	}
@@ -4130,5 +4207,14 @@ abstract class assQuestion
 		{
 			$listener->notifyQuestionDeleted($this);
 		}
+	}
+
+	/**
+	 * @return ilAssHtmlUserSolutionPurifier
+	 */
+	public function getHtmlUserSolutionPurifier()
+	{
+		require_once 'Services/Html/classes/class.ilHtmlPurifierFactory.php';
+		return ilHtmlPurifierFactory::_getInstanceByType('qpl_usersolution');
 	}
 }

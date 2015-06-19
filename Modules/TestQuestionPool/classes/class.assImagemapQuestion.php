@@ -15,11 +15,11 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoring
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version		$Id: class.assImagemapQuestion.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
-class assImagemapQuestion extends assQuestion implements ilObjQuestionScoringAdjustable, ilObjAnswerScoringAdjustable
+class assImagemapQuestion extends assQuestion //implements ilObjQuestionScoringAdjustable, ilObjAnswerScoringAdjustable
 {
 	const MODE_SINGLE_CHOICE   = 0;
 	const MODE_MULTIPLE_CHOICE = 1;
@@ -715,7 +715,9 @@ class assImagemapQuestion extends assQuestion implements ilObjQuestionScoringAdj
 			include_once "./Modules/Test/classes/class.ilObjTest.php";
 			$pass = ilObjTest::_getPass($active_id);
 		}
-		
+
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
+
 		if($this->is_multiple_choice && strlen($_GET['remImage']))
 		{
 			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s AND value1 = %s",
@@ -733,6 +735,14 @@ class assImagemapQuestion extends assQuestion implements ilObjQuestionScoringAdj
 
 		if (strlen($_GET["selImage"]))
 		{
+			$imageWasSelected = true;
+			
+			$types = array('integer', 'integer', 'integer', 'integer');
+			$values = array($active_id, $this->getId(), $pass,  (int)$_GET['selImage']);
+			$query = 'DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s AND value1 = %s';
+			
+			$ilDB->manipulateF($query, $types, $values);
+			
 			$next_id = $ilDB->nextId('tst_solutions');
 			$affectedRows = $ilDB->insert("tst_solutions", array(
 				"solution_id" => array("integer", $next_id),
@@ -743,17 +753,22 @@ class assImagemapQuestion extends assQuestion implements ilObjQuestionScoringAdj
 				"pass" => array("integer", $pass),
 				"tstamp" => array("integer", time())
 			));
-
-			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
-			if (ilObjAssessmentFolder::_enabledAssessmentLogging())
-			{
-				$this->logAction($this->lng->txtlng("assessment", "log_user_entered_values", ilObjAssessmentFolder::_getLogLanguage()), $active_id, $this->getId());
-			}
 		}
 		else
 		{
-			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
-			if (ilObjAssessmentFolder::_enabledAssessmentLogging())
+			$imageWasSelected = false;
+		}
+
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+
+		require_once 'Modules/Test/classes/class.ilObjAssessmentFolder.php';
+		if( ilObjAssessmentFolder::_enabledAssessmentLogging() )
+		{
+			if( $imageWasSelected )
+			{
+				$this->logAction($this->lng->txtlng("assessment", "log_user_entered_values", ilObjAssessmentFolder::_getLogLanguage()), $active_id, $this->getId());
+			}
+			else
 			{
 				$this->logAction($this->lng->txtlng("assessment", "log_user_not_entered_values", ilObjAssessmentFolder::_getLogLanguage()), $active_id, $this->getId());
 			}
@@ -895,6 +910,7 @@ class assImagemapQuestion extends assQuestion implements ilObjQuestionScoringAdj
 		$result['question'] =  $this->formatSAQuestion($this->getQuestion());
 		$result['nr_of_tries'] = (int) $this->getNrOfTries();
 		$result['shuffle'] = (bool) $this->getShuffle();
+		$result['is_multiple'] = (bool) $this->getIsMultipleChoice();
 		$result['feedback'] = array(
 			"onenotcorrect" => $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), false),
 			"allcorrect" => $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), true)
@@ -902,13 +918,14 @@ class assImagemapQuestion extends assQuestion implements ilObjQuestionScoringAdj
 		$result['image'] = (string) $this->getImagePathWeb() . $this->getImageFilename();
 		
 		$answers = array();
+		$order = 0;
 		foreach ($this->getAnswers() as $key => $answer_obj)
 		{
 			array_push($answers, array(
 				"answertext"       => (string)$answer_obj->getAnswertext(),
 				"points"           => (float)$answer_obj->getPoints(),
 				"points_unchecked" => (float)$answer_obj->getPointsUnchecked(),
-				"order"            => (int)$answer_obj->getOrder(),
+				"order"            => (int)$order,
 				"coords"           => $answer_obj->getCoords(),
 				"state"            => $answer_obj->getState(),
 				"area"             => $answer_obj->getArea(),
@@ -916,6 +933,7 @@ class assImagemapQuestion extends assQuestion implements ilObjQuestionScoringAdj
 					$this->feedbackOBJ->getSpecificAnswerFeedbackExportPresentation($this->getId(), $key), 0
 				)
 			));
+			$order++;
 		}
 		$result['answers'] = $answers;
 

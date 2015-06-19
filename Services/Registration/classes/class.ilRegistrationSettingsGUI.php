@@ -27,7 +27,7 @@ require_once './Services/Registration/classes/class.ilRegistrationSettings.php';
 * Class ilRegistrationSettingsGUI
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de> 
-* @version $Id: class.ilRegistrationSettingsGUI.php 46284 2013-11-19 13:48:11Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilRegistrationSettingsGUI:
 * 

@@ -7,7 +7,7 @@ include_once('./Services/Table/classes/class.ilTable2GUI.php');
 /**
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilAssessmentFolderLogAdministrationTableGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 *
 * @ingroup ModulesTest
 */

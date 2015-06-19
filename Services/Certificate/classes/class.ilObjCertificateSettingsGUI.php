@@ -27,7 +27,7 @@ include_once("./Services/Object/classes/class.ilObjectGUI.php");
 * Certificate Settings.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilObjCertificateSettingsGUI.php 33780 2012-03-20 11:31:16Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjCertificateSettingsGUI: ilPermissionGUI
 * @ilCtrl_IsCalledBy ilObjCertificateSettingsGUI: ilAdministrationGUI

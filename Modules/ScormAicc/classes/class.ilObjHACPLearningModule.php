@@ -27,7 +27,7 @@ require_once "./Modules/ScormAicc/classes/class.ilObjAICCLearningModule.php";
 * Class ilObjAICCLearningModule
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjHACPLearningModule.php 13123 2007-01-29 13:57:16Z smeyer $
+* $Id$
 *
 * @ingroup ModulesScormAicc
 */

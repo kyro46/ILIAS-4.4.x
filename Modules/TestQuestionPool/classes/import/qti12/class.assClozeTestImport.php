@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * assClozeTestImport is a class for cloze question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assClozeTestImport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assClozeTestImport extends assQuestionImport
@@ -219,6 +219,31 @@ class assClozeTestImport extends assQuestionImport
 											}
 										}
 									} 
+								}
+								else
+								{
+									// found a feedback for the identifier
+									if (count($ifb->material))
+									{
+										foreach ($ifb->material as $material)
+										{
+											$feedbacks[$ifb->getIdent()] = $material;
+										}
+									}
+									if ((count($ifb->flow_mat) > 0))
+									{
+										foreach ($ifb->flow_mat as $fmat)
+										{
+											if (count($fmat->material))
+											{
+												foreach ($fmat->material as $material)
+												{
+													$feedbacks[$ifb->getIdent()] = $material;
+												}
+											}
+										}
+									}
+									
 								}
 							}
 						}

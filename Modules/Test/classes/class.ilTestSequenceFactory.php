@@ -5,7 +5,7 @@
  * Factory for test sequence
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilTestSequenceFactory.php 46198 2013-11-13 13:05:29Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/Test
  */

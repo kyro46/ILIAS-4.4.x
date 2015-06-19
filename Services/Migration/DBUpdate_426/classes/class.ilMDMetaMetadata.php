@@ -26,7 +26,7 @@
 * Meta Data class (element meta_data)
 *
 * @package ilias-core
-* @version $Id: class.ilMDMetaMetadata.php 15697 2008-01-08 20:04:33Z hschottm $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

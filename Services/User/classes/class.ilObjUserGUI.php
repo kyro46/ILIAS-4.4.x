@@ -9,7 +9,7 @@ include_once('./Services/Calendar/classes/class.ilDatePresentation.php');
 *
 * @author Stefan Meyer <meyer@leifos.com>
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: class.ilObjUserGUI.php 47991 2014-02-18 08:37:47Z mjansen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjUserGUI: ilLearningProgressGUI, ilObjectOwnershipManagementGUI
 *

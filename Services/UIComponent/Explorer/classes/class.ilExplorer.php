@@ -9,7 +9,7 @@ define("IL_FM_NEGATIVE", 2);
 * class for explorer view in admin frame
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilExplorer.php 46297 2013-11-19 17:05:37Z akill $
+* @version $Id$
 *
 */
 

@@ -5,7 +5,7 @@
 * registration form for new users
 *
 * @author Sascha Hofmann <shofmann@databay.de>
-* @version $Id: register.php 33447 2012-03-01 14:00:01Z jluetzen $
+* @version $Id$
 *
 * @package ilias-core
 */

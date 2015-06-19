@@ -27,7 +27,7 @@
 * always instantiate this class first to set/get single meta data elements
 *
 * @package ilias-core
-* @version $Id: class.ilMD.php 19238 2009-03-03 14:31:01Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

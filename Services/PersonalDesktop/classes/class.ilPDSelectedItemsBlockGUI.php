@@ -34,6 +34,7 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 		parent::ilBlockGUI();
 
 		$lng->loadLanguageModule('pd');
+		$lng->loadLanguageModule('cntr'); // #14369
 		
 		//$this->setImage(ilUtil::getImagePath("icon_bm_s.png"));		
 		$this->setEnableNumInfo(false);
@@ -426,24 +427,29 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 		foreach($items as $key => $obj_id)
 		{
 			$item_references = ilObject::_getAllReferences($obj_id);
-			if(is_array($item_references) && count($item_references))
+			foreach($item_references as $ref_id)
 			{
-				foreach($item_references as $ref_id)
+				if($tree->isInTree($ref_id))
 				{
 					$title = $ilObjDataCache->lookupTitle($obj_id);
-					$type = $ilObjDataCache->lookupType($obj_id);
-					
-					$references[$title.$ref_id] =
-						array('ref_id' => $ref_id,
-							  'obj_id' => $obj_id, 
-							  'type' => $type,
-							  'title' => $title,
-							  'description' => $ilObjDataCache->lookupDescription($obj_id),
-							  'parent_ref' => $tree->getParentId($ref_id));
-				}	
-			}		
+					$type  = $ilObjDataCache->lookupType($obj_id);
+
+					$parent_ref_id = $tree->getParentId($ref_id);
+					$par_left      = $tree->getLeftValue($parent_ref_id);
+					$par_left      = sprintf("%010d", $par_left);
+
+					$references[$par_left . $title . $ref_id] = 	array(
+						'ref_id'      => $ref_id,
+						'obj_id'      => $obj_id,
+						'type'        => $type,
+						'title'       => $title,
+						'description' => $ilObjDataCache->lookupDescription($obj_id),
+						'parent_ref'  => $parent_ref_id
+					);
+				}
+			}
 		}
-		ksort($references);		
+		ksort($references);
 		return is_array($references) ? $references : array();
 	}
 	
@@ -483,8 +489,6 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 					{
 						continue;
 					}					
-					
-					ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);							
 										
 					// notes, comment currently do not work properly
 					$item_list_gui->enableNotes(false);
@@ -523,7 +527,22 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 				$ilBench->start("ilPersonalDesktopGUI", "getListHTML");
 				
 				if (is_object($item_list_gui))
-				{
+				{					
+					ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);												
+					
+					// #15232
+					if($this->manage)
+					{
+						if(!$rbacsystem->checkAccess("leave", $item["ref_id"]))
+						{
+							$item_list_gui->enableCheckbox(false);
+						}
+						else
+						{
+							$item_list_gui->enableCheckbox(true);
+						}
+					}
+					
 					$html = $item_list_gui->getListItemHTML($item["ref_id"],
 					$item["obj_id"], $item["title"], $item["description"]);
 					$ilBench->stop("ilPersonalDesktopGUI", "getListHTML");
@@ -661,8 +680,6 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 						$full_class = "ilObj".$class."ListGUI";
 						include_once($location."/class.".$full_class.".php");
 						$item_list_gui = new $full_class();
-											
-						ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);							
 						
 						// notes, comment currently do not work properly
 						$item_list_gui->enableNotes(false);
@@ -704,6 +721,21 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 					}
 					// render item row
 					$ilBench->start("ilPersonalDesktopGUI", "getListHTML");
+															
+					ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);							
+						
+					// #15232
+					if($this->manage)
+					{
+						if(!$rbacsystem->checkAccess("leave", $item["ref_id"]))
+						{
+							$item_list_gui->enableCheckbox(false);
+						}
+						else
+						{
+							$item_list_gui->enableCheckbox(true);
+						}
+					}
 					
 					$html = $item_list_gui->getListItemHTML($item["ref_id"],
 					$item["obj_id"], $item["title"], $item["description"]);
@@ -906,8 +938,6 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 						$full_class = "ilObj".$class."ListGUI";
 						include_once($location."/class.".$full_class.".php");
 						$item_list_gui = new $full_class();
-												
-						ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);							
 						
 						// notes, comment currently do not work properly
 						$item_list_gui->enableNotes(false);
@@ -942,6 +972,8 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 					}
 					// render item row
 					$ilBench->start("ilPersonalDesktopGUI", "getListHTML");
+																
+					ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);													
 					
 					$html = $item_list_gui->getListItemHTML($item["ref_id"],
 					$item["obj_id"], $item["title"], $item["description"]);
@@ -1039,8 +1071,6 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 					{
 						continue;
 					}
-										
-					ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);							
 					
 					// notes, comment currently do not work properly
 					$item_list_gui->enableNotes(false);
@@ -1068,7 +1098,10 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 				}
 				// render item row
 				$ilBench->start("ilPersonalDesktopGUI", "getListHTML");
-		$item_list_gui->setContainerObject($this);
+													
+				ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);							
+					
+				$item_list_gui->setContainerObject($this);
 				$html = $item_list_gui->getListItemHTML($item["ref_id"],
 				$item["obj_id"], $item["title"], $item["description"]);
 				$ilBench->stop("ilPersonalDesktopGUI", "getListHTML");

@@ -11,7 +11,7 @@ include_once './Services/Administration/interfaces/interface.ilAdministrationCom
 * Base class for all search gui classes. Offers functionallities like set Locator set Header ...
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilSearchBaseGUI.php 47313 2014-01-16 14:20:59Z akill $
+* @version $Id$
 * 
 * @package ilias-search
 *

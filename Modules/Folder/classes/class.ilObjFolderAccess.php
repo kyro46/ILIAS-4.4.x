@@ -9,7 +9,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author 	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjFolderAccess.php 37316 2012-10-03 10:04:36Z akill $
+* @version $Id$
 *
 */
 class ilObjFolderAccess extends ilObjectAccess

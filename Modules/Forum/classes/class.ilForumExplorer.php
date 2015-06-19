@@ -11,7 +11,7 @@ include_once 'Services/JSON/classes/class.ilJsonUtil.php';
  * @author  Stefan Meyer <meyer@leifos.com>
  * @author  Nadia Ahmad <nahmad@databay.de>
  * @author  Andreas Kordosz <akordosz@databay.de>
- * @version $Id: class.ilForumExplorer.php 38625 2012-12-03 15:18:59Z mjansen $
+ * @version $Id$
  * @ingroup ModulesForum
  */
 class ilForumExplorer

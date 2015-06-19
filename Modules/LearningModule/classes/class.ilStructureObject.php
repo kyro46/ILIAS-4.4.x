@@ -10,7 +10,7 @@ require_once("./Modules/LearningModule/classes/class.ilLMObject.php");
 * Handles StructureObjects of ILIAS Learning Modules (see ILIAS DTD)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilStructureObject.php 48272 2014-03-03 13:40:13Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

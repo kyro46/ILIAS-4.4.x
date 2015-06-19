@@ -1,6 +1,6 @@
 <!-- ilias_user.dtd for ILIAS mail import -->
 <!-- For comments refer to our mailing list: xml-ilias@uni-koeln.de -->
-<!-- $Id: ilias_group_0_1.dtd 13543 2007-03-29 13:14:46Z rkuester $ -->
+<!-- $Id$ -->
 
 <!-- GROUP -->
 <!-- Added registration as optional due to BC to ILIAS 2 export -->

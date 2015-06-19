@@ -15,7 +15,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoring
  * @author	Björn Heyser <bheyser@databay.de>
  * @author	Maximilian Becker <mbecker@databay.de>
  *         
- * @version		$Id: class.assOrderingQuestion.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
@@ -849,6 +849,8 @@ class assOrderingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 				$pass = ilObjTest::_getPass($active_id);
 			}
 
+			$this->getProcessLocker()->requestUserSolutionUpdateLock();
+
 			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
 				array('integer','integer','integer'),
 				array($active_id, $this->getId(), $pass)
@@ -946,6 +948,8 @@ class assOrderingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 					}
 				}
 			}
+
+			$this->getProcessLocker()->releaseUserSolutionUpdateLock();
 		}
 		if ($entered_values)
 		{
@@ -1008,7 +1012,8 @@ class assOrderingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 						   array(
 							   'answer_id'      => array( 'integer', $next_id ),
 							   'question_fi'    => array( 'integer', $this->getId() ),
-							   'answertext'     => array( 'text', ilRTE::_replaceMediaObjectImageSrc( $answer_obj->getAnswertext(), 0 ) ),
+//							   'answertext'     => array( 'text', ilRTE::_replaceMediaObjectImageSrc( $answer_obj->getAnswertext(), 0 ) ),
+							   'answertext'     => array( 'text', $answer_obj->getAnswertext()),
 							   'solution_order' => array( 'integer', $key ),
 							   'random_id'      => array( 'integer', $answer_obj->getRandomID() ),
 							   'tstamp'         => array( 'integer', time() ),

@@ -12,11 +12,11 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjQuestionScori
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version		$Id: class.assFlashQuestion.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
-class assFlashQuestion extends assQuestion implements ilObjQuestionScoringAdjustable
+class assFlashQuestion extends assQuestion //implements ilObjQuestionScoringAdjustable
 {
 	private $width;
 	private $height;
@@ -477,6 +477,10 @@ class assFlashQuestion extends assQuestion implements ilObjQuestionScoringAdjust
 	public function saveWorkingData($active_id, $pass = NULL)
 	{
 		// nothing to save!
+
+		//$this->getProcessLocker()->requestUserSolutionUpdateLock();
+		// store in tst_solutions
+		//$this->getProcessLocker()->releaseUserSolutionUpdateLock();
 		
 		return true;
 	}

@@ -26,7 +26,7 @@
 * Adapter class for communication between ilias and ilRPCServer
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilLuceneRPCAdapter.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 *
 * @package ilias
 */

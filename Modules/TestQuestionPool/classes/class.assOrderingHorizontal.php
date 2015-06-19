@@ -12,7 +12,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjQuestionScori
  * @author	Björn Heyser <bheyser@databay.de>
  * @author	Maximilian Becker <mbecker@databay.de>
  *          
- * @version	 $Id: class.assOrderingHorizontal.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version	 $Id$
  * 
  * @ingroup	ModulesTestQuestionPool
  */
@@ -358,6 +358,8 @@ class assOrderingHorizontal extends assQuestion implements ilObjQuestionScoringA
 			$pass = ilObjTest::_getPass($active_id);
 		}
 
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
+		
 		$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
 			array('integer','integer','integer'),
 			array($active_id, $this->getId(), $pass)
@@ -378,6 +380,9 @@ class assOrderingHorizontal extends assQuestion implements ilObjQuestionScoringA
 			));
 			$entered_values = true;
 		}
+
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+		
 		if ($entered_values)
 		{
 			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");

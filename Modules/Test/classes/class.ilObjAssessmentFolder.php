@@ -2,6 +2,7 @@
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 require_once "./Services/Object/classes/class.ilObject.php";
+require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionProcessLocker.php';
 
 /**
  * Class ilObjAssessmentFolder
@@ -9,7 +10,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
  * @author	Helmut Schottmüller <hschottm@gmx.de>
  * @author	Björn Heyser <bheyser@databay.de>
  * 
- * @version	$Id: class.ilObjAssessmentFolder.php 44747 2013-09-12 15:42:42Z mjansen $
+ * @version	$Id$
  * 
  * @ingroup ModulesTest
  */
@@ -17,7 +18,11 @@ class ilObjAssessmentFolder extends ilObject
 {
 	const ADDITIONAL_QUESTION_CONTENT_EDITING_MODE_PAGE_OBJECT_DISABLED = 0;
 	const ADDITIONAL_QUESTION_CONTENT_EDITING_MODE_PAGE_OBJECT_ENABLED = 1;
-	
+
+	const ASS_PROC_LOCK_MODE_NONE = 'none';
+	const ASS_PROC_LOCK_MODE_FILE = 'file';
+	const ASS_PROC_LOCK_MODE_DB = 'db';
+
 	var $setting;
 	
 	/**
@@ -588,5 +593,20 @@ class ilObjAssessmentFolder extends ilObject
 		);
 		
 		return $isPageEditorEnabled;
+	}
+	
+	public function getAssessmentProcessLockMode()
+	{
+		return $this->setting->get('ass_process_lock_mode', self::ASS_PROC_LOCK_MODE_NONE);
+	}
+
+	public function setAssessmentProcessLockMode($lockMode)
+	{
+		$this->setting->set('ass_process_lock_mode', $lockMode);
+	}
+	
+	public static function getValidAssessmentProcessLockModes()
+	{
+		return array(self::ASS_PROC_LOCK_MODE_NONE, self::ASS_PROC_LOCK_MODE_FILE, self::ASS_PROC_LOCK_MODE_DB);
 	}
 }

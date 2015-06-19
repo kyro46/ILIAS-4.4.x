@@ -9,7 +9,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
 *
 * @author 		Alex Killing <alex.killing@gmx.de>
 * @author		Stefan Born <stefan.born@phzh.ch> 
-* $Id: class.ilObjFileListGUI.php 46327 2013-11-20 12:21:58Z jluetzen $
+* $Id$
 *
 * @ingroup ModulesFile
 */

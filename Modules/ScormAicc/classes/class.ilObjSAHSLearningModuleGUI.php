@@ -8,7 +8,7 @@ require_once("./Services/FileSystem/classes/class.ilFileSystemGUI.php");
 * SCORM/AICC/HACP Learning Modules
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjSAHSLearningModuleGUI.php 49368 2014-04-11 08:55:45Z jluetzen $
+* $Id$
 *
 * @ilCtrl_Calls ilObjSAHSLearningModuleGUI: ilFileSystemGUI, ilMDEditorGUI, ilPermissionGUI, ilInfoScreenGUI, ilLearningProgressGUI
 * @ilCtrl_Calls ilObjSAHSLearningModuleGUI: ilLicenseGUI, ilCommonActionDispatcherGUI

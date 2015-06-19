@@ -7,7 +7,7 @@
 * @author Nadia Ahmad <nahmad@databay.de> 
 * @author Stefan Meyer <meyer@leifos.com> 
 * @author Jens Conze <jc@databay.de> 
-* @version $Id: class.ilObjPaymentSettingsGUI.php 43794 2013-07-31 10:12:07Z akill $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjPaymentSettingsGUI: ilPermissionGUI, ilShopTopicsGUI, ilShopPageGUI, ilRepositorySearchGUI
 * 
@@ -2268,9 +2268,10 @@ class ilObjPaymentSettingsGUI extends ilObjectGUI
 	*/
 	public function getTabs($tabs_gui)
 	{
-		global $rbacsystem;
+		global $rbacsystem, $ilHelp;
 
 		$tabs_gui->clearTargets();
+		$ilHelp->setScreenIdComponent("pays");
 		if ($rbacsystem->checkAccess('visible,read',$this->object->getRefId()))
 		{
 			// Settings
@@ -3743,8 +3744,8 @@ class ilObjPaymentSettingsGUI extends ilObjectGUI
 		
 		$standard_prices = array();
 		$extension_prices = array();
-		$standard_prices .= $price_obj->getPrices();
-		$extension_prices .= $price_obj->getExtensionPrices();
+		$standard_prices = $price_obj->getPrices();
+		$extension_prices = $price_obj->getExtensionPrices();
 
 		$prices = array_merge($standard_prices, $extension_prices );
 

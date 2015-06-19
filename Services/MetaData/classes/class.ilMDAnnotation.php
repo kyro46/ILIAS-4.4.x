@@ -26,7 +26,7 @@
 * Meta Data class (element annotation)
 *
 * @package ilias-core
-* @version $Id: class.ilMDAnnotation.php 19813 2009-04-28 15:44:59Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

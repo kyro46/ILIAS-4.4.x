@@ -6,7 +6,7 @@
 * This class represents a block method of a block.
 *
 * @author Alex Killing <alex.killing@gmx.de> 
-* @version $Id: class.ilBlockGUI.php 41738 2013-04-24 11:41:26Z jluetzen $
+* @version $Id$
 *
 */
 abstract class ilBlockGUI

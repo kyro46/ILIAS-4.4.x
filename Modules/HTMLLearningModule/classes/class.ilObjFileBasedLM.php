@@ -13,7 +13,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* $Id: class.ilObjFileBasedLM.php 35102 2012-06-18 10:02:11Z akill $
+* $Id$
 *
 * @ingroup ModulesHTMLLearningModule
 */

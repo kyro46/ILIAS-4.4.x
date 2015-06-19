@@ -26,7 +26,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMTree.php");
 /**
 * AICC Object Tree
 *
-* @version $Id: class.ilAICCTree.php 12711 2006-12-01 15:24:41Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

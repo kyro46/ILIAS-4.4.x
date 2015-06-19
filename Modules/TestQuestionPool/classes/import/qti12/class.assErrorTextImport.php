@@ -7,7 +7,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * Class for error text question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assErrorTextImport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assErrorTextImport extends assQuestionImport

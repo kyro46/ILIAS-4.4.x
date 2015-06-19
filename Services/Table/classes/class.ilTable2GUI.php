@@ -1950,6 +1950,10 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 				$item->writeToSession();
 			}
 		}
+		
+		// #13209
+		unset($_REQUEST["tbltplcrt"]);
+		unset($_REQUEST["tbltpldel"]);	
 	}
 
 	/**
@@ -1978,6 +1982,10 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 				$item->clearFromSession();
 			}
 		}
+		
+		// #13209
+		unset($_REQUEST["tbltplcrt"]);
+		unset($_REQUEST["tbltpldel"]);	
 	}
 
 	/**
@@ -2899,7 +2907,7 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 	{
 		global $ilUser;
 		
-		$a_name = ilUtil::stripSlashes($a_name);
+		$a_name = ilUtil::prepareFormOutput($a_name, true);
 		
 		if(trim($a_name) && $this->getContext() != "" && is_object($ilUser) && $ilUser->getId() != ANONYMOUS_USER_ID)
 		{
@@ -2927,7 +2935,7 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 	{
 		global $ilUser;
 		
-		$a_name = ilUtil::stripSlashes($a_name);
+		$a_name = ilUtil::prepareFormOutput($a_name, true);
 
 		if(trim($a_name) && $this->getContext() != "" && is_object($ilUser) && $ilUser->getId() != ANONYMOUS_USER_ID)
 		{
@@ -3045,11 +3053,19 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 					
 					ob_start();
 					$this->fillMetaExcel($worksheet, $row);
-					$this->fillHeaderExcel($worksheet, $row);
-					foreach($this->row_data as $set)
+					
+					// #14142
+					$pre = $row;
+					$this->fillHeaderExcel($worksheet, $row); 
+					if($pre == $row)
 					{
-						$row++;
+						$row++; 
+					}									
+					
+					foreach($this->row_data as $set)
+					{						
 						$this->fillRowExcel($worksheet, $row, $set);
+						$row++;
 					}
 					ob_end_clean();
 

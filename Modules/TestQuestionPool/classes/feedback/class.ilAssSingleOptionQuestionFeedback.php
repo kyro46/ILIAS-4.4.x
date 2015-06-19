@@ -8,7 +8,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssQuestionFeedb
  * with single answer options (numeric, essey, ...)
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssSingleOptionQuestionFeedback.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  * 

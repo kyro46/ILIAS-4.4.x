@@ -5,7 +5,7 @@
 * Explorer View for Learning Modules
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMExplorer.php 45272 2013-10-07 15:25:03Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

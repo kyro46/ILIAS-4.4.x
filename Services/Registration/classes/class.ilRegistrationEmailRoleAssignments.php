@@ -25,7 +25,7 @@
 * Class class.ilregistrationEmailRoleAssignments
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilRegistrationEmailRoleAssignments.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 * 
 * @ingroup ServicesRegistration
 */

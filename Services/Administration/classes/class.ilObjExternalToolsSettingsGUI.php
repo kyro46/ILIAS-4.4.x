@@ -9,7 +9,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * Class ilObjExternalToolsSettingsGUI
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de> 
-* @version $Id: class.ilObjExternalToolsSettingsGUI.php 46432 2013-11-27 09:46:37Z mjansen $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjExternalToolsSettingsGUI: ilPermissionGUI
 * 

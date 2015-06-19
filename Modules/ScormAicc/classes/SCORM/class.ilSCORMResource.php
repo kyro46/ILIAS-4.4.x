@@ -29,7 +29,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMResourceDependency.
 * SCORM Resource
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMResource.php 21316 2009-08-27 13:03:07Z mjansen $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssSingleOptionQ
  * feedback class for assTextSubset questions
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssTextSubsetFeedback.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

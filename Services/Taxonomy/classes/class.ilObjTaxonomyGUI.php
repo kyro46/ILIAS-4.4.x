@@ -367,7 +367,10 @@ die("ilObjTaxonomyGUI::getTreeHTML is deprecated.");
 	 */
 	function createTaxNode()
 	{
-		global $tpl;
+		global $tpl, $ilHelp;
+
+		$this->setTabs("list_items");
+		$ilHelp->setSubScreenId("create_node");
 		
 		$this->initTaxNodeForm("create");
 		$tpl->setContent($this->form->getHTML());
@@ -452,6 +455,7 @@ die("ilObjTaxonomyGUI::getTreeHTML is deprecated.");
 			{
 				$order_nr = ilTaxonomyNode::getNextOrderNr($tax->getId(), (int) $_GET["tax_node"]);
 			}
+	//echo $order_nr; exit;
 			$node->setOrderNr($order_nr);
 			$node->setTaxonomyId($tax->getId());
 			$node->create();
@@ -509,12 +513,15 @@ die("ilObjTaxonomyGUI::getTreeHTML is deprecated.");
 	 */
 	function deleteItems()
 	{
-		global $lng, $tpl, $ilCtrl, $ilTabs;
+		global $lng, $tpl, $ilCtrl, $ilTabs, $ilHelp;
 
 		if(!isset($_POST["id"]))
 		{
 			$this->ilias->raiseError($this->lng->txt("no_checkbox"),$this->ilias->error_obj->MESSAGE);
 		}
+
+		$this->setTabs("list_items");
+		$ilHelp->setSubScreenId("del_items");
 
 //		$ilTabs->clearTargets();
 		
@@ -585,12 +592,13 @@ die("ilObjTaxonomyGUI::getTreeHTML is deprecated.");
 		include_once("./Services/Taxonomy/classes/class.ilTaxonomyNode.php");
 		if (is_array($_POST["order"]))
 		{
-			asort($_POST["order"]);
-			$cnt = 10;
+//			asort($_POST["order"]);
+//			$cnt = 10;
 			foreach ($_POST["order"] as $k => $v)
 			{
-				ilTaxonomyNode::writeOrderNr(ilUtil::stripSlashes($k), $cnt);
-				$cnt+= 10;
+				ilTaxonomyNode::writeOrderNr(ilUtil::stripSlashes($k), $v);
+				ilTaxonomyNode::fixOrderNumbers($this->getCurrentTaxonomyId(), (int) $_GET["tax_node"]);
+//				$cnt+= 10;
 			}
 		}
 		
@@ -614,8 +622,11 @@ die("ilObjTaxonomyGUI::getTreeHTML is deprecated.");
 	 */
 	function moveItems()
 	{
-		global $tpl, $ilCtrl, $lng, $ilToolbar;
-		
+		global $tpl, $ilCtrl, $lng, $ilToolbar, $ilHelp;
+
+		$this->setTabs("list_items");
+		$ilHelp->setSubScreenId("move_items");
+
 		$ilToolbar->addButton($lng->txt("cancel"),
 			$ilCtrl->getLinkTarget($this, "listNodes"));
 		
@@ -758,10 +769,12 @@ die("ilObjTaxonomyGUI::getTreeHTML is deprecated.");
 	 */
 	function setTabs($a_id)
 	{
-		global $ilTabs, $ilCtrl, $tpl, $lng;
+		global $ilTabs, $ilCtrl, $tpl, $lng, $ilHelp;
 		
 		$ilTabs->clearTargets();
-		
+
+		$ilHelp->setScreenIdComponent("tax");
+
 		$tpl->setTitle(ilObject::_lookupTitle($this->getCurrentTaxonomyId()));
 		$tpl->setTitleIcon(ilUtil::getImagePath("icon_tax_b.png"));
 		
@@ -915,17 +928,21 @@ die("ilObjTaxonomyGUI::getTreeHTML is deprecated.");
 		if (is_array($_POST["order"]))
 		{
 			$order = $_POST["order"];
-			asort($order, SORT_NUMERIC);
-			$cnt = 10;
+			//asort($order, SORT_NUMERIC);
+			//$cnt = 10;
 			$tax_node = (int) $_GET["tax_node"];
 			foreach ($order as $a_item_id => $ord_nr)
 			{
 				$tax_ass = new ilTaxNodeAssignment($this->assigned_item_comp_id,
 					$this->assigned_item_obj_id,
 					$this->assigned_item_type, $this->getCurrentTaxonomyId());
-				$tax_ass->setOrderNr($tax_node, $a_item_id, $cnt);				
-				$cnt+= 10;
+				$tax_ass->setOrderNr($tax_node, $a_item_id, $ord_nr);
+				//$cnt+= 10;
 			}
+			$tax_ass = new ilTaxNodeAssignment($this->assigned_item_comp_id,
+				$this->assigned_item_obj_id,
+				$this->assigned_item_type, $this->getCurrentTaxonomyId());
+			$tax_ass->fixOrderNr($tax_node);
 			ilUtil::sendSuccess($lng->txt("msg_obj_modified"), true);
 		}
 		$ilCtrl->redirect($this, "listAssignedItems");

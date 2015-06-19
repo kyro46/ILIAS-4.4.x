@@ -8,7 +8,7 @@ require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionHintTracking.p
  * GUI class for management/output of hint requests during test session
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssQuestionHintRequestGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  * 
@@ -244,8 +244,6 @@ class ilAssQuestionHintRequestGUI extends ilAssQuestionHintAbstractGUI
 				$nextRequestableHint, $this->questionOBJ->getId(),
 				$this->testSession->getActiveId(), $this->testSession->getPass()
 		);
-		
-		$this->testOutputGUI->saveQuestionSolution();
 		
 		$redirectTarget = $this->getHintPresentationLinkTarget($nextRequestableHint->getId(), false);
 		

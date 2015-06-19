@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssMultiOptionQu
  * feedback class for assOrderingQuestion questions
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssOrderingQuestionFeedback.php 47503 2014-01-24 14:56:50Z bheyser $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

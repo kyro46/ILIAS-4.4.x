@@ -29,7 +29,7 @@ require_once("./Modules/LearningModule/classes/class.ilBibItem.php");
 * GUI class for BibItems
 *
 * @author Jens Conze <jc@databay.de>
-* @version $Id: class.ilBibItemGUI.php 33513 2012-03-04 16:43:19Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

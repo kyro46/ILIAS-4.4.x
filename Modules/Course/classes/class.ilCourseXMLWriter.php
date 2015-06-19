@@ -34,7 +34,7 @@ include_once "./Services/Xml/classes/class.ilXmlWriter.php";
 * of the xml document.
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilCourseXMLWriter.php 34988 2012-06-05 13:24:49Z jluetzen $
+* @version $Id$
 */
 class ilCourseXMLWriter extends ilXmlWriter
 {
@@ -299,7 +299,8 @@ class ilCourseXMLWriter extends ilXmlWriter
 			$attr['registrationType'] = 'Password';
 		}
 
-		$attr['maxMembers'] = $this->course_obj->getSubscriptionMaxMembers();
+		$attr['maxMembers'] = $this->course_obj->isSubscriptionMembershipLimited() ?
+			$this->course_obj->getSubscriptionMaxMembers() : 0;
 		$attr['notification'] = $this->course_obj->getSubscriptionNotify() ? 'Yes' : 'No';
 		$attr['waitingList'] = $this->course_obj->enabledWaitingList() ? 'Yes' : 'No';
 

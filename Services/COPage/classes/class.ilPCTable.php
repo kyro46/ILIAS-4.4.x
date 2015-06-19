@@ -10,7 +10,7 @@ require_once("./Services/COPage/classes/class.ilPageContent.php");
 * Table content object (see ILIAS DTD)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCTable.php 49011 2014-03-26 13:28:15Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

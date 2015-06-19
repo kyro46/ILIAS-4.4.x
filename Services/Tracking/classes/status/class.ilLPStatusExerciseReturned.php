@@ -24,7 +24,7 @@
 /**
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilLPStatusExerciseReturned.php 44362 2013-08-22 08:36:03Z jluetzen $
+* @version $Id$
 *
 * @package ilias-tracking
 *

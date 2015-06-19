@@ -8,7 +8,7 @@ include_once("./Services/Export/classes/class.ilXmlImporter.php");
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilCategoryImporter.php 35376 2012-07-04 12:59:59Z smeyer $
+* @version $Id$
 *
 * @ingroup ModulesCategory
 */

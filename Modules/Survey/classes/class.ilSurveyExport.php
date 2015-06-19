@@ -25,7 +25,7 @@
 * Export class for surveys
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilSurveyExport.php 43723 2013-07-29 11:19:02Z jluetzen $
+* @version $Id$
 * @ingroup ModulesSurvey
 */
 class ilSurveyExport
@@ -155,8 +155,8 @@ class ilSurveyExport
 			$mob_obj =& new ilObjMediaObject($mob);
 			$mob_obj->exportFiles($a_export_dir);
 			unset($mob_obj);
-		}
-		/* maybe this will be used later 
+		} 
+		// #14850
 		foreach ($this->survey_obj->questions as $question_id)
 		{
 			$mobs = ilObjMediaObject::_getMobsOfObject("spl:html", $question_id);
@@ -166,7 +166,7 @@ class ilSurveyExport
 				$mob_obj->exportFiles($a_export_dir);
 				unset($mob_obj);
 			}
-		}*/
+		}
 		$ilBench->stop("SurveyExport", "exportXHTMLMediaObjects");
 	}
 

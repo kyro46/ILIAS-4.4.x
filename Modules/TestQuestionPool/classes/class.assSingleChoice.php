@@ -15,7 +15,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoring
  * @author	Björn Heyser <bheyser@databay.de>
  * @author	Maximilian Becker <mbecker@databay.de>
  *          
- * @version		$Id: class.assSingleChoice.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
@@ -627,6 +627,8 @@ class assSingleChoice extends assQuestion implements  ilObjQuestionScoringAdjust
 		}
 		$entered_values = 0;
 
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
+		
 		$result = $ilDB->queryF("SELECT solution_id FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
 			array('integer','integer','integer'),
 			array($active_id, $this->getId(), $pass)
@@ -671,6 +673,9 @@ class assSingleChoice extends assQuestion implements  ilObjQuestionScoringAdjust
 				$entered_values++;
 			}
 		}
+
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+		
 		if ($entered_values)
 		{
 			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
@@ -1053,7 +1058,7 @@ class assSingleChoice extends assQuestion implements  ilObjQuestionScoringAdjust
 		$result = array();
 		$result['id'] = (int) $this->getId();
 		$result['type'] = (string) $this->getQuestionType();
-		$result['title'] = (string) $this->getTitle();
+		$reilUtilsult['title'] = (string) $this->getTitle();
 		$result['question'] =  $this->formatSAQuestion($this->getQuestion());
 		$result['nr_of_tries'] = (int) $this->getNrOfTries();
 		$result['shuffle'] = (bool) $this->getShuffle();
@@ -1072,7 +1077,7 @@ class assSingleChoice extends assQuestion implements  ilObjQuestionScoringAdjust
 				$has_image = true;
 			}
 			array_push($answers, array(
-				"answertext" => (string) $answer_obj->getAnswertext(),
+				"answertext" => (string) $this->formatSAQuestion($answer_obj->getAnswertext(), "\<span class\=\"latex\">", "\<\/span>"),
 				"points" => (float)$answer_obj->getPoints(),
 				"order" => (int)$answer_obj->getOrder(),
 				"image" => (string) $answer_obj->getImage(),

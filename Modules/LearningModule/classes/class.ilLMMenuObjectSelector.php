@@ -8,7 +8,7 @@ require_once("./Services/UIComponent/Explorer/classes/class.ilExplorer.php");
 * LM Menu Object Selector
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: class.ilLMMenuObjectSelector.php 39035 2012-12-27 17:15:21Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

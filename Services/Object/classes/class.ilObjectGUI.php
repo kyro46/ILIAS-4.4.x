@@ -7,7 +7,7 @@
 * Basic methods of all Output classes
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjectGUI.php 49368 2014-04-11 08:55:45Z jluetzen $
+* @version $Id$
 *
 */
 class ilObjectGUI
@@ -663,17 +663,6 @@ class ilObjectGUI
 	}
 
 	/**
-	* Get objects back from trash
-	*/
-	public function undeleteObject()
-	{
-		include_once("./Services/Repository/classes/class.ilRepUtilGUI.php");
-		$ru = new ilRepUtilGUI($this);
-		$ru->restoreObjects($_GET["ref_id"], $_POST["trash_id"]);
-		$this->ctrl->redirect($this, "trash");
-	}
-
-	/**
 	* confirmed deletion of object -> objects are moved to trash or deleted
 	* immediately, if trash is disabled
 	*/
@@ -704,20 +693,6 @@ class ilObjectGUI
 		$this->ctrl->returnToParent($this);
 	}
 
-	/**
-	* remove objects from trash bin and all entries therefore every object needs a specific deleteObject() method
-	*
-	* @access	public
-	*/
-	public function removeFromSystemObject()
-	{
-		global $log, $ilAppEventHandler, $lng;
-		
-		include_once("./Services/Repository/classes/class.ilRepUtilGUI.php");
-		$ru = new ilRepUtilGUI($this);
-		$ru->removeObjectsFromSystem($_POST["trash_id"]);
-		$this->ctrl->redirect($this, "trash");
-	}
 
 	/**
 	* cancel action and go back to previous page
@@ -1557,6 +1532,14 @@ class ilObjectGUI
 		{
 			$_POST["id"] = array($_GET["item_ref_id"]);
 		}
+		
+		if(is_array($_POST["id"]))
+		{
+			foreach($_POST["id"] as $idx => $id)
+			{
+				$_POST["id"][$idx] = (int)$id;
+			}
+		}
 
 		// SAVE POST VALUES (get rid of this
 		ilSession::set("saved_post", $_POST["id"]);
@@ -1567,20 +1550,6 @@ class ilObjectGUI
 		{
 			$ilCtrl->returnToParent($this);
 		}
-	}
-
-	/**
-	* Show trash content of object
-	*
-	* @access	public
- 	*/
-	public function trashObject()
-	{
-		global $tpl;
-
-		include_once("./Services/Repository/classes/class.ilRepUtilGUI.php");
-		$ru = new ilRepUtilGUI($this);
-		$ru->showTrashTable($_GET["ref_id"]);
 	}
 
 	/**

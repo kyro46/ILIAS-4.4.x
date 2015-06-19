@@ -35,7 +35,7 @@ define("LINKS_ERR_NO_NAME_VALUE",3);
 * Class ilParameterAppender
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de> 
-* @version $Id: class.ilParameterAppender.php 24513 2010-07-07 15:59:08Z smeyer $
+* @version $Id$
 * 
 * @ingroup ModulesWebResource
 */

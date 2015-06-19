@@ -4,7 +4,7 @@
 
 /**
 * @author Bjoern Heyser <bheyser@databay.de>
-* @version $Id: class.ilSessionControl.php 35242 2012-06-27 13:22:15Z bheyser $
+* @version $Id$
 *
 * @ingroup ServicesAuthentication
 */

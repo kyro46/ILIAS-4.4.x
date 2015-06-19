@@ -641,7 +641,9 @@ class ilObjMediaCastGUI extends ilObjectGUI
 	 */
 	private function getDuration($file)
 	{
-	    $duration = isset($this->form_gui) ? $this->form_gui->getInput("duration") : "";
+	    $duration = isset($this->form_gui) 
+			? $this->form_gui->getInput("duration") 
+			: array("hh"=>0, "mm"=>0, "ss"=>0);
 	    if ($duration["hh"] == 0 && $duration["mm"] == 0 && $duration["ss"] == 0 && is_file($file))
 	    {
 	        include_once("./Services/MediaObjects/classes/class.ilMediaAnalyzer.php");
@@ -1526,6 +1528,12 @@ class ilObjMediaCastGUI extends ilObjectGUI
 				$mpl->setTitle($item["title"]);
 				$mpl->setDescription($item["content"]);
 				$mpl->setForceAudioPreview(true);
+				if ($this->object->getDownloadable())
+				{
+					$ilCtrl->setParameterByClass("ilobjmediacastgui", "item_id", $item["id"]);
+					$ilCtrl->setParameterByClass("ilobjmediacastgui", "purpose", "Standard");
+					$mpl->setDownloadLink($ilCtrl->getLinkTargetByClass("ilobjmediacastgui", "downloadItem"));
+				}
 				$med_alt = $mob->getMediaItem("VideoAlternative");
 				if (is_object($med_alt))
 				{

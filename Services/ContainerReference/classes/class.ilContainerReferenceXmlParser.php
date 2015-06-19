@@ -30,7 +30,7 @@ include_once('./Services/Calendar/classes/class.ilDateTime.php');
  * Group Import Parser
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * @version $Id: class.ilContainerReferenceXmlParser.php 35412 2012-07-06 10:28:29Z smeyer $
+ * @version $Id$
  *
  * @extends ilSaxParser
 
@@ -174,6 +174,7 @@ class ilContainerReferenceXmlParser extends ilSaxParser
 		/**
 		 * mode can be create or update
 		 */
+		include_once './Modules/Category/classes/class.ilCategoryXmlParser.php';
 		if ($this->mode == ilCategoryXmlParser::MODE_CREATE)
 		{
 			$this->create();

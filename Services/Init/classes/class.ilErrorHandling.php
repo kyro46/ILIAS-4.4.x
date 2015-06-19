@@ -8,7 +8,7 @@
 *
 * @author	Stefan Meyer <meyer@leifos.com>
 * @author	Sascha Hofmann <shofmann@databay.de>
-* @version	$Id: class.ilErrorHandling.php 46193 2013-11-13 09:14:52Z jluetzen $
+* @version	$Id$
 * @extends PEAR
 * @todo		when an error occured and clicking the back button to return to previous page the referer-var in session is deleted -> server error
 */

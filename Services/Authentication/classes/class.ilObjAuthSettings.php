@@ -25,7 +25,7 @@
 * Class ilObjAuthSettings
 * 
 * @author Sascha Hofmann <saschahofmann@gmx.de> 
-* @version $Id: class.ilObjAuthSettings.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @extends ilObject
 */

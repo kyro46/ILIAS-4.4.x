@@ -13,7 +13,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoring
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version		$Id: class.assClozeTest.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup 	ModulesTestQuestionPool
  */
@@ -421,6 +421,23 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		include_once "./Services/Math/classes/class.EvalMath.php";
 		$eval = new EvalMath();
 		$eval->suppress_errors = TRUE;
+
+		// Bugfix for mantis: 14034 
+		// It is a numeric gap, so cast to integer! // BH we should cast to float ;)
+		$answerText = strlen($item->getAnswertext()) ? (float)$item->getAnswertext() : 0;
+		
+		$lowerBound = (
+			$eval->e( $item->getLowerBound() !== FALSE ) && strlen( $item->getLowerBound() ) ?
+				$item->getLowerBound() : $item->getAnswertext()
+		);
+		
+		$upperBound = (
+			$eval->e( $item->getUpperBound() !== FALSE ) && strlen( $item->getUpperBound() ) ?
+				$item->getUpperBound() : $item->getAnswertext()
+		);
+		
+		//vd($answerText, $lowerBound, $upperBound);
+		
 		$ilDB->manipulateF( "INSERT INTO qpl_a_cloze (answer_id, question_fi, gap_id, answertext, points, aorder, cloze_type, lowerlimit, upperlimit) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
 							array(
 								"integer",
@@ -437,14 +454,12 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 								$next_id,
 								$this->getId(),
 								$key,
-								strlen( $item->getAnswertext() ) ? $item->getAnswertext() : "",
+								$answerText,
 								$item->getPoints(),
 								$item->getOrder(),
 								$gap->getType(),
-								($eval->e( $item->getLowerBound() !== FALSE ) && strlen( $item->getLowerBound()
-								) > 0) ? $item->getLowerBound() : $item->getAnswertext(),
-								($eval->e( $item->getUpperBound() !== FALSE ) && strlen( $item->getUpperBound()
-								) > 0) ? $item->getUpperBound() : $item->getAnswertext()
+								$lowerBound,
+								$upperBound
 							)
 		);
 	}
@@ -1286,6 +1301,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 			include_once "./Modules/Test/classes/class.ilObjTest.php";
 			$pass = ilObjTest::_getPass($active_id);
 		}
+		
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
 
 		$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
 			array(
@@ -1333,6 +1350,9 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 				}
 			}
 		}
+
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+
 		if ($entered_values)
 		{
 			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
@@ -1497,6 +1517,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		if (array_key_exists($gap_index, $this->gaps))
 		{
 			$gap =& $this->gaps[$gap_index];
+			
+			$gap_max_points = 0;
 			foreach ($gap->getItems() as $answer) 
 			{
 				if ($answer->getPoints() > $gap_max_points)

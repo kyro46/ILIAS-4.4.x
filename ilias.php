@@ -8,7 +8,7 @@
 * within modules.xml.
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: ilias.php 33447 2012-03-01 14:00:01Z jluetzen $
+* @version $Id$
 *
 */
 

@@ -29,7 +29,7 @@ require_once("./Services/Xml/classes/class.ilSaxParser.php");
 * (c) Sascha Hofmann, 2004
 *  
 * @author	Sascha Hofmann <saschahofmann@gmx.de>
-* @version	$Id: class.ilnetucateResponse.php 33497 2012-03-02 23:24:57Z akill $
+* @version	$Id$
 * 
 */
 class ilnetucateResponse extends ilSaxParser

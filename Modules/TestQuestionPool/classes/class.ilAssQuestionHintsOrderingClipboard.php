@@ -6,7 +6,7 @@
  * (user cuts a hint with a first request and is able to paste it at another position with a further request)
  * 
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssQuestionHintsOrderingClipboard.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

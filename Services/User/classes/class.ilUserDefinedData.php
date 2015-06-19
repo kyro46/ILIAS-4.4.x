@@ -6,7 +6,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilUserDefinedData.php 24219 2010-06-12 16:17:56Z smeyer $
+* @version $Id$
 * @ingroup ServicesUser
 */
 class ilUserDefinedData

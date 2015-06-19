@@ -11,7 +11,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMObjectGUI.php");
 * GUI class for scorm learning module presentation
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMPresentationGUI.php 46869 2013-12-16 13:39:51Z ukohnle $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

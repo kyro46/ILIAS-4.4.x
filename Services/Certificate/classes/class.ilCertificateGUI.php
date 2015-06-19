@@ -27,7 +27,7 @@ include_once("./Services/Certificate/classes/class.ilCertificate.php");
 * GUI class to create PDF certificates
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilCertificateGUI.php 47940 2014-02-14 11:02:39Z mbecker $
+* @version	$Id$
 * @ingroup Services
 */
 class ilCertificateGUI

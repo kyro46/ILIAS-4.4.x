@@ -27,7 +27,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
 * Class ilObjAdvancedEditing
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilObjAdvancedEditing.php 43941 2013-08-06 10:01:09Z jluetzen $
+* @version $Id$
 *
 * @extends ilObject
 */

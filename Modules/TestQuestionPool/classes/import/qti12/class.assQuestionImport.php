@@ -9,7 +9,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * assQuestionImport is a basis class question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assQuestionImport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assQuestionImport

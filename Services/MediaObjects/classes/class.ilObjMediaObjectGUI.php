@@ -11,7 +11,7 @@ require_once ("./Services/Object/classes/class.ilObjectGUI.php");
 * Editing User Interface for MediaObjects within LMs (see ILIAS DTD)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjMediaObjectGUI.php 49518 2014-04-19 12:29:42Z akill $
+* @version $Id$
 * @ilCtrl_Calls ilObjMediaObjectGUI: ilMDEditorGUI, ilImageMapEditorGUI, ilFileSystemGUI
 *
 * @ingroup ServicesMediaObjects

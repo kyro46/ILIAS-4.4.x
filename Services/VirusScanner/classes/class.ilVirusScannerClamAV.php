@@ -5,7 +5,7 @@
 * Interface to the ClamAV virus protector
 *
 * @author        Ralf Schenk <rs@databay.de>
-* @version $Id: class.ilVirusScannerClamAV.php 33489 2012-03-02 19:59:14Z akill $
+* @version $Id$
 *
 * @extends ilVirusScanner
 */

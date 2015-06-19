@@ -5,7 +5,7 @@
  * class can be used as forwarder for taxonomy editing context
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilObjQuestionPoolTaxonomyEditingCommandForwarder.php 46040 2013-11-06 09:27:10Z bheyser $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

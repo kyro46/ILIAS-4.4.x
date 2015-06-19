@@ -26,7 +26,7 @@
 * Meta Data factory class 
 *
 * @package ilias-core
-* @version $Id: class.ilMDFactory.php 8086 2005-07-15 13:54:11Z smeyer $
+* @version $Id$
 */
 
 class ilMDFactory

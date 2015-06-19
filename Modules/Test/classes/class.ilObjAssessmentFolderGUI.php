@@ -4,12 +4,13 @@
 require_once "./Services/Object/classes/class.ilObjectGUI.php";
 
 require_once 'Modules/Test/classes/class.ilObjTest.php';
+require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionProcessLocker.php';
 
 /**
 * Class ilObjAssessmentFolderGUI
 *
 * @author Helmut Schottmüller <hschottm@gmx.de>
-* @version $Id: class.ilObjAssessmentFolderGUI.php 48889 2014-03-24 11:23:22Z mjansen $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjAssessmentFolderGUI: ilPermissionGUI, ilSettingsTemplateGUI, ilGlobalUnitConfigurationGUI
 *
@@ -119,19 +120,53 @@ class ilObjAssessmentFolderGUI extends ilObjectGUI
 	/**
 	* display assessment folder settings form
 	*/
-	public function settingsObject()
+	public function settingsObject(ilPropertyFormGUI $form = null)
 	{
-		
-		global $ilAccess, $ilTabs;
+		global $ilTabs;
                 
 		$ilTabs->setTabActive('settings');
 
+		if($form === null)
+		{
+			$form = $this->buildSettingsForm();
+		}
+		
+		$this->tpl->setVariable("ADM_CONTENT", $form->getHTML());
+	}
+	
+	private function buildSettingsForm()
+	{
+		global $ilAccess;
+		
 		include_once "./Modules/TestQuestionPool/classes/class.ilObjQuestionPool.php";
 		include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->ctrl->getFormAction($this));
 		$form->setTableWidth("100%");
 		$form->setId("settings");
+
+		$header = new ilFormSectionHeaderGUI();
+		$header->setTitle($this->lng->txt('settings'));
+		$form->addItem($header);
+
+		// question process locking behaviour (e.g. on saving users working data)
+		$chb = new ilCheckboxInputGUI($this->lng->txt('ass_process_lock'), 'ass_process_lock');
+		$chb->setChecked($this->object->getAssessmentProcessLockMode() != ilObjAssessmentFolder::ASS_PROC_LOCK_MODE_NONE);
+		$chb->setInfo($this->lng->txt('ass_process_lock_desc'));
+		$form->addItem($chb);
+		$rg = new ilRadioGroupInputGUI($this->lng->txt('ass_process_lock_mode'), 'ass_process_lock_mode');
+		$rg->setRequired(true);
+		$opt = new ilRadioOption($this->lng->txt('ass_process_lock_mode_file'), ilObjAssessmentFolder::ASS_PROC_LOCK_MODE_FILE);
+		$opt->setInfo($this->lng->txt('ass_process_lock_mode_file_desc'));
+		$rg->addOption($opt);
+		$opt = new ilRadioOption($this->lng->txt('ass_process_lock_mode_db'), ilObjAssessmentFolder::ASS_PROC_LOCK_MODE_DB);
+		$opt->setInfo($this->lng->txt('ass_process_lock_mode_db_desc'));
+		$rg->addOption($opt);
+		if($this->object->getAssessmentProcessLockMode() != ilObjAssessmentFolder::ASS_PROC_LOCK_MODE_NONE)
+		{
+			$rg->setValue($this->object->getAssessmentProcessLockMode());
+		}
+		$chb->addSubItem($rg);
 
 		// question settings
 		$header = new ilFormSectionHeaderGUI();
@@ -187,7 +222,8 @@ class ilObjAssessmentFolderGUI extends ilObjectGUI
 		{
 			$form->addCommandButton("saveSettings", $this->lng->txt("save"));
 		}
-		$this->tpl->setVariable("ADM_CONTENT", $form->getHTML());
+
+		return $form;
 	}
 	
 	/**
@@ -197,6 +233,13 @@ class ilObjAssessmentFolderGUI extends ilObjectGUI
 	{
 		global $ilAccess;
 		if (!$ilAccess->checkAccess("write", "", $this->object->getRefId())) $this->ctrl->redirect($this,'settings');
+	
+		$form = $this->buildSettingsForm();
+		if(!$form->checkInput())
+		{
+			$form->setValuesByPost();
+			return $this->settingsObject($form);
+		}
 		
 		$this->object->_setManualScoring($_POST["chb_manual_scoring"]);
 		include_once "./Modules/TestQuestionPool/classes/class.ilObjQuestionPool.php";
@@ -221,6 +264,15 @@ class ilObjAssessmentFolderGUI extends ilObjectGUI
 			}
 		}
 		$this->object->setScoringAdjustableQuestions($scoring_types);
+		
+		if( !$_POST['ass_process_lock'] )
+		{
+			$this->object->setAssessmentProcessLockMode(ilObjAssessmentFolder::ASS_PROC_LOCK_MODE_NONE);
+		}
+		elseif( in_array($_POST['ass_process_lock_mode'], ilObjAssessmentFolder::getValidAssessmentProcessLockModes()) )
+		{
+			$this->object->setAssessmentProcessLockMode($_POST['ass_process_lock_mode']);
+		}
 		
 		ilUtil::sendSuccess($this->lng->txt("msg_obj_modified"),true);
 

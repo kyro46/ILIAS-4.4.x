@@ -5,7 +5,7 @@
 <!-- Initial version by Maik Stuehrenberg (Giessen University) for the BMBF-funded project MiLCA (Medienintensive Lehrmodule in der Computerlinguistik-Ausbildung), modelled after LOM version 1 Final Draft -->
 <!-- Modifications and adoption to ILIAS made by Maik Stuehrenberg (Giessen University), Martin Rus, Matthias Rulinski, Alexander Killing, Matthias Kunkel (ILIAS open source, University of Cologne), Sascha Hofmann (Databay AG, Aachen) -->
 <!-- For comments refer to our mailing list: xml-ilias@uni-koeln.de -->
-<!-- $Id: ilias_co_3_6.dtd 8677 2005-09-18 20:54:49Z akill $ -->
+<!-- $Id$ -->
 
 <!--
 	Things still missing in ILIAS 3 (search for TO_IMPLEMENT in this document)

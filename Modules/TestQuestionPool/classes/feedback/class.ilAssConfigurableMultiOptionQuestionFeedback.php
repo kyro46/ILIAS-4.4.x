@@ -9,7 +9,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssMultiOptionQu
  * and configurable display behaviour
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssConfigurableMultiOptionQuestionFeedback.php 48523 2014-03-12 08:12:24Z akill $
+ * @version		$Id$
  *
  * @package		Modules/TestQuestionPool
  *

@@ -6,7 +6,7 @@
 * special template class to simplify handling of ITX/PEAR
 * @author	Stefan Kesseler <skesseler@databay.de>
 * @author	Sascha Hofmann <shofmann@databay.de>
-* @version	$Id: class.ilTemplate.php 49007 2014-03-26 12:08:59Z jluetzen $
+* @version	$Id$
 */
 class ilTemplate extends ilTemplateX
 {

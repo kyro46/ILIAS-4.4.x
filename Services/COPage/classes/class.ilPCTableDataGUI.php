@@ -11,7 +11,7 @@ require_once("./Services/COPage/classes/class.ilPageContentGUI.php");
 * Handles user commands on table data elements (table cells)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCTableDataGUI.php 30416 2011-08-29 17:02:24Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

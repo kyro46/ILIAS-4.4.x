@@ -10,7 +10,7 @@ require_once("./Services/COPage/classes/class.ilPageContentGUI.php");
 * User Interface for LM List Editing
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCListGUI.php 43464 2013-07-17 09:18:27Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

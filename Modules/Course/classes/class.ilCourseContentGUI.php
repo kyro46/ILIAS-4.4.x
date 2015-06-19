@@ -5,7 +5,7 @@
 * Class ilCourseContentGUI
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilCourseContentGUI.php 46182 2013-11-12 14:48:04Z jluetzen $
+* @version $Id$
 *
 * @extends ilObjectGUI
 *

@@ -9,7 +9,7 @@ require_once 'Services/Contact/classes/class.ilAddressbook.php';
 
 /**
 * @author Jens Conze
-* @version $Id: class.ilMailSearchGroupsGUI.php 40016 2013-02-19 18:52:18Z mjansen $
+* @version $Id$
 *
 * @ingroup ServicesMail
 */

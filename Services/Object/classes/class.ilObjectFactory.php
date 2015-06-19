@@ -14,7 +14,7 @@
 * database table "object_data"
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjectFactory.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 */
 class ilObjectFactory

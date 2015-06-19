@@ -27,7 +27,7 @@ include_once("./Services/Table/classes/class.ilTable2GUI.php");
 * TableGUI class for found users in survey administration
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilFoundUsersTableGUI.php 20638 2009-07-19 08:14:34Z hschottm $
+* @version $Id$
 *
 * @ingroup ModulesSurvey
 * 

@@ -7,7 +7,7 @@ include_once 'Modules/Forum/classes/class.ilObjForum.php';
 /**
  * Class ilObjForumAccess
  * @author  Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilObjForumAccess.php 37316 2012-10-03 10:04:36Z akill $
+ * @version $Id$
  * @ingroup ModulesForum
  */
 class ilObjForumAccess extends ilObjectAccess

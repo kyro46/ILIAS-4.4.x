@@ -25,7 +25,7 @@
 * QTI matapplet class
 *
 * @author Helmut Schottmüller <hschottm@gmx.de>
-* @version $Id: class.ilQTIMatapplet.php 12481 2006-11-09 00:04:34Z hschottm $
+* @version $Id$
 *
 * @package assessment
 */

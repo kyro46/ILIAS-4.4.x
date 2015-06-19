@@ -6,7 +6,7 @@
 * Class ilFramesetGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilFramesetGUI.php 29825 2011-07-12 15:31:30Z akill $
+* @version $Id$
 */
 class ilFramesetGUI
 {

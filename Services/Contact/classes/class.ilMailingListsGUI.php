@@ -9,7 +9,7 @@ require_once "Services/Contact/classes/class.ilAddressbook.php";
 
 /**
 * @author Michael Jansen <mjansen@databay.de>
-* @version $Id: class.ilMailingListsGUI.php 39416 2013-01-24 11:04:51Z jluetzen $
+* @version $Id$
 *
 * @ingroup ServicesMail
 */

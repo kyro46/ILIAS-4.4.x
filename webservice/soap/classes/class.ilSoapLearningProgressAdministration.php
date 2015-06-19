@@ -8,7 +8,7 @@ include_once './webservice/soap/classes/class.ilSoapAdministration.php';
  * This class handles all DB changes necessary for fraunhofer
  *
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * @version $Id: class.ilSoapLearningProgressAdministration.php 44391 2013-08-22 19:07:17Z akill $
+ * @version $Id$
  *
  */
 class ilSoapLearningProgressAdministration extends ilSoapAdministration

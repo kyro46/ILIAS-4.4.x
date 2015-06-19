@@ -5,7 +5,7 @@
 * Class ilObjTestVerificationListGUI
 *
 * @author Jörg Lützenkirchen <luetzenkirchen@leifos.com>
-* $Id: class.ilObjTestVerificationListGUI.php 46079 2013-11-07 10:13:57Z jluetzen $
+* $Id$
 *
 * @extends ilObjectListGUI
 */

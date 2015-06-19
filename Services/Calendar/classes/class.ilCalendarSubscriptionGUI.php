@@ -7,7 +7,7 @@ include_once './Services/Calendar/classes/class.ilCalendarCategory.php';
  * Show calendar subscription info
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilCalendarSubscriptionGUI.php 34993 2012-06-06 12:43:00Z smeyer $
+ * $Id$
  */
 class ilCalendarSubscriptionGUI
 {
@@ -74,7 +74,7 @@ class ilCalendarSubscriptionGUI
 		$hash = $this->createToken();
 		$url = ILIAS_HTTP_PATH.'/calendar.php?client_id='.CLIENT_ID.'&token='.$hash;
 		$info->addSection($this->getCalendar()->getTitle());
-		$info->addProperty('Abonnieren', $url, $url);
+		$info->addProperty($GLOBALS['lng']->txt('cal_ical_url'), $url, $url);
 
 		$GLOBALS['tpl']->setContent($info->getHTML());
 	}

@@ -7,7 +7,7 @@
 * Base class for all search classes
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilAbstractSearch.php 25503 2010-09-01 09:48:10Z jluetzen $
+* @version $Id$
 * 
 * @package ilias-search
 *

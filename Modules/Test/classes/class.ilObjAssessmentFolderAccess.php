@@ -8,7 +8,7 @@ require_once("./Services/Object/classes/class.ilObjectAccess.php");
  * 
  * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
  * 
- * @version $Id: class.ilObjAssessmentFolderAccess.php 44121 2013-08-13 16:28:33Z mbecker $
+ * @version $Id$
  *
  * @ingroup ModulesTest
  */

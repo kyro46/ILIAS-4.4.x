@@ -26,7 +26,7 @@
 * Meta Data class (element typicalagerange)
 *
 * @package ilias-core
-* @version $Id: class.ilMDTypicalAgeRange.php 15697 2008-01-08 20:04:33Z hschottm $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

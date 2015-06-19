@@ -29,7 +29,7 @@
 *
 * @author Werner Randelshofer, Hochschule Luzern, werner.randelshofer@hslu.ch
 *
-* @version $Id: class.ilObjDiskQuotaSettings.php 43362 2013-07-10 12:38:47Z jluetzen $
+* @version $Id$
 *
 * @extends ilObject
 * @package WebDAV

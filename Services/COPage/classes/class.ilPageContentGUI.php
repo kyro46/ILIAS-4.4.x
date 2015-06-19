@@ -7,7 +7,7 @@ require_once("./Services/COPage/classes/class.ilPageContent.php");
 * User Interface for Editing of Page Content Objects (Paragraphs, Tables, ...)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPageContentGUI.php 45035 2013-09-26 13:49:37Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */
@@ -262,7 +262,7 @@ class ilPageContentGUI
 			$btpl->setCurrentBlock("int_link_prep");
 			$btpl->setVariable("INT_LINK_PREP", ilInternalLinkGUI::getInitHTML(
 				$ilCtrl->getLinkTargetByClass(array("ilpageeditorgui", "ilinternallinkgui"),
-						"", false, true, false)));
+						"", false, true, false), true));
 			$btpl->parseCurrentBlock();
 
 		}

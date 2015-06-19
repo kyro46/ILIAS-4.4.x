@@ -6,7 +6,7 @@
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
 *
-* @version $Id: class.ilLPListOfProgressGUI.php 46656 2013-12-08 22:14:33Z mstuder $
+* @version $Id$
 *
 * @ilCtrl_Calls ilLPListOfProgressGUI: ilLPProgressTableGUI
 *

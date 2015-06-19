@@ -8,7 +8,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
  * Class ilObjCourseListGUI
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * $Id: class.ilObjCourseListGUI.php 42214 2013-05-15 10:49:49Z smeyer $
+ * $Id$
  *
  * @ingroup ModulesCourse
  */
@@ -171,7 +171,7 @@ class ilObjCourseListGUI extends ilObjectListGUI
 	public function checkCommandAccess($a_permission, $a_cmd, $a_ref_id, $a_type, $a_obj_id = "")
 	{
 		// Only check cmd access for cmd 'register' and 'unregister'
-		if($a_cmd != 'view' and $a_cmd != 'leave')
+		if($a_cmd != 'view' and $a_cmd != 'leave' and $a_cmd != 'join')
 		{
 			$a_cmd = '';
 		}

@@ -57,7 +57,7 @@ require_once('Services/Authentication/classes/class.ilSessionControl.php');
 * static utility functions used to manage authentication modes
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: class.ilAuthUtils.php 46677 2013-12-09 10:22:15Z smeyer $
+* @version $Id$
 *
 */
 class ilAuthUtils

@@ -32,7 +32,7 @@ require_once("./Modules/ScormAicc/classes/AICC/class.ilAICCPresentationGUI.php")
 * GUI class for hacp learning module presentation
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilHACPPresentationGUI.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

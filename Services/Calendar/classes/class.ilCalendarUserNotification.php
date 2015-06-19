@@ -5,7 +5,7 @@
  * 
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilCalendarUserNotification.php 37457 2012-10-09 11:50:31Z smeyer $
+ * $Id$
  */
 class ilCalendarUserNotification
 {

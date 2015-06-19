@@ -27,7 +27,7 @@ require_once("./Services/Xml/classes/class.ilSaxParser.php");
 * XML checker
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilXmlChecker.php 33497 2012-03-02 23:24:57Z akill $
+* @version $Id$
 *
 * @extends ilSaxParser
 * @ingroup ModulesTest

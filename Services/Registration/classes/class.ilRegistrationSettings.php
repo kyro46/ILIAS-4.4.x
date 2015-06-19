@@ -38,7 +38,7 @@ define('IL_REG_ERROR_NO_PERM',2);
 * Class ilObjAuthSettingsGUI
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilRegistrationSettings.php 35566 2012-07-16 16:11:20Z jluetzen $
+* @version $Id$
 * 
 * @ingroup ServicesRegistration
 */
@@ -272,7 +272,7 @@ class ilRegistrationSettings
 				$tmp_logins[] = $login;
 			}
 		}
-		$this->approve_recipient_logins = implode(';',$tmp_logins);
+		$this->approve_recipient_logins = implode(',',$tmp_logins);
 
 		$this->setAllowedDomains($ilias->getSetting('reg_allowed_domains'));
 	}

@@ -18,7 +18,7 @@
  * 
  * Browser check
  *
- * @version $Id: class.ilBrowser.php 44747 2013-09-12 15:42:42Z mjansen $
+ * @version $Id$
  * @author	Michael Jansen <mjansen@databay.de>
  * @author  Fabian Schmid <fs@studer-raimann.ch>
  * @license	http://www.opensource.org/licenses/mit-license.php The MIT License

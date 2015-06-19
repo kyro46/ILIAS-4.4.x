@@ -10,7 +10,7 @@ require_once './Services/Utilities/classes/class.ilFormat.php';
  * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author Maximilian Becker <mbecker@databay.de>
  * 
- * @version $Id: class.ilTestExport.php 44890 2013-09-20 13:54:50Z mbecker $
+ * @version $Id$
  *
  * @ingroup ModulesTest
  */
@@ -158,7 +158,7 @@ class ilTestExport
 		include_once "./Services/Excel/classes/class.ilExcelWriterAdapter.php";
 		$excelfile = ilUtil::ilTempnam();
 		$adapter = new ilExcelWriterAdapter($excelfile, FALSE);
-		$testname = ilUtil::getASCIIFilename(preg_replace("/\s/", "_", $this->test_obj->getTitle())) . ".xls";
+		$testname = ilUtil::getASCIIFilename(preg_replace("/\s/", "_", $this->test_obj->getTitle() . '_aggregated')) . ".xls";
 		$workbook = $adapter->getWorkbook();
 		$workbook->setVersion(8); // Use Excel97/2000 Format
 		// Creating a worksheet
@@ -261,7 +261,7 @@ class ilTestExport
 		}
 		if ($deliver)
 		{
-			ilUtil::deliverData($csv, ilUtil::getASCIIFilename($this->test_obj->getTitle() . ".csv"));
+			ilUtil::deliverData($csv, ilUtil::getASCIIFilename($this->test_obj->getTitle() . "_aggregated.csv"));
 			exit;
 		}
 		else
@@ -287,7 +287,14 @@ class ilTestExport
 		require_once './Services/Excel/classes/class.ilExcelWriterAdapter.php';
 		$excelfile = ilUtil::ilTempnam();
 		$adapter = new ilExcelWriterAdapter($excelfile, FALSE);
-		$testname = ilUtil::getASCIIFilename(preg_replace("/\s/", "_", $this->test_obj->getTitle())) . ".xls";
+		$testname = $this->test_obj->getTitle();
+		switch($this->mode)
+		{
+				case 'results':
+				$testname .= '_results';
+				break;
+		}
+		$testname = ilUtil::getASCIIFilename(preg_replace("/\s/", "_", $testname)) . ".xls";
 		$workbook = $adapter->getWorkbook();
 		$workbook->setVersion(8); // Use Excel97/2000 Format
 		// Creating a worksheet
@@ -710,7 +717,7 @@ class ilTestExport
 						$pages++;
 					}
 				} else {
-					$resultsheet =& $workbook->addWorksheet($username);
+					$resultsheet =& $workbook->addWorksheet(utf8_decode($username));
 				}
 				if (method_exists($resultsheet, "writeString"))
 				{
@@ -973,7 +980,7 @@ class ilTestExport
 		}
 		if ($deliver)
 		{
-			ilUtil::deliverData($csv, ilUtil::getASCIIFilename($this->test_obj->getTitle() . ".csv"));
+			ilUtil::deliverData($csv, ilUtil::getASCIIFilename($this->test_obj->getTitle() . "_results.csv"));
 			exit;
 		}
 		else

@@ -5,7 +5,7 @@
 * Form and GUI functions for Social Bookmark Administration
 *
 * @author Jan Posselt <jposselt@databay.de>
-* @version $Id: class.ilSocialBookmarks.php 36163 2012-08-13 08:26:28Z jluetzen $
+* @version $Id$
 *
 * @package ilias
 */

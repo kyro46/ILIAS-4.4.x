@@ -28,7 +28,7 @@
 *
 * @author Mircho Mirev <mircho@macropoint.com>
 * @author Peter Gabriel <peter@gabriel-online.net>
-* @version $Id: class.ilIniFile.php 33491 2012-03-02 22:26:42Z akill $
+* @version $Id$
 *
 */
 class ilIniFile

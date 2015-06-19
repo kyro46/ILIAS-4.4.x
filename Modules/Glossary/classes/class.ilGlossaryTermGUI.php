@@ -8,7 +8,7 @@ require_once("./Modules/Glossary/classes/class.ilGlossaryTerm.php");
 * GUI class for glossary terms
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilGlossaryTermGUI.php 46013 2013-11-05 14:07:12Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilGlossaryTermGUI: ilTermDefinitionEditorGUI, ilGlossaryDefPageGUI, ilPropertyFormGUI
 *
@@ -348,6 +348,8 @@ class ilGlossaryTermGUI
 				$tpl->parseCurrentBlock();
 			}
 
+			ilUtil::includeMathjax($tpl);
+
 			$tpl->setCurrentBlock("definition");
 			$tpl->setVariable("PAGE_CONTENT", $output);
 			$tpl->parseCurrentBlock();
@@ -368,7 +370,7 @@ class ilGlossaryTermGUI
 		for($j=0; $j<count($defs); $j++)
 		{
 			$def = $defs[$j];
-			$page = new ilGlossaryDefPage("gdf", $def["id"]);
+			$page = new ilGlossaryDefPage($def["id"]);
 			$page->buildDom();
 			$page_links = $page->getInternalLinks();
 			foreach($page_links as $key => $page_link)

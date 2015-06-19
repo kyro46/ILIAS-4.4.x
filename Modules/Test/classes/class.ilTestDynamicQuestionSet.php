@@ -8,7 +8,7 @@ require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionList.php';
  * provided for the current test
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilTestDynamicQuestionSet.php 44345 2013-08-21 14:30:35Z bheyser $
+ * @version		$Id$
  * 
  * @package		Modules/Test
  */
@@ -64,14 +64,14 @@ class ilTestDynamicQuestionSet
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public function load(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig, $taxonomyFilterSelection)
+	public function load(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig, ilTestDynamicQuestionSetFilterSelection $filterSelection)
 	{
 		$this->completeQuestionList = $this->initCompleteQuestionList(
-					$dynamicQuestionSetConfig
+					$dynamicQuestionSetConfig, $filterSelection->getAnswerStatusActiveId()
 		);
 		
 		$this->filteredQuestionList = $this->initFilteredQuestionList(
-					$dynamicQuestionSetConfig, $taxonomyFilterSelection
+					$dynamicQuestionSetConfig, $filterSelection
 		);
 		
 		$this->actualQuestionSequence = $this->initActualQuestionSequence(
@@ -81,22 +81,31 @@ class ilTestDynamicQuestionSet
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private function initCompleteQuestionList(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig)
+	private function initCompleteQuestionList(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig, $answerStatusActiveId)
 	{
 		$questionList = new ilAssQuestionList(
 				$this->db, $this->lng, $this->pluginAdmin, $dynamicQuestionSetConfig->getSourceQuestionPoolId()
 		);
+
+		$questionList->setAnswerStatusActiveId($answerStatusActiveId);
 		
 		$questionList->load();
 		
 		return $questionList;
 	}
 	
-	private function initFilteredQuestionList(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig, $taxonomyFilterSelection)
+	private function initFilteredQuestionList(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig, ilTestDynamicQuestionSetFilterSelection $filterSelection)
 	{
 		$questionList = new ilAssQuestionList(
 				$this->db, $this->lng, $this->pluginAdmin, $dynamicQuestionSetConfig->getSourceQuestionPoolId()
 		);
+
+		$questionList->setAnswerStatusActiveId($filterSelection->getAnswerStatusActiveId());
+
+		if( $dynamicQuestionSetConfig->isAnswerStatusFilterEnabled() )
+		{
+			$questionList->setAnswerStatusFilter($filterSelection->getAnswerStatusSelection());
+		}
 
 		if( $dynamicQuestionSetConfig->isTaxonomyFilterEnabled() )
 		{
@@ -106,7 +115,7 @@ class ilTestDynamicQuestionSet
 					$dynamicQuestionSetConfig->getSourceQuestionPoolId()
 			));
 			
-			foreach($taxonomyFilterSelection as $taxId => $taxNodes)
+			foreach($filterSelection->getTaxonomySelection() as $taxId => $taxNodes)
 			{
 				$questionList->addTaxonomyFilter($taxId, $taxNodes);
 			}
@@ -117,6 +126,8 @@ class ilTestDynamicQuestionSet
 				$dynamicQuestionSetConfig->getOrderingTaxonomyId()
 			));
 		}
+		
+		$questionList->setForcedQuestionIds($filterSelection->getForcedQuestionIds());
 		
 		$questionList->load();
 		
@@ -213,10 +224,15 @@ class ilTestDynamicQuestionSet
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	public function getFilteredQuestionsData()
+
+	public function getCompleteQuestionList()
 	{
-		return $this->filteredQuestionList->getQuestionDataArray();
+		return $this->completeQuestionList;
+	}
+	
+	public function getFilteredQuestionList()
+	{
+		return $this->filteredQuestionList;
 	}
 }
 

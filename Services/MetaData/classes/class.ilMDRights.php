@@ -26,7 +26,7 @@
 * Meta Data class (element rights)
 *
 * @package ilias-core
-* @version $Id: class.ilMDRights.php 19416 2009-03-20 07:44:07Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

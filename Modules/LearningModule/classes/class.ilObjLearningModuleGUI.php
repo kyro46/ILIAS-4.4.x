@@ -9,7 +9,7 @@ require_once("./Modules/LearningModule/classes/class.ilObjContentObjectGUI.php")
 * GUI class for ilLearningModule
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjLearningModuleGUI.php 47418 2014-01-22 09:01:31Z akill $
+* @version $Id$
 * @ilCtrl_Calls ilObjLearningModuleGUI: ilLMPageObjectGUI, ilStructureObjectGUI, ilObjStyleSheetGUI, ilMDEditorGUI
 * @ilCtrl_Calls ilObjLearningModuleGUI: ilLearningProgressGUI, ilPermissionGUI, ilInfoScreenGUI
 * @ilCtrl_Calls ilObjLearningModuleGUI: ilExportGUI, ilCommonActionDispatcherGUI, ilPageMultiLangGUI, ilObjectTranslationGUI

@@ -7,7 +7,7 @@ include_once "./Services/Xml/classes/class.ilXmlWriter.php";
  * Class for category export
  *
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilCategoryXmlWriter.php 35366 2012-07-04 09:55:01Z smeyer $
+ * $Id$
  */
 class ilCategoryXmlWriter extends ilXmlWriter
 {

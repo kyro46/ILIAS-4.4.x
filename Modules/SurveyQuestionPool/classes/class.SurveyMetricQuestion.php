@@ -30,7 +30,7 @@ include_once "./Modules/SurveyQuestionPool/classes/class.SurveyQuestion.php";
 * for metric survey question types.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.SurveyMetricQuestion.php 43723 2013-07-29 11:19:02Z jluetzen $
+* @version	$Id$
 * @extends SurveyQuestion
 * @ingroup ModulesSurveyQuestionPool
 */
@@ -799,7 +799,7 @@ class SurveyMetricQuestion extends SurveyQuestion
 		}
 		else
 		{
-			array_push($a_array, $this->lng->txt("skipped"));
+			array_push($a_array, $this->getSkippedValue());
 		}
 	}
 	

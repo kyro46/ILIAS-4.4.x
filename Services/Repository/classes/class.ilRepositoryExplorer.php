@@ -8,7 +8,7 @@ require_once("./Services/UIComponent/Explorer/classes/class.ilExplorer.php");
  * Repository Explorer
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilRepositoryExplorer.php 47298 2014-01-16 12:33:39Z smeyer $
+ * @version $Id$
  * @ingroup	ServicesRepository
  */
 class ilRepositoryExplorer extends ilExplorer

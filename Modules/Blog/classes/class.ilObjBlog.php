@@ -96,7 +96,7 @@ class ilObjBlog extends ilObject2
 					",bg_color = ".$ilDB->quote($this->getBackgroundColor(), "text").
 					",font_color = ".$ilDB->quote($this->getFontcolor(), "text").
 					",img = ".$ilDB->quote($this->getImage(), "text").
-					",rss_active = ".$ilDB->quote($this->hasRSS(), "text").
+					",rss_active = ".$ilDB->quote($this->hasRSS(), "integer").
 					",approval = ".$ilDB->quote($this->hasApproval(), "integer").
 					" WHERE id = ".$ilDB->quote($this->id, "integer"));
 			
@@ -500,7 +500,11 @@ class ilObjBlog extends ilObject2
 		$notified = $ntf->sendMail($users, "_".$a_posting_id, 
 			($admin_only ? "write" : "read"));								
 
-		ilNotification::updateNotificationTime(ilNotification::TYPE_BLOG, $blog_obj_id, $notified);				
+		// #14387
+		if(sizeof($notified))
+		{
+			ilNotification::updateNotificationTime(ilNotification::TYPE_BLOG, $blog_obj_id, $notified, $a_posting_id);				
+		}
 	}
 			
 	/**

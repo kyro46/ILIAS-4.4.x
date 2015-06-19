@@ -26,7 +26,7 @@
    * Soap user administration methods
    *
    * @author Stefan Meyer <meyer@leifos.com>
-   * @version $Id: class.ilSoapUserAdministration.php 45185 2013-10-02 15:48:07Z mjansen $
+   * @version $Id$
    *
    * @package ilias
    */

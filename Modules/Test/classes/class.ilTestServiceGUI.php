@@ -14,7 +14,7 @@ include_once 'Modules/Test/classes/class.ilTestService.php';
 *
 * @author	Helmut Schottmüller <helmut.schottmueller@mac.com>
 * @author	Björn Heyser <bheyser@databay.de>
-* @version	$Id: class.ilTestServiceGUI.php 49220 2014-04-04 10:36:27Z gvollbach $
+* @version	$Id$
 *
 * @ingroup ModulesTest
 */
@@ -50,6 +50,13 @@ class ilTestServiceGUI
 	protected $testSessionFactory = null;
 	
 	/**
+	 * factory for test session
+	 *
+	 * @var ilTestSequenceFactory 
+	 */
+	protected $testSequenceFactory = null;
+
+	/**
 	 * The constructor takes the test object reference as parameter 
 	 *
 	 * @param object $a_object Associated ilObjTest class
@@ -57,7 +64,7 @@ class ilTestServiceGUI
 	 */
 	function ilTestServiceGUI(ilObjTest $a_object)
 	{
-		global $lng, $tpl, $ilCtrl, $ilias, $tree;
+		global $lng, $tpl, $ilCtrl, $ilias, $tree, $ilDB, $ilPluginAdmin;
 
 		$this->lng =& $lng;
 		$this->tpl =& $tpl;
@@ -71,6 +78,9 @@ class ilTestServiceGUI
 		
 		require_once 'Modules/Test/classes/class.ilTestSessionFactory.php';
 		$this->testSessionFactory = new ilTestSessionFactory($this->object);
+		
+		require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
+		$this->testSequenceFactory = new ilTestSequenceFactory($ilDB, $this->lng, $ilPluginAdmin, $this->object);
 	}
 	
 	/**
@@ -124,14 +134,17 @@ class ilTestServiceGUI
 
 		$counted_pass = $this->object->_getResultPass($active_id);
 		$reached_pass = $this->object->_getPass($active_id);
+		
+		require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+		$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this->object);
+		$testPassesSelector->setActiveId($active_id);
+		$lastFinishedPass = $this->testSessionFactory->getSession($active_id)->getLastFinishedPass();
+		$testPassesSelector->setLastFinishedPass($lastFinishedPass);
 
-		for($pass = 0; $pass <= $reached_pass; $pass++)
+		foreach($testPassesSelector->getReportablePasses() as $pass)
 		{
 			$row = array();
 
-			$finishdate = $this->object->getPassFinishDate($active_id, $pass);
-			if($finishdate > 0)
-			{
 				if(!$short)
 				{
 					$result_array =& $this->object->getTestResult($active_id, $pass);
@@ -162,7 +175,7 @@ class ilTestServiceGUI
 							'tst_pass_details',
 							$this->ctrl->getLinkTargetByClass($targetclass, $targetcommand)
 						);
-						if($this->object->isPassDeletionAllowed())
+						if($this->object->isPassDeletionAllowed() && $pass != $counted_pass)
 						{
 							$aslgui->addItem(
 								$this->lng->txt('delete'),
@@ -187,10 +200,10 @@ class ilTestServiceGUI
 				}
 
 				$row['pass'] = $pass + 1;
-				$row['date'] = $finishdate;
+				$row['date'] = $this->object->getPassFinishDate($active_id, $pass);
 				if(!$short)
 				{
-					$row['answered'] = $this->object->getAnsweredQuestionCount($active_id, $pass) . ' ' . strtolower($this->lng->txt('of')) . ' ' . (count($result_array) - 2);
+					$row['answered'] = $result_array['pass']['num_workedthrough'] . ' ' . strtolower($this->lng->txt('of')) . ' ' . (count($result_array) - 2);
 					if($this->object->isOfferingQuestionHintsEnabled())
 					{
 						$row['hints'] = $total_requested_hints;
@@ -200,7 +213,6 @@ class ilTestServiceGUI
 				}
 				
 				$data[] = $row;
-			}
 		}
 
 		$table->setData($data);
@@ -303,7 +315,7 @@ class ilTestServiceGUI
 
 						$show_question_only = ($this->object->getShowSolutionAnswersOnly()) ? TRUE : FALSE;
 
-						if($this->object->getShowSolutionListComparison() && $show_solutions)
+						if($show_solutions)
 						{
 							$compare_template = new ilTemplate('tpl.il_as_tst_answers_compare.html', TRUE, TRUE, 'Modules/Test');
 							$compare_template->setVariable("HEADER_PARTICIPANT", $this->lng->txt('tst_header_participant'));
@@ -788,9 +800,6 @@ class ilTestServiceGUI
 		$template->setVariable("TXT_USR_NAME", $this->lng->txt("name"));
 		$uname = $this->object->userLookupFullName($user_id, $overwrite_anonymity);
 		$template->setVariable("VALUE_USR_NAME", $uname);
-		$pass = $this->object->_getPass($active_id);
-		$template->setVariable("EXAM_ID_TXT", $this->lng->txt("exam_id"));
-		$template->setVariable("EXAM_ID", $this->object->getExamId($active_id , $pass));
 		$template->setVariable("TXT_TEST_DATE", $this->lng->txt("tst_tst_date"));
 		$template->setVariable("TXT_PRINT_DATE", $this->lng->txt("tst_print_date"));
 		$old_value = ilDatePresentation::useRelativeDates();
@@ -917,6 +926,16 @@ class ilTestServiceGUI
 
 			$signature = $this->getResultsSignature();
 			$template->setVariable("SIGNATURE", $signature);
+			
+			if ($this->object->isShowExamIdInTestResultsEnabled())
+			{
+				$template->setCurrentBlock('exam_id_footer');
+				$template->setVariable('EXAM_ID_VAL', $this->object->lookupExamId(
+					$testSession->getActiveId(), $pass
+				));
+				$template->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
+				$template->parseCurrentBlock();
+			}
 		}
 		$template->setVariable("TEXT_HEADING", sprintf($this->lng->txt("tst_result_user_name"), $uname));
 		$template->setVariable("USER_DATA", $user_data);
@@ -994,6 +1013,9 @@ class ilTestServiceGUI
 	 */
 	public function getQuestionResultForTestUsers($question_id, $test_id)
 	{
+		// REQUIRED, since we call this object regardless of the loop
+		$question_gui =& $this->object->createQuestionGUI("", $question_id);
+
 		$foundusers = $this->object->getParticipantsForTestAndQuestion($test_id, $question_id);
 		$output = "";
 		foreach ($foundusers as $active_id => $passes)
@@ -1003,7 +1025,9 @@ class ilTestServiceGUI
 			{
 				if (($resultpass !== null) && ($resultpass == $passes[$i]["pass"]))
 				{
+					// check if re-instantiation is really neccessary
 					$question_gui =& $this->object->createQuestionGUI("", $passes[$i]["qid"]);
+					
 					$output .= $this->getResultsHeadUserAndPass($active_id, $resultpass+1);
 					$output .= $question_gui->getSolutionOutput(
 						$active_id, 

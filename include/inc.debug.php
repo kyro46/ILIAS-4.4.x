@@ -26,7 +26,7 @@
  * 
  * @author Björn Heyser <bheyser@databay.de>
  * @author Sascha Hofmann <shofmann@databay.de>
- * @version $Id: inc.debug.php 43884 2013-08-02 11:12:56Z bheyser $
+ * @version $Id$
  *
  * @package ilias-develop
  */

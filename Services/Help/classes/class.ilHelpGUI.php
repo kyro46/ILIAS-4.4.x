@@ -8,7 +8,7 @@ include_once ("Services/Help/classes/class.ilHelp.php");
 * Help GUI class.
 *
 * @author	Alex Killing <alex.killing@gmx.de>
-* @version	$Id: class.ilHelpGUI.php 47279 2014-01-15 16:48:14Z akill $
+* @version	$Id$
 *
 * @ilCtrl_Calls ilHelpGUI: ilLMPageGUI
 *
@@ -187,7 +187,7 @@ class ilHelpGUI
 	function showHelp()
 	{
 		global $ilHelp, $lng, $ilSetting;
-		
+
 		if ($_GET["help_screen_id"] != "")
 		{
 			ilSession::set("help_screen_id", $_GET["help_screen_id"]);

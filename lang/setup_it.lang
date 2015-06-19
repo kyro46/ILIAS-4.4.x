@@ -5,7 +5,7 @@
 * @module       setup language file italian
 * @modulegroup	language
 * @author 		Simone Giannoni <giannoni@ksolutions.it>, Roberto del Mastro <roberto@opencons.net>
-* @version		$Id: setup_it.lang 46062 2013-11-06 16:13:02Z akill $
+* @version		$Id$
 */
 // The language file starts beyond the HTML-comment below. DO NOT modify this line!
 // To edit your language file with a spreadsheet (i.e. Excel or StarCalc) remove all lines
@@ -585,3 +585,4 @@ tree_implementation_ns#:#Nested-Set Model###06 11 2013 new variable
 tree_implementation_mp#:#Materialized-Path Model###06 11 2013 new variable
 tree_implementation_switch_btn#:#Switch Tree Implementation###06 11 2013 new variable
 tree_implementation_switched#:#The tree implementation type has been switched.###06 11 2013 new variable
+feedback_recipient_info#:#This address is used in the footer link "Contact Administration"###14 05 2014 new variable

@@ -6,7 +6,7 @@
 * are stored here 
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilLinkCheckNotify.php 33502 2012-03-03 14:14:30Z akill $
+* @version $Id$
 */
 class ilLinkCheckNotify
 {

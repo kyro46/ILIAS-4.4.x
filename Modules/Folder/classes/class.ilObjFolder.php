@@ -27,7 +27,7 @@ require_once "./Services/Container/classes/class.ilContainer.php";
 * Class ilObjFolder
 *
 * @author Wolfgang Merkens <wmerkens@databay.de>
-* @version $Id: class.ilObjFolder.php 44216 2013-08-16 07:17:55Z jluetzen $
+* @version $Id$
 *
 * @extends ilObject
 */

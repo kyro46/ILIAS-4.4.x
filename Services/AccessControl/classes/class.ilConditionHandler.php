@@ -61,7 +61,7 @@
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilConditionHandler.php 44362 2013-08-22 08:36:03Z jluetzen $
+* @version $Id$
 */
 class ilConditionHandler
 {

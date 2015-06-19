@@ -7,7 +7,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
  * Class ilObjSystemFolderGUI
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * $Id: class.ilObjSystemFolderGUI.php 48733 2014-03-19 09:14:59Z jluetzen $
+ * $Id$
  *
  * @ilCtrl_Calls ilObjSystemFolderGUI: ilPermissionGUI, ilImprintGUI
  * @ilCtrl_Calls ilObjSystemFolderGUI: ilObjectOwnershipManagementGUI, ilCronManagerGUI
@@ -911,8 +911,15 @@ class ilObjSystemFolderGUI extends ilObjectGUI
 	*/
 	function showServerInfoObject()
 	{
-		global $tpl, $ilCtrl;
+		/**
+		 * @var $ilToolbar ilToolbarGUI
+		 * @var $lng       ilLanguage
+		 * @var $ilCtrl    ilCtrl
+		 * @var $tpl       ilTemplate
+		 */
+		global $tpl, $ilCtrl, $ilToolbar, $lng;
 
+		$ilToolbar->addButton($lng->txt('vc_information'), $this->ctrl->getLinkTarget($this, 'showVcsInformation'));
 
 		$this->initServerInfoForm();
 		$this->setServerInfoSubTabs("server_data");
@@ -963,17 +970,6 @@ class ilObjSystemFolderGUI extends ilObjectGUI
 		$ne->setValue($ilSetting->get("ilias_version"));
 		$this->form->addItem($ne);
 
-		// version controll information, object can be created by factory in later revisions (if we support git etc.)
-		require_once 'Services/Administration/classes/class.ilSubversionInformation.php';
-		$vc = new ilSubversionInformation();
-		$revision_info = $vc->getInformationAsHtml();
-		if($revision_info)
-		{
-			$ne = new ilCustomInputGUI($lng->txt('vc_information'), '');
-			$ne->setHtml($revision_info);
-			$this->form->addItem($ne);
-		}
-		
 		// host
 		$ne = new ilNonEditableValueGUI($lng->txt("host"), "");
 		$ne->setValue($_SERVER["SERVER_NAME"]);
@@ -1089,8 +1085,12 @@ class ilObjSystemFolderGUI extends ilObjectGUI
 	*/
 	public function initBasicSettingsForm()
 	{
+		/**
+		 * @var $lng ilLanguage
+		 * @var $ilSetting ilSetting
+		 */
 		global $lng, $ilSetting;
-		
+
 		include_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 		$this->form = new ilPropertyFormGUI();
 		$lng->loadLanguageModule("pd");
@@ -1124,13 +1124,8 @@ class ilObjSystemFolderGUI extends ilObjectGUI
 		$cb2 = new ilCheckboxInputGUI($this->lng->txt("search_engine"), "open_google");
 		$cb2->setInfo($this->lng->txt("enable_search_engine"));
 		$this->form->addItem($cb2);
-		if(!$robot_settings->checkModRewrite())
-		{
-			$cb2->setAlert($lng->txt("mod_rewrite_disabled"));
-			$cb2->setChecked(false);
-			$cb2->setDisabled(true);
-		}
-		elseif(!$robot_settings->checkRewrite())
+
+		if(!$robot_settings->checkRewrite())
 		{
 			$cb2->setAlert($lng->txt("allow_override_alert"));
 			$cb2->setChecked(false);
@@ -2224,5 +2219,34 @@ class ilObjSystemFolderGUI extends ilObjectGUI
 		$ilErr->raiseError($lng->txt("msg_no_perm_read"), $ilErr->FATAL);
 	}
 
+	/**
+	 *
+	 */
+	protected function showVcsInformationObject()
+	{
+		$vc_info = array();
+
+		require_once 'Services/Administration/classes/class.ilSubversionInformation.php';
+		require_once 'Services/Administration/classes/class.ilGitInformation.php';
+
+		foreach(array(new ilSubversionInformation(), new ilGitInformation()) as $vc)
+		{
+			$html = $vc->getInformationAsHtml();
+			if($html)
+			{
+				$vc_info[] = $html;
+			}
+		}
+
+		if($vc_info)
+		{
+			ilUtil::sendInfo(implode("<br />", $vc_info));
+		}
+		else
+		{
+			ilUtil::sendInfo($this->lng->txt('vc_information_not_determined'));
+		}
+
+		$this->showServerInfoObject();
+	}
 }
-?>

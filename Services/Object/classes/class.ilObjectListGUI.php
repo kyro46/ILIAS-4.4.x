@@ -17,7 +17,7 @@ define ("IL_LIST_FULL", "full");
 * generally refuses them.
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjectListGUI.php 47874 2014-02-11 14:57:12Z jluetzen $
+* $Id$
 *
 */
 class ilObjectListGUI
@@ -2601,7 +2601,7 @@ class ilObjectListGUI
 	function insertCommands($a_use_asynch = false, $a_get_asynch_commands = false,
 		$a_asynch_url = "", $a_header_actions = false)
 	{
-		global $lng;				
+		global $lng, $ilUser;
 
 		if (!$this->getCommandsStatus())
 		{
@@ -2783,6 +2783,26 @@ class ilObjectListGUI
 		if(!$a_header_actions)
 		{
 			$this->ctrl->clearParametersByClass($this->gui_class_name);
+		}
+
+		// fix bug #12417
+		// there is one case, where no action menu should be displayed:
+		// public area, category, no info tab
+		// todo: make this faster and remove type specific implementation if possible
+		if ($a_use_asynch && !$a_get_asynch_commands && !$a_header_actions)
+		{
+			if ($ilUser->getId() == ANONYMOUS_USER_ID && $this->type == "cat")
+			{
+				include_once("./Services/Container/classes/class.ilContainer.php");
+				include_once("./Services/Object/classes/class.ilObjectServiceSettingsGUI.php");
+				if (!ilContainer::_lookupContainerSetting(
+					$this->obj_id,
+					ilObjectServiceSettingsGUI::INFO_TAB_VISIBILITY,
+					true))
+				{
+					return;
+				}
+			}
 		}
 
 		if ($a_use_asynch && $a_get_asynch_commands)

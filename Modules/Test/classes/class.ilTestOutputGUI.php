@@ -13,12 +13,13 @@ require_once './Modules/Test/classes/class.ilTestPlayerAbstractGUI.php';
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  *          
- * @version		$Id: class.ilTestOutputGUI.php 48457 2014-03-10 15:26:56Z bheyser $
+ * @version		$Id$
  * 
  * @inGroup		ModulesTest
  * 
  * @ilCtrl_Calls ilTestOutputGUI: ilAssQuestionHintRequestGUI, ilAssSpecFeedbackPageGUI, ilAssGenFeedbackPageGUI
  * @ilCtrl_Calls ilTestOutputGUI: ilTestSignatureGUI
+ * @ilCtrl_Calls ilTestOutputGUI: ilAssQuestionPageGUI
  */
 class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 {
@@ -49,12 +50,9 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		$testSessionFactory = new ilTestSessionFactory($this->object);
 		$this->testSession = $testSessionFactory->getSession($_GET['active_id']);
 		
-		if( !$this->testSession->getActiveId() )
-		{
-			$this->testSession->setUserId($ilUser->getId());
-			$this->testSession->setAnonymousId($_SESSION["tst_access_code"][$this->object->getTestId()]);
-			$this->testSession->saveToDb();
-		}
+		$this->ensureExistingTestSession($this->testSession);
+		
+		$this->initProcessLocker($this->testSession->getActiveId());
 		
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
 		$this->testSequence = $testSequenceFactory->getSequence($this->testSession);
@@ -70,6 +68,15 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		
 		switch($next_class)
 		{
+			case 'ilassquestionpagegui':
+				
+				$questionId = $this->testSequence->getQuestionForSequence( $this->calculateSequence() );
+				
+				require_once "./Modules/TestQuestionPool/classes/class.ilAssQuestionPageGUI.php";
+				$page_gui = new ilAssQuestionPageGUI($questionId);
+				$ret = $this->ctrl->forwardCommand($page_gui);
+				break;
+			
 			case 'iltestsubmissionreviewgui':
 				require_once './Modules/Test/classes/class.ilTestSubmissionReviewGUI.php';
 				$gui = new ilTestSubmissionReviewGUI($this, $this->object);
@@ -258,6 +265,7 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 				if ($this->object->isRandomTest())
 				{
 					$this->generateRandomTestPassForActiveUser();
+
 					$this->object->loadQuestions();
 					$shuffle = FALSE; // shuffle is already done during the creation of the random questions
 				}
@@ -356,6 +364,21 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 				break;
 		}
 	}
+	
+	private function isValidSequenceElement($sequenceElement)
+	{
+		if( $sequenceElement < 1 )
+		{
+			return false;
+		}
+		
+		if( !$this->testSequence->getPositionOfSequence($sequenceElement) )
+		{
+			return false;
+		}
+		
+		return true;
+	}
 
 	/**
 	 * Creates the learners output of a question
@@ -364,7 +387,10 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 	{
 		global $ilUser;
 		
-		if ($sequence < 1) $sequence = $this->testSequence->getFirstSequence();
+		if( !$this->isValidSequenceElement($sequence) )
+		{
+			$sequence = $this->testSequence->getFirstSequence();
+		}
 		
 		$_SESSION["active_time_id"]= $this->object->startWorkingTime($this->testSession->getActiveId(), 
 																	 $this->testSession->getPass()
@@ -380,6 +406,23 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 
 		$questionId = $this->testSequence->getQuestionForSequence($sequence);
 		$question_gui = $this->object->createQuestionGUI("", $questionId);
+		
+		if( !is_object($question_gui) )
+		{
+			global $ilLog;
+
+			$ilLog->write(
+				"INV SEQ: active={$this->testSession->getActiveId()} qId=$questionId seq=$sequence "
+				.serialize($this->testSequence)
+			);
+			
+			$ilLog->logStack('INV SEQ');
+			
+			$this->ctrl->setParameter($this, 'gotosequence', $this->testSequence->getFirstSequence());
+			$this->ctrl->setParameter($this, 'activecommand', 'gotoquestion');
+			$this->ctrl->redirect($this, 'redirectQuestion');
+		}
+		
 		$question_gui->setTargetGui($this);
 
 		if ($this->object->getJavaScriptOutput())
@@ -551,7 +594,7 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 			$this->tpl->setVariable("JAVASCRIPT_URL", $this->ctrl->getLinkTarget($this, "gotoQuestion"));
 		}
 
-		if ($question_gui->object->supportsJavascriptOutput())
+		if ($question_gui->object->supportsJavascriptOutput() && !$this->object->getForceJS())
 		{
 			$this->tpl->touchBlock("jsswitch");
 		}
@@ -712,6 +755,14 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 			{
 				// Something went wrong. Maybe the user pressed the start button twice
 				// Questions already exist so there is no need to create new questions
+
+				global $ilLog, $ilUser;
+
+				$ilLog->write(
+					__METHOD__.' Random Questions allready exists for user '.
+					$ilUser->getId().' in test '.$this->object->getTestId()
+				);
+
 				return true;
 			}
 		}
@@ -719,13 +770,13 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		{
 			// This may not happen! If it happens, raise a fatal error...
 
-			global $ilias, $ilErr, $ilUser;
+			global $ilLog, $ilUser;
 
-			$error = sprintf(
+			$ilLog->write(__METHOD__.' '.sprintf(
 				$this->lng->txt("error_random_question_generation"), $ilUser->getId(), $this->object->getTestId()
-			);
-
-			$ilias->raiseError($error, $ilErr->FATAL);
+			));
+			
+			return true;
 		};
 
 		return false;
@@ -733,11 +784,6 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 
 	protected function generateRandomTestPassForActiveUser()
 	{
-		if( $this->performTearsAndAngerBrokenConfessionChecks() )
-		{
-			return;
-		}
-
 		global $tree, $ilDB, $ilPluginAdmin;
 
 		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetConfig.php';
@@ -751,12 +797,19 @@ class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		$sourcePoolDefinitionList = new ilTestRandomQuestionSetSourcePoolDefinitionList($ilDB, $this->object, $sourcePoolDefinitionFactory);
 		$sourcePoolDefinitionList->loadDefinitions();
 
-		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetStagingPoolQuestionList.php';
-		$stagingPoolQuestionList = new ilTestRandomQuestionSetStagingPoolQuestionList($ilDB, $ilPluginAdmin);
+		$this->processLocker->requestRandomPassBuildLock($sourcePoolDefinitionList->hasTaxonomyFilters());
+		
+		if( !$this->performTearsAndAngerBrokenConfessionChecks() )
+		{
+			require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetStagingPoolQuestionList.php';
+			$stagingPoolQuestionList = new ilTestRandomQuestionSetStagingPoolQuestionList($ilDB, $ilPluginAdmin);
 
-		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetBuilder.php';
-		$questionSetBuilder = ilTestRandomQuestionSetBuilder::getInstance($ilDB, $this->object, $questionSetConfig, $sourcePoolDefinitionList, $stagingPoolQuestionList);
+			require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetBuilder.php';
+			$questionSetBuilder = ilTestRandomQuestionSetBuilder::getInstance($ilDB, $this->object, $questionSetConfig, $sourcePoolDefinitionList, $stagingPoolQuestionList);
 
-		$questionSetBuilder->performBuild($this->testSession);
+			$questionSetBuilder->performBuild($this->testSession);
+		}
+		
+		$this->processLocker->releaseRandomPassBuildLock();
 	}
 }

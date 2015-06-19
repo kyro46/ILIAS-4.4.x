@@ -26,7 +26,7 @@
 * Meta Data class (element location)
 *
 * @package ilias-core
-* @version $Id: class.ilMDLocation.php 19258 2009-03-04 10:11:40Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

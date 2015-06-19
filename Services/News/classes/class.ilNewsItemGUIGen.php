@@ -11,7 +11,7 @@ define("IL_FORM_RE_CREATE", 3);
 * User Interface for NewsItem entities.
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilNewsItemGUIGen.php 30603 2011-09-12 15:03:45Z smeyer $
+* @version $Id$
 */
 class ilNewsItemGUIGen 
 {

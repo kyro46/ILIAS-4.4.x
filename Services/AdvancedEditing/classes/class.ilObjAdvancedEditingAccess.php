@@ -28,7 +28,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilObjAdvancedEditingAccess.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 */
 class ilObjAdvancedEditingAccess extends ilObjectAccess

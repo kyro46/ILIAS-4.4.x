@@ -6,7 +6,7 @@
 * bookmark import export
 *
 * @author Manfred Thaler <manfred.thaler@endo7.com>
-* @version $Id: class.ilBookmarkImportExport.php 35849 2012-07-27 15:26:05Z mjansen $
+* @version $Id$
 * @ingroup ServicesBookmarks
 */
 class ilBookmarkImportExport

@@ -6,7 +6,7 @@
 *
 * @author		Helmut Schottmueller <helmut.schottmueller@mac.com>
 * @author 		Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjQuestionPoolListGUI.php 48465 2014-03-10 16:08:15Z bheyser $
+* $Id$
 *
 * @extends ilObjectListGUI
 * @ingroup ModulesTestQuestionPool

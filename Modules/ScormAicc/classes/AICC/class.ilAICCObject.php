@@ -25,7 +25,7 @@
 /**
 * Parent object for all AICC objects, that are stored in table aicc_object
 *
-* @version $Id: class.ilAICCObject.php 21335 2009-08-28 10:00:30Z mjansen $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

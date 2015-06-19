@@ -8,7 +8,7 @@ require_once("./Services/UIComponent/Explorer2/classes/class.ilTreeExplorerGUI.p
 * class for explorer view for mailboxes
 * 
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilMailExplorer.php 42077 2013-05-07 15:52:11Z jluetzen $
+* @version $Id$
 */
 class ilMailExplorer extends ilTreeExplorerGUI
 {	

@@ -27,7 +27,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
 * Class ilObjCertificateSettings
 * 
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilObjCertificateSettings.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCertificate
 */

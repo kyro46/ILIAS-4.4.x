@@ -26,7 +26,7 @@
 * class ilTimingPlaned
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilTimingPlaned.php 46515 2013-11-29 13:56:09Z jluetzen $
+* @version $Id$
 * 
 */
 

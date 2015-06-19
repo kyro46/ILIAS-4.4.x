@@ -6,7 +6,7 @@
 *
 * @author Peter Gabriel <pgabriel@databay.de>
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilDBUpdate.php 46891 2013-12-17 14:51:19Z fschmid $
+* @version $Id$
 * @ingroup ServicesDatabase
 */
 class ilDBUpdate

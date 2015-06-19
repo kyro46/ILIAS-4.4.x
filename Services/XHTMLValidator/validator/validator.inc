@@ -23,7 +23,7 @@
    |                     http://validator.aborla.net/                     |
    +----------------------------------------------------------------------+
 
-     $Id: validator.inc 8421 2005-08-16 15:10:39Z akill $
+     $Id$
 
 vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 */

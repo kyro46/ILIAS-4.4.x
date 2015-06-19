@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/exceptions/class.ilTestQuestionPoolExcept
  * Model class for managing a question hint
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssQuestionHint.php 45934 2013-10-31 17:22:22Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

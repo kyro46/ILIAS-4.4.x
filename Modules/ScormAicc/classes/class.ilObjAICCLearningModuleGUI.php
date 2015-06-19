@@ -31,7 +31,7 @@ require_once("./Modules/ScormAicc/classes/class.ilObjAICCLearningModule.php");
 * Class ilObjAICCLearningModuleGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjAICCLearningModuleGUI.php 33509 2012-03-04 11:44:42Z akill $
+* $Id$
 *
 * @ilCtrl_Calls ilObjAICCLearningModuleGUI: ilFileSystemGUI, ilMDEditorGUI, ilPermissionGUI, ilLearningProgressGUI
 * @ilCtrl_Calls ilObjAICCLearningModuleGUI: ilInfoScreenGUI

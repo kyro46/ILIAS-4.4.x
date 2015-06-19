@@ -27,7 +27,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
 * Class ilObjExternalToolsSettings
 * 
 * @author Sascha Hofmann <saschahofmann@gmx.de> 
-* @version $Id: class.ilObjExternalToolsSettings.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @extends ilObject
 */

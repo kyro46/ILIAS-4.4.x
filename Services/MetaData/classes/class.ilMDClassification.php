@@ -26,7 +26,7 @@
 * Meta Data class (element classification)
 *
 * @package ilias-core
-* @version $Id: class.ilMDClassification.php 19234 2009-03-03 13:39:41Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

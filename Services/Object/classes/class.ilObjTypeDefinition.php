@@ -28,7 +28,7 @@
 * CLASS IS DEPRECATED
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* $Id: class.ilObjTypeDefinition.php 33501 2012-03-03 11:11:05Z akill $
+* $Id$
 * 
 * @extends ilObject
 */

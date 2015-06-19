@@ -37,7 +37,7 @@ define ("QT_TEXTSUBSET", "assTextSubset");
 * QTI item class
 *
 * @author Helmut Schottmüller <hschottm@gmx.de>
-* @version $Id: class.ilQTIItem.php 20504 2009-07-10 08:27:44Z hschottm $
+* @version $Id$
 *
 * @package assessment
 */

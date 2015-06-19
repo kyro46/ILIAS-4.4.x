@@ -7,7 +7,7 @@
 * Abstract class for test search. Should be inherited by ilFulltextMediaPoolSearch
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilMediaPoolSearch.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 * 
 * @package ilias-search
 *

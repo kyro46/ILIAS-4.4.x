@@ -6,7 +6,7 @@
  * GUI class for service settings (calendar, notes, comments)
  *
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * @version $Id: class.ilObjectServiceSettingsGUI.php 46447 2013-11-27 15:11:25Z akill $
+ * @version $Id$
  * 
  * @ilCtrl_Calls ilObjectServiceSettingsGUI:  
  * @ingroup ServicesObject

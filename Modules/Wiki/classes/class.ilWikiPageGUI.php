@@ -197,9 +197,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 		$lg->enableComments(ilObjWiki::_lookupPublicNotes($wiki_id), false);
 		
 		// rating
-		if (ilObjWiki::_lookupRatingOverall($wiki_id)
-			&& $this->getPageObject()->getRating()
-			&& $this->getPageObject()->old_nr == 0)
+		if (ilObjWiki::_lookupRatingOverall($wiki_id))
 		{
 			$lg->enableRating(true, $this->lng->txt("wiki_rate_overall"), 
 				false,
@@ -543,10 +541,10 @@ class ilWikiPageGUI extends ilPageObjectGUI
 	{
 		global $ilUser, $lng, $ilToolbar, $ilCtrl, $tpl;
 
-		$ilToolbar->setFormAction($ilCtrl->getFormActionByClass("ilobjwikigui", "printView"),
+		/*$ilToolbar->setFormAction($ilCtrl->getFormActionByClass("ilobjwikigui", "printView"),
 			false, "print_view");
 		$ilToolbar->addFormButton($lng->txt("cont_show_print_view"), "printView");
-		$ilToolbar->setCloseFormTag(false);
+		$ilToolbar->setCloseFormTag(false);*/
 
 		$this->initPrintViewSelectionForm();
 
@@ -590,10 +588,11 @@ class ilWikiPageGUI extends ilPageObjectGUI
 
 		$this->form->addCommandButton("printView", $lng->txt("cont_show_print_view"));
 		//$this->form->setOpenTag(false);
-		$this->form->setCloseTag(false);
+		//$this->form->setCloseTag(false);
 
 		$this->form->setTitle($lng->txt("cont_print_selection"));
-		//$this->form->setFormAction($ilCtrl->getFormAction($this));
+		$this->form->setFormAction($ilCtrl->getFormActionByClass("ilobjwikigui", "printView"),
+			false, "print_view");
 	}
 
 	////
@@ -647,7 +646,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 	{
 		global $ilAccess, $tpl, $ilCtrl, $lng;
 
-		if ($ilAccess->checkAccess("read", "", $_GET["ref_id"]))
+		if ($ilAccess->checkAccess("edit_content", "", $_GET["ref_id"]))
 		{
 			$this->initRenameForm();
 			$tpl->setContent($this->form->getHTML());
@@ -691,7 +690,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 		$this->initRenameForm();
 		if ($this->form->checkInput())
 		{
-			if ($ilAccess->checkAccess("read", "", $_GET["ref_id"]))
+			if ($ilAccess->checkAccess("edit_content", "", $_GET["ref_id"]))
 			{
 				$new_name = $this->form->getInput("new_page_name");
 				

@@ -8,7 +8,7 @@ require_once("Services/Mail/classes/class.ilMailbox.php");
 * Mail Import Parser
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilMailImportParser.php 34068 2012-04-06 07:08:36Z mjansen $Id: class.ilMailImportParser.php,v 1.2 2004/04/08 09:59:55 smeyer Exp $
+* @version $Id$Id: class.ilMailImportParser.php,v 1.2 2004/04/08 09:59:55 smeyer Exp $
 *
 * @extends ilSaxParser
 */

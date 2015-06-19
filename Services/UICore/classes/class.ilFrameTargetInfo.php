@@ -4,7 +4,7 @@
 /**
  * ilFrameTargetInfo
  * @author	 Alex Killing <alex.killing@gmx.de>
- * @version	$Id: class.ilFrameTargetInfo.php 34129 2012-04-12 07:43:21Z mjansen $
+ * @version	$Id$
  */
 class ilFrameTargetInfo
 {

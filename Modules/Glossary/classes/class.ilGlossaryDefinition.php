@@ -7,7 +7,7 @@ require_once("./Modules/Glossary/classes/class.ilGlossaryDefPage.php");
 * Class ilGlossaryDefinition
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilGlossaryDefinition.php 47283 2014-01-15 18:04:51Z akill $
+* @version $Id$
 *
 * @ingroup ModulesGlossary
 */

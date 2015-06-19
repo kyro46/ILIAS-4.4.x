@@ -244,11 +244,13 @@ class assFormulaQuestion extends assQuestion
 			{
 				$resObj = $this->getResult($result);
 				$value  = "";
-
+				$frac_helper = '';
 				$user_data[$result]['result_type'] = $resObj->getResultType();
 
-				if($resObj->getResultType() == assFormulaQuestionResult::RESULT_FRAC
-				||$resObj->getResultType() == assFormulaQuestionResult::RESULT_CO_FRAC)
+				if(
+					$resObj->getResultType() == assFormulaQuestionResult::RESULT_FRAC ||
+					$resObj->getResultType() == assFormulaQuestionResult::RESULT_CO_FRAC
+				)
 				{
 					$is_frac = true;
 				}
@@ -256,13 +258,30 @@ class assFormulaQuestion extends assQuestion
 				{
 					if(is_array($userdata[$result]))
 					{
-						if($forsolution)
+						if($forsolution && $result_output)
 						{
-							$value = $userdata[$result]["value"];
+							$value_org = $resObj->calculateFormula($this->getVariables(), $this->getResults(), parent::getId());
+							$value = sprintf("%." . $resObj->getPrecision() . "f", $value_org);
+							if($is_frac)
+							{
+								$value = assFormulaQuestionResult::convertDecimalToCoprimeFraction($value_org);
+								if(is_array($value))
+								{
+									$frac_helper = $value[1];
+									$value =  $value[0];
+								}
+							}
 						}
 						else
 						{
-							$value = ' value="' . $userdata[$result]["value"] . '"';
+							if($forsolution)
+							{
+								$value = $userdata[$result]["value"];
+							}
+							else
+							{
+								$value = ' value="' . $userdata[$result]["value"] . '"';
+							}
 						}
 					}
 				}
@@ -276,6 +295,12 @@ class assFormulaQuestion extends assQuestion
 						if($is_frac)
 						{
 							$value = assFormulaQuestionResult::convertDecimalToCoprimeFraction($value);
+							if(is_array($value))
+							{
+								$frac_helper = $value[1];
+								$value = $value[0];
+							}
+							$value = ' value="' . $value . '"';
 						}
 					}
 					else
@@ -290,6 +315,11 @@ class assFormulaQuestion extends assQuestion
 							||$resObj->getResultType() == assFormulaQuestionResult::RESULT_CO_FRAC)
 						{
 							$val = $resObj->convertDecimalToCoprimeFraction($val);
+							if(is_array($val))
+							{
+								$frac_helper = $val[1];
+								$val = $val[0];
+							}
 						}
 						else
 						{
@@ -361,9 +391,31 @@ class assFormulaQuestion extends assQuestion
 						$units .= ' ' . $this->lng->txt('expected_result_type') . ': ' . $this->lng->txt('result_dec');
 						break;
 					case assFormulaQuestionResult::RESULT_FRAC:
+						if(strlen($frac_helper))
+						{
+							$units .= ' &asymp; ' . $frac_helper . ', ';
+						}
+						elseif (is_array($userdata) && isset($userdata[$result]) && strlen($userdata[$result]["frac_helper"]))
+						{
+							if(!preg_match('-/-',  $value))
+							{
+								$units .= ' &asymp; ' . $userdata[$result]["frac_helper"] . ', ';
+							}
+						}
 						$units .= ' ' . $this->lng->txt('expected_result_type') . ': ' . $this->lng->txt('result_frac');
 						break;
 					case assFormulaQuestionResult::RESULT_CO_FRAC:
+						if(strlen($frac_helper))
+						{
+							$units .= ' &asymp; ' . $frac_helper . ', ';
+						}
+						elseif (is_array($userdata) && isset($userdata[$result]) && strlen($userdata[$result]["frac_helper"]))
+						{
+							if(!preg_match('-/-',  $value))
+							{
+								$units .= ' &asymp; ' . $userdata[$result]["frac_helper"] . ', ';
+							}
+						}
 						$units .= ' ' . $this->lng->txt('expected_result_type') . ': ' . $this->lng->txt('result_co_frac');
 						break;
 					case assFormulaQuestionResult::RESULT_NO_SELECTION:
@@ -381,7 +433,7 @@ class assFormulaQuestion extends assQuestion
 							$resunit = $this->getUnitrepository()->getUnit($userdata[$result]["unit"]);
 						}
 
-						if($userdata[$result]["value"])
+						if(isset($userdata[$result]["value"]))
 						{
 							$user_value = $userdata[$result]["value"];
 						}
@@ -421,7 +473,14 @@ class assFormulaQuestion extends assQuestion
 					$resulttext = "(";
 					if($resObj->getRatingSimple())
 					{
-						$resulttext .= $found['points'] . " " . (($found['points'] == 1) ? $this->lng->txt('point') : $this->lng->txt('points'));
+						if($frac_helper)
+						{
+							$resulttext .="n/a";
+						}
+						else
+						{
+							$resulttext .= $found['points'] . " " . (($found['points'] == 1) ? $this->lng->txt('point') : $this->lng->txt('points'));
+						}
 					}
 					else
 					{
@@ -914,6 +973,9 @@ class assFormulaQuestion extends assQuestion
 			include_once "./Modules/Test/classes/class.ilObjTest.php";
 			$pass = ilObjTest::_getPass($active_id);
 		}
+
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
+		
 		$entered_values = FALSE;
 		foreach($_POST as $key => $value)
 		{
@@ -975,6 +1037,9 @@ class assFormulaQuestion extends assQuestion
 				));
 			}
 		}
+
+		$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+
 		if($entered_values)
 		{
 			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
@@ -1084,7 +1149,7 @@ class assFormulaQuestion extends assQuestion
 	 */
 	public function setExportDetailsXLS(&$worksheet, $startrow, $active_id, $pass, &$format_title, &$format_bold)
 	{
-		include_once ("./classes/class.ilExcelUtils.php");
+		require_once 'Services/Excel/classes/class.ilExcelUtils.php';
 		$solution = $this->getSolutionValues($active_id, $pass);
 		$worksheet->writeString($startrow, 0, ilExcelUtils::_convert_text($this->lng->txt($this->getQuestionType())), $format_title);
 		$worksheet->writeString($startrow, 1, ilExcelUtils::_convert_text($this->getTitle()), $format_title);
@@ -1094,7 +1159,7 @@ class assFormulaQuestion extends assQuestion
 			$worksheet->writeString($startrow + $i, 0, ilExcelUtils::_convert_text($solutionvalue["value1"]), $format_bold);
 			if(strpos($solutionvalue["value1"], "_unit"))
 			{
-				$unit = $this->getUnit($solutionvalue["value2"]);
+				$unit = $this->getUnitrepository()->getUnit($solutionvalue["value2"]);
 				if(is_object($unit))
 				{
 					$worksheet->write($startrow + $i, 1, $unit->getUnit());
@@ -1148,7 +1213,6 @@ class assFormulaQuestion extends assQuestion
 				$user_solution[$matches[1]]["unit"] = $solution_value["value2"];
 			}
 		}
-		
 		foreach($this->getResults() as $result)
 		{
 			$resVal = $result->calculateFormula($this->getVariables(), $this->getResults(), parent::getId(), false);
@@ -1182,7 +1246,13 @@ class assFormulaQuestion extends assQuestion
 				|| $result->getResultType() == assFormulaQuestionResult::RESULT_FRAC)
 			{
 				$value = assFormulaQuestionResult::convertDecimalToCoprimeFraction($resVal);
+				if(is_array($value))
+				{
+					$frac_helper = $value[1];
+					$value =  $value[0];
+				}
 				$user_solution[$result->getResult()]["value"] = $value;
+				$user_solution[$result->getResult()]["frac_helper"] = $frac_helper;
 			}
 			else
 			{

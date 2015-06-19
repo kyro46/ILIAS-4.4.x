@@ -10,7 +10,7 @@ require_once 'Services/LinkChecker/interfaces/interface.ilLinkCheckerGUIRowHandl
 * Class ilObjLinkResourceGUI
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de> 
-* @version $Id: class.ilObjLinkResourceGUI.php 47142 2014-01-09 13:06:17Z smeyer $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjLinkResourceGUI: ilMDEditorGUI, ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
 * @ilCtrl_Calls ilObjLinkResourceGUI: ilExportGUI, ilWorkspaceAccessGUI, ilCommonActionDispatcherGUI
@@ -534,7 +534,7 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 			$links->setLinkId($link_id);
 			$links->setTitle(ilUtil::stripSlashes($data['tit']));
 			$links->setDescription(ilUtil::stripSlashes($data['des']));
-			$links->setTarget(ilUtil::stripSlashes($data['tar']));
+			$links->setTarget(str_replace('"', '', ilUtil::stripSlashes($data['tar'])));
 			$links->setActiveStatus((int) $data['act']);
 			$links->setDisableCheckStatus((int) $data['che']);
 			$links->setLastCheckDate($orig['last_check']);
@@ -605,7 +605,7 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 		
 		include_once './Modules/WebResource/classes/class.ilLinkResourceItems.php';
 		$this->link = new ilLinkResourceItems($a_webr_id);
-		$this->link->setTarget($this->form->getInput('tar'));
+		$this->link->setTarget(str_replace('"', '', ilUtil::stripSlashes($this->form->getInput('tar'))));
 		$this->link->setTitle($this->form->getInput('tit'));
 		$this->link->setDescription($this->form->getInput('des'));
 		$this->link->setDisableCheckStatus($this->form->getInput('che'));
@@ -1017,11 +1017,18 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 		$this->checkPermission('write');
 		$this->activateTabs('content','id_content_view');
 		
-		$link_ids = is_array($_POST['link_ids']) ?
-			$_POST['link_ids'] :
-			array($_GET['link_id']);
-		
-		if(!$link_ids)
+		$link_ids = array();
+
+		if(is_array($_POST['link_ids']))
+		{
+			$link_ids =$_POST['link_ids'];
+		}
+		elseif(isset($_GET['link_id']))
+		{
+			$link_ids = array($_GET['link_id']);
+		}
+
+		if(!count($link_ids) > 0)
 		{
 			ilUtil::sendFailure($this->lng->txt('select_one'));
 			$this->view();
@@ -1518,8 +1525,10 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 		{
 			$url = ilLinkResourceItems::_getFirstLink($obj_id);
 			
-			// handle internal links
-			if(stristr($url["target"], "|"))
+			/// #15647 - handle internal links
+			include_once "Services/Form/classes/class.ilFormPropertyGUI.php";
+			include_once "Services/Form/classes/class.ilLinkInputGUI.php";								
+			if(ilLinkInputGUI::isInternalLink($url["target"]))			
 			{
 				// #10612
 				$parts = explode("|", $url["target"]);
@@ -1555,9 +1564,11 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 			$item = $items->getItem($_REQUEST["link_id"]);
 			if($item["target"])
 			{
-				// handle internal links
-				if(stristr($item["target"], "|"))
-				{
+				// #15647 - handle internal links
+				include_once "Services/Form/classes/class.ilFormPropertyGUI.php";
+				include_once "Services/Form/classes/class.ilLinkInputGUI.php";								
+				if(ilLinkInputGUI::isInternalLink($item["target"]))
+				{				
 					$parts = explode("|", $item["target"]);
 					if ($parts[0] == "page")
 					{

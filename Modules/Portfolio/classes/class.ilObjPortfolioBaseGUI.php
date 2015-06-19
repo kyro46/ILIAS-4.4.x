@@ -246,7 +246,7 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 	// PAGES
 	//
 	
-	abstract protected function getPageInstance($a_page_id = null);
+	abstract protected function getPageInstance($a_page_id = null, $a_portfolio_id = null);
 	
 	abstract protected function getPageGUIInstance($a_page_id);
 	
@@ -323,10 +323,16 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 	 * Show portfolio page creation form
 	 */
 	protected function addPage()
-	{		
+	{
+		global $ilHelp;
+
 		$this->tabs_gui->clearTargets();
 		$this->tabs_gui->setBackTarget($this->lng->txt("back"),
 			$this->ctrl->getLinkTarget($this, "view"));
+
+		$ilHelp->setScreenIdComponent("prtf");
+		$ilHelp->setScreenId("add_page");
+
 
 		$form = $this->initPageForm("create");
 		$this->tpl->setContent($form->getHTML());
@@ -430,10 +436,15 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 	 * Show portfolio blog page creation form
 	 */
 	protected function addBlog()
-	{		
+	{
+		global $ilHelp;
+
 		$this->tabs_gui->clearTargets();
 		$this->tabs_gui->setBackTarget($this->lng->txt("back"),
 			$this->ctrl->getLinkTarget($this, "view"));
+
+		$ilHelp->setScreenIdComponent("prtf");
+		$ilHelp->setScreenId("add_blog");
 
 		$form = $this->initBlogForm();
 		$this->tpl->setContent($form->getHTML());
@@ -484,6 +495,8 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		}
 		else
 		{
+			 $this->tabs_gui->activateTab("pages");
+			
 			include_once("./Services/Utilities/classes/class.ilConfirmationGUI.php");
 			$cgui = new ilConfirmationGUI();
 			$cgui->setFormAction($this->ctrl->getFormAction($this));
@@ -786,6 +799,8 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		}
 		else
 		{			
+			 $this->tabs_gui->activateTab("pages");
+			
 			if(!$a_form)
 			{
 				$a_form = $this->initCopyPageForm();
@@ -810,8 +825,7 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 			// existing
 			if($form->getInput("target") == "old")
 			{
-				$portfolio_id = $form->getInput("prtf");
-				$portfolio = new ilObjPortfolio($portfolio_id, false);				
+				$portfolio_id = $form->getInput("prtf");						
 			}
 			// new
 			else
@@ -826,8 +840,8 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 			foreach($_POST["prtf_pages"] as $page_id)
 			{				
 				$source = $this->getPageInstance($page_id);
-				$target = $this->getPageInstance();
-				$target->setXMLContent($source->copyXmlContent());
+				$target = $this->getPageInstance(null, $portfolio_id);
+				$target->setXMLContent($source->copyXmlContent(true)); // copy mobs		
 				$target->setType($source->getType());
 				$target->setTitle($source->getTitle());
 				$target->create();							
@@ -841,6 +855,8 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		$this->copyPageForm($form);
 	}
 	
+	abstract protected function initCopyPageFormOptions(ilFormPropertyGUI $a_tgt);
+	
 	function initCopyPageForm()
 	{		
 		include_once("Services/Form/classes/class.ilPropertyFormGUI.php");
@@ -852,35 +868,7 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		$tgt->setRequired(true);
 		$form->addItem($tgt);
 
-		$all = ilObjPortfolio::getPortfoliosOfUser($this->user_id);			
-		if(sizeof($all) > 1)
-		{			
-			$old = new ilRadioOption($this->lng->txt("prtf_existing_portfolio"), "old");
-			$tgt->addOption($old);
-
-			$options = array();
-			foreach($all as $item)
-			{
-				if($item["id"] != $this->object->getId())
-				{
-					$options[$item["id"]] = $item["title"]; 
-				}
-			}				
-			$prtf = new ilSelectInputGUI($this->lng->txt("portfolio"), "prtf");
-			$prtf->setRequired(true);
-			$prtf->setOptions($options);
-			$old->addSubItem($prtf);
-		}
-
-		$new = new ilRadioOption($this->lng->txt("prtf_new_portfolio"), "new");
-		$tgt->addOption($new);
-
-		// 1st page
-		$tf = new ilTextInputGUI($this->lng->txt("title"), "title");
-		$tf->setMaxLength(128);
-		$tf->setSize(40);
-		$tf->setRequired(true);
-		$new->addSubItem($tf);		
+		$this->initCopyPageFormOptions($tgt);
 
 		$form->addCommandButton("copyPage", $this->lng->txt("save"));
 		$form->addCommandButton("view", $this->lng->txt("cancel"));

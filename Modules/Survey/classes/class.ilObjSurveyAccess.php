@@ -29,7 +29,7 @@ include_once "./Services/Object/classes/class.ilObjectAccess.php";
 *
 * @author Alex Killing <alex.killing@gmx.de>
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilObjSurveyAccess.php 44447 2013-08-23 13:54:35Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesSurvey
 */

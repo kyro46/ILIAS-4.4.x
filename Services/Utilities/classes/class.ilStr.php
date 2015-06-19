@@ -27,7 +27,7 @@
 *
 * @author Alex Killing <alex.killing@gmx.de>
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilStr.php 29301 2011-05-27 09:20:28Z smeyer $
+* @version $Id$
 */
 class ilStr
 {

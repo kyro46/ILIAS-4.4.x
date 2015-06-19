@@ -20,7 +20,7 @@ include_once "Services/Context/classes/class.ilContext.php";
 * @author Alex Killing <alex.killing@gmx.de>
 * @author Sascha Hofmann <shofmann@databay.de>
 
-* @version $Id: class.ilInitialisation.php 49370 2014-04-11 09:11:14Z jluetzen $
+* @version $Id$
 *
 * @ingroup ServicesInit
 */
@@ -319,11 +319,11 @@ class ilInitialisation
 			$default_client = $ilIliasIniFile->readVariable("clients","default");						
 			ilUtil::setCookie("ilClientId", $default_client);
 			if (CLIENT_ID != "" && CLIENT_ID != $default_client)
-			{							
-				$mess = array("en" => "Client ".$c." does not exist.",
-						"de" => "Mandant ".$c." ist ungültig.");				
+			{
+				$mess = array("en" => "Client does not exist.",
+						"de" => "Mandant ist ungültig.");
 				self::redirect("index.php?client_id=".$default_client, null, $mess);							
-			}			
+			}
 			else
 			{
 				self::abortAndDie("Invalid client");
@@ -828,9 +828,15 @@ class ilInitialisation
 	protected static function initLog() 
 	{		
 		require_once "./Services/Logging/classes/class.ilLog.php";
-		$log = new ilLog(ILIAS_LOG_DIR,ILIAS_LOG_FILE,CLIENT_ID,ILIAS_LOG_ENABLED,ILIAS_LOG_LEVEL);				
+		try
+		{
+			$log = new ilLog(ILIAS_LOG_DIR,ILIAS_LOG_FILE,CLIENT_ID,ILIAS_LOG_ENABLED,ILIAS_LOG_LEVEL);				
+		}
+		catch(ilLogException $e)
+		{
+			self::abortAndDie($e->getMessage());
+		}
 		self::initGlobal("ilLog", $log);
-		
 		// deprecated
 		self::initGlobal("log", $log);
 	}
@@ -1463,6 +1469,13 @@ class ilInitialisation
 	 */
 	protected static function redirect($a_target, $a_message_id, $a_message_static)
 	{		
+		// #12739
+		if(defined("ILIAS_HTTP_PATH") &&
+			!stristr($a_target, ILIAS_HTTP_PATH))
+		{
+			$a_target = ILIAS_HTTP_PATH."/".$a_target;
+		}
+		
 		if(ilContext::supportsRedirects())
 		{
 			ilUtil::redirect($a_target);

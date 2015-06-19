@@ -27,7 +27,7 @@
 * Class to retrieve an HTTP request
 *
 * @author	Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilHttpRequest.php 12814 2006-12-08 19:18:01Z akill $
+* @version	$Id$
 */
 	
 class ilHttpRequest

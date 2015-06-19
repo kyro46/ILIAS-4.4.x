@@ -6,7 +6,7 @@
 * Class ilObjUserFolder
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjUserFolder.php 34214 2012-04-16 14:36:18Z jluetzen $
+* @version $Id$
 *
 * @extends ilObject
 */

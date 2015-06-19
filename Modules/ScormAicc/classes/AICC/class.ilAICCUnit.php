@@ -10,7 +10,7 @@ class ilAICCUnit extends ilAICCObject
 /**
 * AICC Item
 *
-* @version $Id: class.ilAICCUnit.php 23539 2010-04-17 22:00:54Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

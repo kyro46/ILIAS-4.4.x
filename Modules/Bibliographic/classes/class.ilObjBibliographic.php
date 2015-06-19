@@ -18,6 +18,8 @@ use \LibRIS\RISReader;
  */
 class ilObjBibliographic extends ilObject2 {
 
+	const ATTRIBUTE_VALUE_MAXIMAL_TEXT_LENGTH = 4000;
+
 	/**
 	 * Id of literary articles
 	 *
@@ -67,7 +69,7 @@ class ilObjBibliographic extends ilObject2 {
 			$this->doRead();
 		}
 
-		parent::__construct();
+		parent::__construct($existant_bibl_id, false);
 	}
 
 
@@ -357,7 +359,10 @@ class ilObjBibliographic extends ilObject2 {
 					$attribute_string = array();
 					foreach ($attribute as $author_key => $author) {
 						$lastname = array($author['von'], $author['last'], $author['jr']);
-						$attribute_string[$author_key] = implode(' ', array_filter($lastname)) . ', ' . $author['first'];
+						$attribute_string[$author_key] = implode(' ', array_filter($lastname));
+                        			if(!empty($author['first'])){
+			                        	$attribute_string[$author_key] .= ', ' . $author['first'];
+                        			}
 					}
 					$bibtex_reader->data[$key][$attr_key] = implode(' / ', $attribute_string);
 				}
@@ -493,8 +498,6 @@ class ilObjBibliographic extends ilObject2 {
 		$this->setType($original->getType());
 
 		$this->doUpdate();
-
-		$this->writeSourcefileEntriesToDb();
 	}
 
 
@@ -535,6 +538,10 @@ class ilObjBibliographic extends ilObject2 {
 				if (is_array($attribute)) {
 					$attribute = implode(", ", $attribute);
 				}
+
+				if(mb_strlen($attribute, 'UTF-8') > self::ATTRIBUTE_VALUE_MAXIMAL_TEXT_LENGTH){
+					$attribute = mb_substr($attribute, 0, self::ATTRIBUTE_VALUE_MAXIMAL_TEXT_LENGTH - 3, 'UTF-8') . '...';
+		                }
 
 				// ty (RIS) or entryType (BIB) is the type and is treated seperately
 				if (strtolower($key) == 'ty' || strtolower($key) == 'entrytype') {

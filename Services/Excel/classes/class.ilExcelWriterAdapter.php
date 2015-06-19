@@ -7,7 +7,7 @@ include_once 'Services/Excel/classes/class.ilExcelWriterWrapper.php';
 * Class ilExcelWriterAdapter
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilExcelWriterAdapter.php 24199 2010-06-11 08:09:26Z jluetzen $
+* @version $Id$
 * 
 * @extends ilObjectGUI
 *

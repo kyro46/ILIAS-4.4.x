@@ -1,7 +1,7 @@
 <?php
 
 // Translation: Nuno Lopes
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.13
 
 $error[0] = 'URL Inválido: <em>%s</em>!';

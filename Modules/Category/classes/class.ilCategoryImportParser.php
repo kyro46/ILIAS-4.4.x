@@ -27,7 +27,7 @@ require_once("./Services/Xml/classes/class.ilSaxParser.php");
 * Category Import Parser
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilCategoryImportParser.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @ingroup ModulesCategory
 */

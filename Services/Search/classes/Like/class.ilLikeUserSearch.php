@@ -27,7 +27,7 @@
 * Performs Mysql Like search in table usr_data
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilLikeUserSearch.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 * 
 * @package ilias-search
 *

@@ -27,7 +27,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 * @package ilias-core
-* @version $Id: class.ilMDUtilSelect.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 */
 class ilMDUtilSelect
 {

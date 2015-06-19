@@ -1,7 +1,7 @@
 /**
  * ILIAS Open Source Test & Assessment styles
  *
- * @revision        $Id: ta.css 49207 2014-04-04 08:54:10Z mjansen $
+ * @revision        $Id$
  */
 
 .kiosk {
@@ -456,4 +456,8 @@ div.ilTestOutputBlock_DynTestFinished
 
 .ilCenterForced {
 	text-align: center !important;
+}
+
+.test_specific_feedback td{
+    padding-right: 0.5em;
 }

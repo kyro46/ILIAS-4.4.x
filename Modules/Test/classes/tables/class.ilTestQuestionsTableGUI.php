@@ -7,7 +7,7 @@ include_once('./Services/Table/classes/class.ilTable2GUI.php');
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
 * @author Björn Heyser <bheyser@databay.de>
-* @version $Id: class.ilTestQuestionsTableGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 *
 * @ingroup ModulesTest
 */
@@ -245,7 +245,7 @@ class ilTestQuestionsTableGUI extends ilTable2GUI
 		    $this->tpl->setVariable("QUESTION_POOL", ilObject::_lookupTitle($data["orig_obj_fi"]));
 		}
 		else {
-		    $this->tpl->setVariable("QUESTION_POOL", '&nbsp;');
+		    $this->tpl->setVariable("QUESTION_POOL", $this->lng->txt('tst_question_not_from_pool_info'));
 		}
 
 

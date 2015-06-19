@@ -29,7 +29,7 @@
 * This class depends on the session since we offer the possiblility to add or delete active roles during one session.
 * 
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilRbacSystem.php 47340 2014-01-17 15:45:48Z jluetzen $
+* @version $Id$
 * 
 * @ingroup ServicesAccessControl
 */

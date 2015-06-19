@@ -31,7 +31,7 @@ require_once "Modules/Category/classes/class.ilObjCategory.php";
 * Handles DAV requests on a category object.
 *
 * @author Werner Randelshofer, Hochschule Luzern, werner.randelshofer@hslu.ch
-* @version $Id: class.ilObjCategoryDAV.php 20544 2009-07-13 14:16:27Z wrandels $
+* @version $Id$
 *
 * @package webdav
 */

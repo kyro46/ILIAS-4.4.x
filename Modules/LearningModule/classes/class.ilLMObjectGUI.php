@@ -9,7 +9,7 @@
 * Base class for ilStructureObjects and ilPageObjects (see ILIAS DTD)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMObjectGUI.php 35423 2012-07-07 17:42:36Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

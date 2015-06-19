@@ -258,7 +258,7 @@ class ilTestExpressPageObjectGUI extends ilAssQuestionPageGUI
 		{
 			$questionType = $_REQUEST['sel_question_types'];
 		}
-		
+		require_once 'Modules/Test/classes/class.ilObjAssessmentFolder.php';
 		if( ilObjAssessmentFolder::isAdditionalQuestionContentEditingModePageObjectEnabled() )
 		{
 			$addContEditMode = $_POST['add_quest_cont_edit_mode'];
@@ -292,6 +292,13 @@ class ilTestExpressPageObjectGUI extends ilAssQuestionPageGUI
 					$ilCtrl->setParameterByClass('ilobjtestgui', 'test_express_mode', 1);
 				}
 				
+				if( isset($_REQUEST['add_quest_cont_edit_mode']) )
+				{
+					$ilCtrl->setParameterByClass(
+						'ilobjtestgui', 'add_quest_cont_edit_mode', $_REQUEST['add_quest_cont_edit_mode']
+					);
+				}
+				
 				$ilCtrl->setParameterByClass('ilobjtestgui', 'usage', 3);
 				$ilCtrl->setParameterByClass('ilobjtestgui', 'calling_test', $this->test_object->getId());
 
@@ -311,6 +318,13 @@ class ilTestExpressPageObjectGUI extends ilAssQuestionPageGUI
 				if ($_REQUEST['test_express_mode'])
 				{
 					$ilCtrl->setParameterByClass('ilobjtestgui', 'test_express_mode', 1);
+				}
+				
+				if( isset($_REQUEST['add_quest_cont_edit_mode']) )
+				{
+					$ilCtrl->setParameterByClass(
+						'ilobjtestgui', 'add_quest_cont_edit_mode', $_REQUEST['add_quest_cont_edit_mode']
+					);
 				}
 				
 				$ilCtrl->setParameterByClass('ilobjtestgui', 'usage', 2);
@@ -433,7 +447,7 @@ class ilTestExpressPageObjectGUI extends ilAssQuestionPageGUI
 			$new_pool->addSubItem($name);
 		}
 
-		$form->addCommandButton("handleToolbarCommand", $lng->txt("submit"));
+		$form->addCommandButton("handleToolbarCommand", $lng->txt("create"));
 		$form->addCommandButton("questions", $lng->txt("cancel"));
 
 		return $tpl->setContent($form->getHTML());

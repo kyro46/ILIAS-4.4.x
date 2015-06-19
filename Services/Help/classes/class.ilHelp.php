@@ -6,7 +6,7 @@
  * Online help application class
  *
  * @author	Alex Killing <alex.killing@gmx.de>
- * @version	$Id: class.ilHelp.php 38308 2012-11-21 16:15:12Z akill $
+ * @version	$Id$
  */
 class ilHelp
 {

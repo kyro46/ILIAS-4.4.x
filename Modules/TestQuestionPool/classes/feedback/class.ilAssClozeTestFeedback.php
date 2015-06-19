@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssMultiOptionQu
  * feedback class for assClozeTest questions
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssClozeTestFeedback.php 44607 2013-09-04 15:20:02Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

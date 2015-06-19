@@ -26,7 +26,7 @@
 * Object XML Parser
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjectXMLParser.php 33497 2012-03-02 23:24:57Z akill $
+* @version $Id$
 *
 * @extends ilSaxParser
 */

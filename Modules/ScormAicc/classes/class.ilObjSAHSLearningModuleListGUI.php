@@ -8,7 +8,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
  * Class ilObjSAHSLearningModuleListGUI
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * $Id: class.ilObjSAHSLearningModuleListGUI.php 47282 2014-01-15 17:03:22Z akill $
+ * $Id$
  *
  * @ingroup ModulesScormAicc
  */

@@ -27,7 +27,7 @@
 * Base class for creating and handling mail boxes
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilAddressbook.php 39716 2013-02-05 15:11:58Z nkrzywon $
+* @version $Id$
 *
 */
 
@@ -89,6 +89,9 @@ class ilAddressbook
 
 		if($a_query_str)
 		{
+			// #14768
+			$a_query_str = str_replace('%', '\%', $a_query_str);
+			$a_query_str = str_replace('_', '\_', $a_query_str);
 		
 			$query = "SELECT * FROM ".$this->table_addr." 
 				WHERE ( " .$ilDB->like('login', 'text', '%'.$a_query_str.'%'). " 
@@ -104,8 +107,9 @@ class ilAddressbook
 		{
 			$res = $ilDB->queryf("
 				SELECT * FROM ".$this->table_addr." WHERE user_id = %s",
-				array('text', 'integer'),
-				array($this->table_addr, $this->user_id));
+				array('integer'),
+				array($this->user_id)
+			);
 		}
 	
 		while($row = $res->fetchRow(DB_FETCHMODE_OBJECT))
@@ -377,6 +381,55 @@ class ilAddressbook
 	public function getSearchQuery()
 	{
 		return $this->search_query;
+	}
+
+	/**
+	 * @param ilObjUser $usr
+	 */
+	public static function onUserDeletion(ilObjUser $usr)
+	{
+		/**
+		 * @var $ilDB ilDB
+		 */
+		global $ilDB;
+
+		$ilDB->manipulateF(
+			'UPDATE addressbook SET login = NULL, auto_update = %s WHERE login = %s AND email IS NOT NULL',
+			array('integer', 'text'),
+			array(0, $usr->getLogin())
+		);
+
+		$ilDB->manipulateF(
+			'DELETE FROM addressbook_mlist_ass WHERE addr_id IN(
+				SELECT addr_id FROM addressbook WHERE login = %s AND email IS NULL
+			)',
+			array('text'),
+			array($usr->getLogin())
+		);
+
+		$ilDB->manipulateF(
+			'DELETE FROM addressbook WHERE login = %s AND email IS NULL',
+			array('text'),
+			array($usr->getLogin())
+		);
+	}
+
+	/**
+	 * @param string $from
+	 * @param string $to
+	 */
+	public static function onLoginNameChange($from, $to)
+	{
+		/**
+		 * @var $ilDB ilDB
+		 */
+		global $ilDB;
+
+		$ilDB->manipulateF(
+			'UPDATE addressbook SET login = %s WHERE login = %s',
+			array('text', 'text'),
+			array($to, $from)
+		);
 	}
 }
 ?>

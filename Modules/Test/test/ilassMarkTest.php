@@ -6,7 +6,7 @@
  * 
  * @author Maximilian Becker <mbecker@databay.de>
  *         
- * @version $Id: ilassMarkTest.php 44198 2013-08-15 14:54:18Z mbecker $
+ * @version $Id$
  * 
  * @ingroup ModulesTest
  */

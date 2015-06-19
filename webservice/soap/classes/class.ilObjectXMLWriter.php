@@ -14,7 +14,7 @@ include_once "./Services/Xml/classes/class.ilXmlWriter.php";
 * of the xml document.
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjectXMLWriter.php 39200 2013-01-11 13:58:38Z smeyer $
+* @version $Id$
 */
 class ilObjectXMLWriter extends ilXmlWriter
 {

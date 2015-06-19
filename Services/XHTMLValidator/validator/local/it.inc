@@ -1,7 +1,7 @@
 <?php
 
 // Translation: Sergio Bonfiglio (hiei2@interfree.it)
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.13
 
 $error[0] = 'URL non valida: <em>%s</em>!';

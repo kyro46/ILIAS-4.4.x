@@ -66,6 +66,12 @@ class ilScoringAdjustmentGUI
 	 */
 	public function executeCommand()
 	{
+		$setting = new ilSetting('assessment');
+		if( ! (bool)$setting->get('assessment_adjustments_enabled', false) )
+		{
+			$this->ctrl->redirectByClass('ilObjTestGUI');
+		}
+		
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass($this);
 
@@ -264,17 +270,20 @@ class ilScoringAdjustmentGUI
 
 		$form->addCommandButton("save", $this->lng->txt("save"));
 
+		if(method_exists($question, 'reworkFormForCorrectionMode'))
+		{
+			$form = $question->reworkFormForCorrectionMode($form);
+		}
+
 		$participants = $this->object->getParticipants();
 		$active_ids = array_keys($participants);
+		$results = array();
+		
 		foreach ($active_ids as $active_id)
 		{
-			$passes[] = $this->object->_getPass($active_id);
-			foreach ($passes as $key => $pass)
-			{
-				for ($i = 0; $i <= $pass; $i++)
-				{
-					$results[] = $question->object->getSolutionValues($active_id, $i);
-				}
+			for ($i = 0, $max=$this->object->_getPass($active_id); $i <= $max ; $i++)
+			{ // Strange for-syntax works.
+				$results[] = $question->object->getSolutionValues($active_id, $i);
 			}
 		}
 
@@ -319,7 +328,21 @@ class ilScoringAdjustmentGUI
 		{
 			/** @var $item ilFormPropertyGUI */
 			$item = $form->getItemByPostVar($postvar);
-			$item->setDisabled(true);
+			if($item != false)
+			{
+				$item->setDisabled(true);
+				switch (true)
+				{
+					case ($item instanceof ilNumberInputGUI):
+						/** @var ilNumberInputGUI $item */
+
+						$a = 1;
+						break;
+				}
+
+			} else {
+				$a = 1; // Sadly, this can happen. (And does no harm.)
+			}
 		}
 		return $form;
 	}
@@ -330,7 +353,19 @@ class ilScoringAdjustmentGUI
 		$question_pool_id = $_POST['qpl_id'];
 		$form = $this->buildAdjustQuestionForm($question_id, $question_pool_id);
 
+		
+
+		require_once './Modules/TestQuestionPool/classes/class.assQuestion.php';
+		/** @var $question assQuestionGUI|ilGuiQuestionScoringAdjustable */
+		$question = assQuestion::instantiateQuestionGUI( $question_id );
+
 		$form->setValuesByPost($_POST);
+		if(method_exists($question, 'resetFormValuesForSuppressedPostvars'))
+		{
+			$question->resetFormValuesForSuppressedPostvars($form);
+		}
+
+
 
 		if (!$form->checkInput())
 		{
@@ -339,9 +374,7 @@ class ilScoringAdjustmentGUI
 			return;
 		}
 
-		require_once './Modules/TestQuestionPool/classes/class.assQuestion.php';
-		/** @var $question assQuestionGUI|ilGuiQuestionScoringAdjustable */
-		$question = assQuestion::instantiateQuestionGUI( $question_id );
+
 
 		if ($question instanceof ilGuiQuestionScoringAdjustable)
 		{
@@ -356,7 +389,14 @@ class ilScoringAdjustmentGUI
 		
 		if ($question instanceof ilGuiAnswerScoringAdjustable)
 		{
-			$question->writeAnswerSpecificPostData(true);
+			if($question instanceof assOrderingQuestionGUI)
+			{
+				$question->writeAnswerSpecificPostData(false);
+			} 
+			else 
+			{
+				$question->writeAnswerSpecificPostData(true);
+			}
 		}
 		
 		if($question->object instanceof ilObjAnswerScoringAdjustable)

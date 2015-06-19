@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssMultiOptionQu
  * feedback class for assOrderingHorizontal questions
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssOrderingHorizontalFeedback.php 47754 2014-02-07 08:51:39Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

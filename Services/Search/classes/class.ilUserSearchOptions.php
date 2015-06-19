@@ -26,7 +26,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilUserSearchOptions.php 44216 2013-08-16 07:17:55Z jluetzen $
+* @version $Id$
 *
 *
 */

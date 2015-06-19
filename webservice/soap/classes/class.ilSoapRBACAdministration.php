@@ -26,7 +26,7 @@
  * Soap rbac administration methods
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * @version $Id: class.ilSoapRBACAdministration.php 48805 2014-03-21 10:02:33Z smeyer $
+ * @version $Id$
  *
  * @package ilias
  */

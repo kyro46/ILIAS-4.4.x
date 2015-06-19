@@ -27,7 +27,7 @@
 *
 * @author		Helmut Schottmueller <helmut.schottmueller@mac.com>
 * @author 		Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjSurveyQuestionPoolListGUI.php 43723 2013-07-29 11:19:02Z jluetzen $
+* $Id$
 *
 * @extends ilObjectListGUI
 * @ingroup ModulesSurveyQuestionPool

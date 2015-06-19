@@ -1,6 +1,6 @@
 <!-- ilias_style.dtd for ILIAS Styles -->
 <!-- For comments refer to our mailing list: xml-ilias@uni-koeln.de -->
-<!-- $Id: ilias_style_0_1.dtd 5188 2004-10-07 13:03:01Z akill $ -->
+<!-- $Id$ -->
 
 <!-- Styles -->
 <!ELEMENT StyleSheet (Title, Description+, Style*)>

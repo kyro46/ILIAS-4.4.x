@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" id="scormplayer">
 	<head>
 		<title>{DOC_TITLE}</title>
+		{IE_COMPATIBILITY}
 		<script type="text/javascript">//<![CDATA[
 		Date.remoteOffset = (new Date()).getTime() - {TIMESTAMP};
 		//]]></script>
@@ -35,6 +36,7 @@
 					<a target="_self" href="#" class="ilc_rte_mlink_RTELink" id="navSuspendAll">{btnSuspendAll}</a>
 					<a target="_self" href="#" class="ilc_rte_mlink_RTELink" id="navPrevious">&lt; {btnPrevious}</a>
 					<a target="_self" href="#" class="ilc_rte_mlink_RTELink" id="navContinue">{btnContinue} &gt;</a>
+					<div id="noCredit">{contCreditOff}</div>
 				</div>
 				<div style="clear:both;"></div>
 			</div>

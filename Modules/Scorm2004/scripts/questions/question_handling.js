@@ -29,10 +29,12 @@ ilias.questions.init = function() {
 
 ilias.questions.refresh_lang = function() {
 
-	jQuery(".ilc_qinput_ClozeGapSelect").each(function(){							
+	jQuery(".ilc_qinput_ClozeGapSelect").each(function(){
 		$(this).prepend("<option id='-1' value='-1' selected='selected'>-- "+
-			ilias.questions.txt.please_select+" --</option>");		
-	});		
+			ilias.questions.txt.please_select+" --</option>");
+
+		$(this).val("");
+	});
 	
 };
 
@@ -131,23 +133,30 @@ ilias.questions.assSingleChoice = function(a_id) {
 	answers[a_id].wrong = 0;
 	answers[a_id].passed = true;
 	answers[a_id].choice = [];
+	
+	var checked_right = false;
 			
 	for (var i=0;i<a_node.length;i++) {
 		if ((!a_node.get(i).checked && questions[a_id].answers[i][tocheck] > 0) 
 			|| (a_node.get(i).checked && questions[a_id].answers[i][tocheck] <= 0))
-		{
-			answers[a_id].passed = false;
+		{			
 			answers[a_id].wrong++;
 			answers[a_id].answer[i]=false;
 			
 		} else {
+			if (a_node.get(i).checked)
+			{
+				checked_right = true;
+			}
 			answers[a_id].answer[i]=true;
 		}
 		if (a_node.get(i).checked)
 		{
 			answers[a_id].choice.push(a_node.get(i).value);
 		}
-	}		
+	}	
+	
+	answers[a_id].passed = checked_right; // #10772
 	
 	ilias.questions.showFeedback(a_id);
 };
@@ -541,7 +550,8 @@ ilias.questions.assErrorText =function(a_id) {
 			var is_wrong = false;
 			for(var j=0;j<questions[a_id].correct_answers.length;j++)
 			{
-				if(text_select == questions[a_id].correct_answers[j]["answertext_wrong"])
+				if(text_select == questions[a_id].correct_answers[j]["answertext_wrong"] &&
+					questions[a_id].correct_answers[j]["pos"] == questions[a_id].answers[i]["order"]) // #14115
 				{
 					is_wrong = true;
 				}
@@ -754,13 +764,18 @@ ilias.questions.showCorrectAnswers =function(a_id) {
 	
 	switch (questions[a_id].type) {
 		
-		case 'assSingleChoice':				
+		case 'assSingleChoice':		
+			var max = 0; // #10772
 			for (var i=0;i<questions[a_id].answers.length;i++) {
+				if (questions[a_id].answers[i].points > max)
+				{
+					max = questions[a_id].answers[i].points;
+				}	
 				jQuery('input[name="answers'+a_id+'"]').eq(i).prop("disabled",true);
 				jQuery('input[name="answers'+a_id+'"]').eq(i).prop("checked",false);
 			}
 			for (var i=0;i<questions[a_id].answers.length;i++) {
-				if (questions[a_id].answers[i].points > 0) {
+				if (questions[a_id].answers[i].points == max) {
 					jQuery('input[name="answers'+a_id+'"]').eq(i).prop("checked",true);
 				}
 			}
@@ -937,7 +952,8 @@ ilias.questions.showCorrectAnswers =function(a_id) {
 					var correct = "";
 					for(var j=0;j<questions[a_id].correct_answers.length;j++)
 					{
-						if(questions[a_id].answers[i]["answertext"] == questions[a_id].correct_answers[j]["answertext_wrong"])
+						if(questions[a_id].answers[i]["answertext"] == questions[a_id].correct_answers[j]["answertext_wrong"] &&
+							questions[a_id].correct_answers[j]["pos"] == questions[a_id].answers[i]["order"]) // #14115
 						{
 							is_wrong = true;
 							correct = questions[a_id].correct_answers[j]["answertext_correct"];
@@ -1111,7 +1127,8 @@ jQuery(document).ready(function() {
 	has_VML = document.namespaces;
 	has_canvas = document.createElement('canvas');
 	has_canvas = has_canvas && has_canvas.getContext;
-
+	isIE = (document.documentMode != undefined); // #15309
+	
 	if(!(has_canvas || has_VML)) {
 		jQuery.fn.maphilight_mod = function() { return this; };
 		return;
@@ -1185,7 +1202,7 @@ jQuery(document).ready(function() {
 				context.lineWidth = options.strokeWidth;
 				context.stroke();
 			}
-			if(options.fade && !jQuery.browser.msie)
+			if(options.fade && !isIE)
 			{
 				fader(canvas, 0);
 			}
@@ -1318,7 +1335,7 @@ jQuery(document).ready(function() {
 			wrap = jQuery('<div>').css({display:'block',background:'url("'+this.src+'")',position:'relative',padding:0,width:this.width,height:this.height});
 			img.before(wrap).css('opacity', 0).css(canvas_style).remove();
 			
-			if(jQuery.browser.msie && !has_canvas) { img.css('filter', 'Alpha(opacity=0)'); }
+			if(isIE && !has_canvas) { img.css('filter', 'Alpha(opacity=0)'); }
 			
 			wrap.append(img);
 
@@ -1384,7 +1401,7 @@ jQuery(document).ready(function() {
 				shape = shape_from_area(object);
 
 				// IE!
-				if (jQuery.browser.msie && !has_canvas)
+				if (isIE && !has_canvas)
 				{
 					add_shape_to(target_canvas, shape[0], shape[1], area_options, "", jQuery(object).attr("id"));
 				} 
@@ -1405,7 +1422,6 @@ jQuery(document).ready(function() {
 				else {
 					object = this;
 				}
-
 				if (!jQuery('#canvas_' + jQuery(object).attr('id')).attr('id'))
 				{
 					if (area_options.linked)
@@ -1426,6 +1442,17 @@ jQuery(document).ready(function() {
 					}
 					else
 					{
+						if (!questions[question_id].is_multiple) {
+							// remove all areas
+							for (var i=0;i<questions[question_id].answers.length;i++) {
+								jQuery('#canvas_' + question_id + '_' + i).remove();
+								if (jQuery(object).attr('id') != question_id + '_' + i) {
+									answers[question_id].areas[i] = false;
+								}
+							}
+							//clear_canvas(canvas);
+						}
+
 						draw(object, canvas);
 					}
 				}

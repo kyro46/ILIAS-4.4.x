@@ -28,7 +28,7 @@ define ("SHOWDRAW_YES", "2");
 * QTI render hotspot class
 *
 * @author Helmut Schottmüller <hschottm@gmx.de>
-* @version $Id: class.ilQTIRenderHotspot.php 12481 2006-11-09 00:04:34Z hschottm $
+* @version $Id$
 *
 * @package assessment
 */

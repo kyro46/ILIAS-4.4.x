@@ -97,7 +97,9 @@ class ilSubscriberTableGUI extends ilTable2GUI
 			$this->disable('footer');
 			$this->disable('numinfo');
 			$this->disable('select_all');
-		}	
+		}
+
+		$this->setExternalSegmentation(true);
 	}
 	
 	/**
@@ -174,7 +176,7 @@ class ilSubscriberTableGUI extends ilTable2GUI
 		
 		$this->tpl->setVariable('VAL_SUBTIME',ilDatePresentation::formatDate(new ilDateTime($a_set['sub_time'],IL_CAL_UNIX)));
 		
-		$this->ctrl->setParameterByClass(get_class($this->getParentObject()),'member_id',$a_set['id']);
+		$this->ctrl->setParameterByClass(get_class($this->getParentObject()),'member_id',$a_set['usr_id']);
 		$link = $this->ctrl->getLinkTargetByClass(get_class($this->getParentObject()),'sendMailToSelectedUsers');
 		$this->tpl->setVariable('MAIL_LINK',$link);
 		$this->tpl->setVariable('MAIL_TITLE',$this->lng->txt('crs_mem_send_mail'));
@@ -260,7 +262,7 @@ class ilSubscriberTableGUI extends ilTable2GUI
 		$a_user_data = array();
 		foreach((array) $usr_data['set'] as $ud)
 		{			
-			$a_user_data[$ud['usr_id']] = array_merge($ud,$course_user_data[$ud['usr_id']]);
+			$a_user_data[$ud['usr_id']] = array_merge($ud,(array) $course_user_data[$ud['usr_id']]);
 		}
 
 		// Custom user data fields
@@ -318,11 +320,15 @@ class ilSubscriberTableGUI extends ilTable2GUI
 		// Waiting list subscription
 		foreach($sub_data as $usr_id => $usr_data)
 		{
+			if(!in_array($usr_id, $usr_ids))
+			{
+				continue;
+			}
 			$a_user_data[$usr_id]['sub_time'] = $usr_data['time'];
 			$a_user_data[$usr_id]['subject'] = $usr_data['subject'];
 		}
 		
-		$this->setMaxCount($usr_data['cnt'] ? $usr_data['cnt'] : 0);
+		$this->setMaxCount(count($sub_ids));
 		return $this->setData($a_user_data);
 	}
 	

@@ -5,7 +5,7 @@
  * 
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSNodeMappingAssignment.php 39297 2013-01-16 16:32:00Z smeyer $
+ * $Id$
  */
 class ilECSNodeMappingAssignment
 {

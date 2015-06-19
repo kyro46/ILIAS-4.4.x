@@ -13,7 +13,7 @@ require_once("Services/AccessControl/classes/class.ilAccessInfo.php");
 *
 * @author Alex Killing <alex.killing@gmx.de>
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: class.ilAccessHandler.php 41368 2013-04-12 09:41:59Z jluetzen $
+* @version $Id$
 *
 * @ingroup ServicesAccessControl
 */

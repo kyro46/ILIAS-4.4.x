@@ -25,7 +25,7 @@
 * class for editing lm menu
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: class.ilLMMenuEditor.php 22144 2009-10-18 11:02:15Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

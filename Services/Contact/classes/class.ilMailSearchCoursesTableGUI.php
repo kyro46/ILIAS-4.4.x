@@ -4,7 +4,7 @@
 /** 
 * 
 * @author Jan Posselt <jposselt@databay.de>
-* @version $Id: class.ilMailSearchCoursesTableGUI.php 43100 2013-07-01 06:48:44Z mjansen $
+* @version $Id$
 * 
 * 
 * @ingroup ServicesMail

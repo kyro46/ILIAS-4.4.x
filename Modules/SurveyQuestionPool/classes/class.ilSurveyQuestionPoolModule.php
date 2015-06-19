@@ -28,7 +28,7 @@ include_once("./Services/Component/classes/class.ilModule.php");
 * TestQuestionPool Module.
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilSurveyQuestionPoolModule.php 17379 2008-09-11 08:18:47Z hschottm $
+* @version $Id$
 *
 * @ingroup ModulesTestQuestionPool
 */

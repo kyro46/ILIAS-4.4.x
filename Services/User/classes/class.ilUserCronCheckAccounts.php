@@ -60,13 +60,16 @@ class ilUserCronCheckAccounts extends ilCronJob
 		
 		$status = ilCronJobResult::STATUS_NO_ACTION;
 		
-		$two_weeks_in_seconds = 60 * 60 * 24 * 14;
-
+		$now = time();
+		$two_weeks_in_seconds = $now + (60 * 60 * 24 * 14); // #14630
+			
+		// all users who are currently active and expire in the next 2 weeks
 		$query = "SELECT * FROM usr_data,usr_pref ".
 			"WHERE time_limit_message = '0' ".
 			"AND time_limit_unlimited = '0' ".
-			"AND time_limit_from < ".$ilDB->quote(time(), "integer")." ".
-			"AND time_limit_until > ".$ilDB->quote($two_weeks_in_seconds, "integer")." ".
+			"AND time_limit_from < ".$ilDB->quote($now, "integer")." ".
+			"AND time_limit_until > ".$ilDB->quote($now, "integer")." ". 
+			"AND time_limit_until < ".$ilDB->quote($two_weeks_in_seconds, "integer")." ". 		
 			"AND usr_data.usr_id = usr_pref.usr_id ".
 			"AND keyword = ".$ilDB->quote("language", "text");
 
@@ -88,8 +91,8 @@ class ilUserCronCheckAccounts extends ilCronJob
 			
 			$mail->From('noreply');
 			$mail->To($data['email']);
-			$mail->Subject($lng->txt($data['language'],'account_expires_subject'), true);
-			$mail->Body($lng->txt($data['language'],'account_expires_body')." ".strftime('%Y-%m-%d %R',$data['expires']));
+			$mail->Subject($this->txt($data['language'],'account_expires_subject'), true);
+			$mail->Body($this->txt($data['language'],'account_expires_body')." ".strftime('%Y-%m-%d %R',$data['expires']));
 			$mail->send();
 
 			// set status 'mail sent'
@@ -111,6 +114,13 @@ class ilUserCronCheckAccounts extends ilCronJob
 		$result = new ilCronJobResult();
 		$result->setStatus($status);		
 		return $result;
+	}
+	
+	// #13288 / #12345
+	protected function txt($language,$key,$module = 'common')
+	{
+		include_once 'Services/Language/classes/class.ilLanguage.php';
+		return ilLanguage::_lookupEntry($language, $module, $key);
 	}
 	
 	protected function checkNotConfirmedUserAccounts()

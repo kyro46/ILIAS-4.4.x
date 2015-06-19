@@ -5,7 +5,7 @@
 * Unit tests for single choice questions
 * 
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: assSingleChoiceTest.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 * 
 *
 * @ingroup ServicesTree

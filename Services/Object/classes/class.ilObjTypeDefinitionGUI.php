@@ -8,7 +8,7 @@
 * handles operation assignment to objects (ONLY FOR TESTING PURPOSES!)
 * 
 * @author Stefan Meyer <meyer@leifos.com>
-* $Id: class.ilObjTypeDefinitionGUI.php 35423 2012-07-07 17:42:36Z akill $Id: class.ilObjTypeDefinitionGUI.php,v 1.14 2005/11/21 17:12:08 shofmann Exp $
+* $Id$Id: class.ilObjTypeDefinitionGUI.php,v 1.14 2005/11/21 17:12:08 shofmann Exp $
 *
 * @extends ilObjectGUI
 */

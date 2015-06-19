@@ -26,7 +26,7 @@
 * Class ilObjFolderListGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjFolderListGUI.php 36588 2012-08-28 15:14:37Z smeyer $
+* $Id$
 *
 * @extends ilObjectListGUI
 */

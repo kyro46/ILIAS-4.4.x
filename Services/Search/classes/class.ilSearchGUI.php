@@ -11,7 +11,7 @@ include_once 'Services/Search/classes/class.ilSearchBaseGUI.php';
 * GUI class for 'simple' search
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilSearchGUI.php 47313 2014-01-16 14:20:59Z akill $
+* @version $Id$
 * @ilCtrl_Calls ilSearchGUI: ilPropertyFormGUI
 * @ilCtrl_Calls ilSearchGUI: ilObjectGUI, ilContainerGUI
 * @ilCtrl_Calls ilSearchGUI: ilObjCategoryGUI, ilObjCourseGUI, ilObjFolderGUI, ilObjGroupGUI
@@ -628,6 +628,9 @@ class ilSearchGUI extends ilSearchBaseGUI
 				case 'wiki':
 					$filter[] = 'wpg';
 					break;
+				
+				default:
+					$filter[] = $key;
 			}
 		}
 		return $filter ? $filter : array();

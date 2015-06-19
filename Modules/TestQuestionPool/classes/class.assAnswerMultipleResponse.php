@@ -10,7 +10,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * ASS_AnswerMultipleResponse is a class for answers with a binary state indicator (checked/unchecked, set/unset)
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assAnswerMultipleResponse.php 44250 2013-08-18 13:39:51Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 * @see ASS_AnswerSimple
 */

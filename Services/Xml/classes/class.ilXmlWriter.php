@@ -12,7 +12,7 @@
 * of the xml document.
 *
 * @author Matthias Rulinski <matthias.rulinski@mi.uni-koeln.de>
-* @version $Id: class.ilXmlWriter.php 22967 2010-02-13 10:15:40Z akill $
+* @version $Id$
 */
 class ilXmlWriter
 {
@@ -424,7 +424,8 @@ class ilXmlWriter
 	{
 		// check for existing data (element's content)
 		if (is_string($data) or
-			is_integer($data))
+			is_integer($data) or
+			is_float($data))
 		{
 			// write starttag
 			$this->xmlStartTag($tag, $attrs, FALSE, $encode, $escape);

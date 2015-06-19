@@ -26,7 +26,7 @@
  * soap server
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * @version $Id: inc.soap_functions.php 44391 2013-08-22 19:07:17Z akill $
+ * @version $Id$
  *
  * @package ilias
  */

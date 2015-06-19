@@ -7,7 +7,7 @@
 * Class for creating an object (new node) by parsing XML code and adding it to an existing DOM object
 *  
 * @author	Jens Conze <jconze@databay.de>
-* @version	$Id: class.ilXML2DOM.php 33496 2012-03-02 23:15:02Z akill $
+* @version	$Id$
 */
 
 class XMLStruct

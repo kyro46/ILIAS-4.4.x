@@ -25,7 +25,7 @@
 * Meta Data class (element identifier)
 *
 * @package ilias-core
-* @version $Id: class.ilMDIdentifier.php 33252 2012-02-20 23:19:23Z akill $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

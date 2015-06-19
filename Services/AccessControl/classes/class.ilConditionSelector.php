@@ -5,7 +5,7 @@
 * Repository Explorer
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilConditionSelector.php 33875 2012-03-24 16:22:32Z akill $
+* @version $Id$
 *
 */
 

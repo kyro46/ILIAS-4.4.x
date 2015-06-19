@@ -1,7 +1,7 @@
 <?php
 
 // Translation: Thomas Jansson (thomasjansson@users.sourceforge.net)
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.11
 
 $error[0] = 'Felaktig URL: <em>%s</em>!';

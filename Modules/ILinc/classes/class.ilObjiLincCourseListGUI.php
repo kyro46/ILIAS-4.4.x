@@ -26,7 +26,7 @@
 * Class ilObjiLincCourseListGUI
 *
 * @author 		Alex Killing <alex.killing@gmx.de>
-* @version		$Id: class.ilObjiLincCourseListGUI.php 33414 2012-02-28 21:51:22Z akill $
+* @version		$Id$
 *
 * @extends ilObjectListGUI
 */

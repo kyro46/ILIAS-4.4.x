@@ -13,7 +13,7 @@ include_once ("./Modules/LearningModule/classes/class.ilEditClipboard.php");
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* @version $Id: class.ilLMEditorGUI.php 45246 2013-10-04 16:26:40Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilLMEditorGUI: ilObjDlBookGUI, ilObjLearningModuleGUI
 *

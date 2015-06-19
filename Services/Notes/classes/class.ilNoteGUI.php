@@ -11,7 +11,7 @@ include_once ("Services/Notes/classes/class.ilNote.php");
 * (and their lists) of an object.
 *
 * @author	Alex Killing <alex.killing@gmx.de>
-* @version	$Id: class.ilNoteGUI.php 47027 2014-01-05 15:37:44Z akill $
+* @version	$Id$
 *
 * @ingroup ServicesNotes
 */

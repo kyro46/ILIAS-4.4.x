@@ -25,7 +25,7 @@
 * client management
 *
 * @author Sascha Hofmann <shofmann@databay.de> 
-* @version $Id: class.ilClientList.php 19042 2009-02-18 16:45:40Z akill $
+* @version $Id$
 *
 */
 

@@ -26,7 +26,7 @@
 * Meta Data class (element requirement)
 *
 * @package ilias-core
-* @version $Id: class.ilMDRequirement.php 23607 2010-04-21 23:03:20Z akill $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

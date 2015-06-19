@@ -27,7 +27,7 @@
 * class for searching forum entries 
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFulltextExerciseSearch.php 23386 2010-03-26 06:47:42Z akill $
+* @version $Id$
 * 
 * @package ilias-search
 *

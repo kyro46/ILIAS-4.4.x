@@ -13,7 +13,7 @@ require_once "./Modules/Exercise/classes/class.ilExerciseMembers.php";
 *
 * @author Stefan Meyer <meyer@leifos.com>
 * @author Michael Jansen <mjansen@databay.de>
-* @version $Id: class.ilObjExercise.php 44970 2013-09-24 09:42:08Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesExercise
 */
@@ -1100,9 +1100,9 @@ class ilObjExercise extends ilObject
 		{
 			$this->members_obj->assignMember($user_id);
 		}
-		// no submission yet
-		ilExAssignment::updateStatusReturnedForUser($a_ass_id, $user_id, 0);
-		ilExerciseMembers::_writeReturned($this->getId(), $user_id, 0);
+		// no submission (of blog/portfolio) yet (unless text assignment)
+		ilExAssignment::updateStatusReturnedForUser($a_ass_id, $user_id, (bool)$a_text);
+		ilExerciseMembers::_writeReturned($this->getId(), $user_id, (bool)$a_text);
 		
 		return $next_id;
 	}

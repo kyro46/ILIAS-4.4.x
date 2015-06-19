@@ -28,7 +28,7 @@ include_once('Modules/Course/classes/class.ilFSStorageCourse.php');
 * class ilCourseArchives
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilCourseArchives.php 25101 2010-08-12 12:55:56Z smeyer $
+* @version $Id$
 * 
 * @extends Object
 */

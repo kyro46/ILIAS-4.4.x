@@ -28,7 +28,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
 * Class ilObjGroupListGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjGroupListGUI.php 42214 2013-05-15 10:49:49Z smeyer $
+* $Id$
 *
 * @extends ilObjectListGUI
 */

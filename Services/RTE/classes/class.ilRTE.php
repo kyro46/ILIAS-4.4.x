@@ -28,7 +28,7 @@
 * integrated in ILIAS
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilRTE.php 45099 2013-09-30 13:36:55Z jluetzen $
+* @version	$Id$
 * @module   class.ilRTE.php
 */
 class ilRTE

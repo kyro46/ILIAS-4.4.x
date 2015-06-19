@@ -27,7 +27,7 @@ require_once("./Modules/ScormAicc/classes/AICC/class.ilAICCObject.php");
 * AICC Block
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilAICCBlock.php 12711 2006-12-01 15:24:41Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

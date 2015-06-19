@@ -6,7 +6,7 @@
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilFileSystemGUI.php 35833 2012-07-27 12:46:46Z jluetzen $
+* @version $Id$
 *
 */
 class ilFileSystemGUI

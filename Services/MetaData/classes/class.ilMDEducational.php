@@ -26,7 +26,7 @@
 * Meta Data class (element educational)
 *
 * @package ilias-core
-* @version $Id: class.ilMDEducational.php 22187 2009-10-25 06:24:23Z akill $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

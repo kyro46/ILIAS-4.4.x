@@ -28,7 +28,7 @@ include_once './Services/ContainerReference/classes/class.ilContainerReferenceXm
  * Category reference xml parser
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * @version $Id: class.ilCategoryReferenceXmlParser.php 35412 2012-07-06 10:28:29Z smeyer $
+ * @version $Id$
  *
  * @extends ilCategoryReferenceXmlParser
 

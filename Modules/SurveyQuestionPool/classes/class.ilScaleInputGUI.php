@@ -7,7 +7,7 @@ include_once("./Services/Form/classes/class.ilTextInputGUI.php");
 * This class represents a scale property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilScaleInputGUI.php 33990 2012-03-29 11:24:28Z jluetzen $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilScaleInputGUI extends ilTextInputGUI

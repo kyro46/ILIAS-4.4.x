@@ -5,7 +5,7 @@
 * @module		language file English
 * @modulegroup	language
 * @author 		Matthias Kunkel <mkunkel@me.com>
-* @version		$Id: ilias_en.lang 49426 2014-04-16 09:41:36Z nkrzywon $
+* @version		$Id$
 */
 // The language file starts beyond the HTML-comment below. DO NOT modify this line!
 // To edit your language file with a spreadsheet (i.e. Excel or StarCalc) remove all lines
@@ -112,7 +112,7 @@ administration#:#language_translation_enabled#:#Page translation enabled
 administration#:#language_translation_mode#:#Translation mode
 administration#:#log_scan_desc#:#Write scan results to 'scanlog.log' in client data directory.
 administration#:#log_scan#:#Log scan results
-administration#:#loginname_change_blocking_time_info#:#Insert a period in days that an user has to wait before changing again its login name. If you enter 0, user can change login names anytime.
+administration#:#loginname_change_blocking_time_info#:#Insert a period in days that a user has to wait before changing again its login name. If you enter 0, user can change login names anytime.
 administration#:#loginname_change_blocking_time_invalidity_info#:#Please insert a numeric value.
 administration#:#loginname_change_blocking_time#:#Blocking Time for Changing Login Names
 administration#:#loginname_history_info#:#If activated, login name changes will be logged in database. This history is accessible in the database table 'loginname_history'.
@@ -152,7 +152,7 @@ administration#:#restoring_missing_objs#:#Restoring missing objects...
 administration#:#restoring_trash#:#Restoring trash...
 administration#:#restoring_unbound_objs#:#Restoring unbound objects and subobjects...
 administration#:#restoring#:#Restoring...
-administration#:#reuse_of_loginnames_contained_in_history#:#No Reuse of Login Names
+administration#:#reuse_of_loginnames_contained_in_history#:#Reuse of Login Names
 administration#:#scan_completed#:#Scan completed
 administration#:#scan_desc#:#Scan system for corrupted/invalid/missing/unbound objects.
 administration#:#scan_details#:#Scan details
@@ -182,12 +182,21 @@ adve#:#adve_grp_wiki#:#Wikis
 adve#:#adve_page_editor_settings#:#ILIAS Page Editor
 adve#:#adve_rte_settings#:#TinyMCE Editor
 adve#:#adve_text_content_features#:#Text Content Menu
+assessment#:#aggregated_answers_header#:#Overview of Participant Answers
+assessment#:#aggregated_answers_variants#:#Answer Variations
+assessment#:#number_of_users#:#Number of Participants
+assessment#:#number_of_passes#:#Number of Passes
+assessment#:#answer_variant#:#Answervariant
+assessment#:#adjust_question_form_error#:#The form could not be submitted. Please check your input.
+assessment#:#no_archive_on_anonymous#:#Archiving is not possible in an anonymous test: option deactivated automatically.
 assessment#:#autosave#:#Automatic saving
 assessment#:#autosave_info#:#If checked, answers are saved in intervals without user interaction to avoid data loss.
 assessment#:#autosave_ival#:#Interval
 assessment#:#autosave_ival_info#:#Interval in which answers are saved automatically. (seconds)
 assessment#:#for#:#for
-assessment#:#solution_contain_keywords#:#Score is granted based on the occurence of the following keywords:
+assessment#:#tst_dyn_quest_set_pool_deleted#:#The currently configured questionpool "%s" has been deleted.
+assessment#:#tst_old_style_rnd_quest_set_broken#:#This random test is in a irreparable state, because one or more connected question pools have been deleted. Therefor participants cannot take the test any longer.
+assessment#:#solution_contain_keywords#:#Score is granted based on the occurrence of the following keywords:
 assessment#:#essay_scoring_mode#:#Scoring Mode
 assessment#:#essay_scoring_mode_without_keywords#:#No Automatic Scoring
 assessment#:#essay_scoring_mode_without_keywords_desc#:#No points are granted unless the tutor's manual scoring.
@@ -203,6 +212,7 @@ assessment#:#assessment_scoring_adjust_desc#:#Enables the corrections feature to
 assessment#:#assessment_log_scoring_adjustment_activate#:#Question types available in adjustment
 assessment#:#assessment_log_scoring_adjustment_desc#:#Question types checked here are available in adjustment. This setting is regardless of the current ability of the question types, e.g. a question that does not support adjustment is still shown here.
 assessment#:#0_unlimited#:#(0=unlimited)
+assessment#:#tst_question_not_from_pool_info#:#No Pool
 assessment#:#action#:#Action
 assessment#:#add_answer_tf#:#True/False Answers
 assessment#:#add_answer_yn#:#Yes/No Answers
@@ -266,9 +276,10 @@ assessment#:#autosave_failed#:#Autosave failed!
 assessment#:#autosave_success#:#Autosave successful...
 assessment#:#available_points#:#Available Points
 assessment#:#available_terms#:#Available Terms
-assessment#:#average_reached_points#:#Average Reached Points
+assessment#:#average_reached_points#:#Average Points
 assessment#:#backtocallingtest#:#Back to the calling test
 assessment#:#by#:#by
+assessment#:#tst_participant_fullname_pattern#:#%2$s, %1$s
 assessment#:#cancel_test#:#Suspend the Test
 assessment#:#cannot_edit_marks#:#There are already learners who ran the test. You can only change the marks if a score reporting date is enabled and the reporting date is not yet reached.
 assessment#:#cannot_edit_test#:#You do not possess sufficient permissions to edit the test!
@@ -290,7 +301,8 @@ assessment#:#circle#:#Circle
 assessment#:#clientip#:#Client IP
 assessment#:#close_text_hint#:#You can define a gap by entering [gap][/gap] at the text position of your choice or by clicking the button. Press the 'Create gaps' button to add an editable form for every gap.
 assessment#:#insert_gap#:#Insert Gap
-assessment#:#cloze_fixed_textlength_description#:#If you enter a value greater than 0, all text and numeric gap text fields will be created with the fixed length of this value.
+assessment#:#cloze_fixed_textlength_description#:#If you enter a value, all text gap fields, not providing an own maximum character limitation, as well as all numeric gap fields will be created with a fixed length of this value, so entering more than the allowed characters is not possible. Note, that for numeric gaps the decimal separator is counted as a regular character.
+assessment#:#qpl_maxchars_info_numeric_question#:#If you enter a value, the field for the numerical answer will be created with a fixed length of this value, so entering more than the allowed characters is not possible. Note, that for numeric gaps the decimal separator is counted as a regular character.
 assessment#:#cloze_fixed_textlength#:#Text Field Length
 assessment#:#cloze_text#:#Cloze Text
 assessment#:#cloze_textgap_case_insensitive#:#Case Insensitive
@@ -329,7 +341,7 @@ assessment#:#detail_ending_time_reached#:#You have reached the finish time of th
 assessment#:#detail_max_processing_time_reached#:#You have reached the maximum allowed processing time of the test!
 assessment#:#detail_starting_time_not_reached#:#You have not reached the start time of the test. The test will be available on %s
 assessment#:#detailed_evaluation_for#:#Detailed Evaluation for %s
-assessment#:#detailed_evaluation_missing_active_id#:#You must call the Datailed Evaluation for a selected participant!
+assessment#:#detailed_evaluation_missing_active_id#:#You must call the Detailed Evaluation for a selected participant!
 assessment#:#detailed_evaluation_show#:#Show Detailed Evaluation
 assessment#:#detailed_evaluation#:#Detailed Evaluation
 assessment#:#detailed_output_printview#:#Detailed Output with Question Print Views
@@ -388,12 +400,19 @@ assessment#:#error_no_lower_limit#:#Please enter a lower bound.
 assessment#:#error_no_upper_limit#:#Please enter an upper bound.
 assessment#:#error_open_image_file#:#Error opening an image file!
 assessment#:#error_open_java_file#:#Error opening an java applet!
-assessment#:#error_random_question_generation#:#A fatal error occured during the generation of your random questions for the test. Please contact your administrator with the following information: The system could not create an active ID for user ID %s and test ID %s.
+assessment#:#error_random_question_generation#:#A fatal error occurred during the generation of your random questions for the test. Please contact your administrator with the following information: The system could not create an active ID for user ID %s and test ID %s.
 assessment#:#error_save_image_file#:#Error saving an image file!
 assessment#:#errors_section#:#Error Data
 assessment#:#errors#:#Errors
 assessment#:#errortext_info#:#Please enter the error text. To mark a word as an error please insert a hash sign (#) in front of the word. To mark a group of words as an error please encapsulate the words group between double brackets (i.e.: here is ((an example)) of it). If you press the &quot;Analyze Error Text&quot; button, all marked words will be extracted for further processing.
 assessment#:#errortext#:#Error Text
+assessment#:#ass_process_lock#:#Use Lockings during Test Passes
+assessment#:#ass_process_lock_desc#:#Without the use of any locking mechanism, race conditions are possible. This can lead to inconsistent test results.
+assessment#:#ass_process_lock_mode#:#Lock Mode during Test Pass
+assessment#:#ass_process_lock_mode_file#:#Use Filesystem Locks
+assessment#:#ass_process_lock_mode_file_desc#:#This locking mechanism requests locks on empty files in the filesystem. Concurrent processes for the same user and the same test/question are waiting until the other process releases his lock.
+assessment#:#ass_process_lock_mode_db#:#Use Database Table Locks
+assessment#:#ass_process_lock_mode_db_desc#:#This locking mechanism locks tables within the database. Concurrent processes for the same or other users in the same or in another test for the same or another question are waiting until the other process releases his locks.
 assessment#:#eval_all_users#:#Evaluation for All Users
 assessment#:#eval_choice_result#:#The choice with the value %s is %s. You received %s points.
 assessment#:#eval_cloze_result#:#Gap number %s with the value %s is %s. You received %s points.
@@ -419,7 +438,7 @@ assessment#:#exp_type_spss#:#Comma Separated Value (CSV)
 assessment#:#export#:#Export
 assessment#:#externalscript_additional_parameters_hint#:#Enter the additional script parameters in key-value-coding and separate multiple key-value-pairs with a newline, e.g. <p>key1=Hello<br />key2=World</p>
 assessment#:#externalscript_additional_parameters#:#Script Parameters
-assessment#:#externalscript_use_kvc#:#Please use key-value-coding for the script paramters!
+assessment#:#externalscript_use_kvc#:#Please use key-value-coding for the script parameters!
 assessment#:#failed_official#:#failed
 assessment#:#failed_short#:#failed
 assessment#:#false#:#False
@@ -550,10 +569,14 @@ assessment#:#tst_filter_tax_node#:#Taxonomy Node
 assessment#:#tst_save_and_create_new_rule#:#Save and Add New Rule
 assessment#:#tst_msg_random_qsc_modified_add_new_rule#:#The configuration for the random set of questions has been modified successfully. You can add a new rule now.
 assessment#:#tst_msg_random_question_set_config_modified#:#The configuration for the random set of questions has been modified successfully.
+assessment#:#tst_msg_random_question_set_synced#:#The questions for the current configuration has been synchronized successfully.
+assessment#:#tst_btn_rebuild_random_question_stage#:#Synchronize Quesitons from Pool
 assessment#:#tst_msg_rand_quest_set_stage_pool_last_sync#:#A test with a random set of questions is possible with the current configuration.<br />Date of last synchronisation of selected question pools: <b>%s</b>
 assessment#:#tst_msg_rand_quest_set_pass_not_buildable#:#A test with a random set of questions is not possible with the current selection of question pools and the amount of questions.
 assessment#:#tst_msg_rand_quest_set_no_src_pool_defs#:#A test with a random set of questions is not possible without selecting at least one question pool.
 assessment#:#tst_msg_rand_quest_set_incomplete_quest_amount_cfg#:#A test with a random set of questions is not possible without a correctly defined amount of questions.
+assessment#:#tst_msg_rand_quest_set_no_pools_available#:#Currently you cannot add new rules for the question selection, because there are no question pools available.
+assessment#:#tst_msg_rand_quest_set_change_quest_amount_here#:#You can change the question amount here: %s
 assessment#:#tst_rnd_quest_set_cfg_pool_form#:#Rule for Selection of Questions
 assessment#:#tst_inp_source_pool_label#:#Question Pool
 assessment#:#tst_inp_source_pool_filter_tax#:#Taxonomy Filter
@@ -629,6 +652,7 @@ assessment#:#polygon_click_starting_point#:#Please click on the starting point o
 assessment#:#polygon#:#Polygon
 assessment#:#postpone#:#Postpone Question
 assessment#:#postponed#:#postponed
+assessment#:#postpone_status#:#Postponed
 assessment#:#preview#:#Preview
 assessment#:#previous_question_rows#:#<< Questions %d - %d of %d
 assessment#:#print_answers#:#Print Answers
@@ -664,6 +688,7 @@ assessment#:#qpl_imagemap_preview_missing#:#ILIAS could not create the temporary
 assessment#:#qpl_import_create_new_qpl#:#Import the questions in a new question pool
 assessment#:#qpl_import_no_items#:#Error: The import file contains no questions!
 assessment#:#qpl_import_non_ilias_files#:#Error: The import file contains QTI files which are not created by an ILIAS system. Please contact the ILIAS team to get in import filter for your QTI file format.
+assessment#:#tst_import_non_ilias_zip#:#Error: The filename of the uploaded import file does not match the expected format.
 assessment#:#qpl_import_verify_found_questions#:#ILIAS found the following questions in the import file. Please select the questions you want to import.
 assessment#:#qpl_move_insert_clipboard#:#The selected question(s) are marked for moving
 assessment#:#qpl_move_select_none#:#Please check at least one question to select it for moving
@@ -692,6 +717,7 @@ assessment#:#question_saved_for_upload#:#The question was saved automatically in
 assessment#:#question_short#:#Q
 assessment#:#question_summary#:#List of Questions
 assessment#:#obligations_summary#:#List of Obligatory Questions
+assessment#:#tst_you_have_to_answer_this_question#:#You have to answer this question to be able to finish the test.
 assessment#:#question_title#:#Question Title
 assessment#:#question_type#:#Question Type
 assessment#:#questionpool_not_entered#:#Please enter a name for a question pool!
@@ -791,6 +817,7 @@ assessment#:#textsize#:#Text Size
 assessment#:#thumb_geometry_info#:#The image thumbnails will be created with a maximum values of height and width given, aspect ratio preserved.
 assessment#:#thumb_geometry#:#Thumbnail Geometry
 assessment#:#thumb_size_info#:#If you enter a thumbnail size, a thumbnail of this size will be generated for uploaded images. Without a thumbnail size, the original image size will be used.
+assessment#:#thumb_size_unit_pixel#:#Pixel
 assessment#:#thumb_size#:#Thumbnail Size
 assessment#:#time_format#:#HH MM SS
 assessment#:#too_many_empty_parameters#:#Please fill out your empty applet parameters before you add a new parameter!
@@ -890,7 +917,7 @@ assessment#:#tst_list_of_questions_start#:#Show the List of Questions prior to t
 assessment#:#tst_list_of_questions_with_description#:#Show the question descriptions in the List of Questions
 assessment#:#tst_list_of_questions_yes#:#Yes, and additional
 assessment#:#tst_mark_create_new_mark_step#:#Create New Mark Step
-assessment#:#tst_mark_create_simple_mark_schema#:#Create Simple Mark Schema
+assessment#:#tst_mark_create_simple_mark_schema#:#Reset to Simple Mark Schema
 assessment#:#tst_mark_minimum_level#:#Minimum Level (in %)
 assessment#:#tst_mark_official_form#:#Official Form
 assessment#:#tst_mark_passed#:#Passed
@@ -910,6 +937,7 @@ assessment#:#tst_no_export_randomtest#:#You cannot export a test with random sel
 assessment#:#tst_no_marks_defined#:#There are no marks defined, please create at least a simple mark schema!
 assessment#:#tst_no_more_available_questionpools#:#There are no more question pools available
 assessment#:#tst_no_question_selected_for_removal#:#Please check at least one question to remove it!
+assessment#:#tst_no_question_selected_for_moving_to_qpl#:#Please choose at least one question to be added to a question pool!
 assessment#:#tst_no_questionpools_for_random_test#:#You have not added a question pool for this random test! Please select at least one question pool.
 assessment#:#tst_no_questions_available#:#There are no questions available! You need to create new questions or browse for questions.
 assessment#:#tst_no_questions_for_random_test#:#You have taken no questions from the questionspools for this random test! Please take at least one question by setting the amount of questions for an added question pool.
@@ -974,7 +1002,7 @@ assessment#:#tst_random_select_questionpool#:#Select the question pool to choose
 assessment#:#tst_random_selection_question_count_too_high#:#The question count you entered was higher than the maximum number of available questions. The question count has been reduced automatically.
 assessment#:#tst_random_selection_question_total_count_too_high#:#The question count you entered was higher than the maximum number of available questions for all selected question pools. The question count has been reduced automatically.
 assessment#:#tst_nonpool_questions_get_lost_warning#:#<b>The current test mode includes questions in its configuration that are not assigned to any question pool. If you change the test mode, these questions will be lost permanently.</b>
-assessment#:#tst_reached_points#:#Reached Points
+assessment#:#tst_reached_points#:#Points
 assessment#:#tst_remove_mark#:#Remove this mark
 assessment#:#tst_remove_questions_and_results#:#This test was already executed by %s user(s). Removing questions from this test will remove all test results of these users. Are you sure you want to remove the following question(s) from the test?
 assessment#:#tst_remove_questions#:#Are you sure you want to remove the following questions from the test?
@@ -989,7 +1017,7 @@ assessment#:#tst_result_user_name_pass#:#Results of Test Pass %s for %s
 assessment#:#tst_result_user_name#:#Test Results for %s
 assessment#:#tst_results_access_always#:#Always
 assessment#:#tst_results_access_date#:#Date
-assessment#:#tst_results_access_description#:#This setting handles the access of the participants to their test results. If results can be accessed after the test is finished, the participants can access their test results after they finished a test pass for the first time. Even if a test has more than one allowed test pass, the participants can access their test results after finishing the first pass. If you choose a date access restriction, the participants will not be able to access their test results until the specified date and time is reached. You must choose this option if you want to use the ECTS scoring system of if you have to score questions manually. If "Always" is selected, the participants can access their test results at any time even if the did not finish the test yet. If "Never" is selected, the access to test results is not available.
+assessment#:#tst_results_access_description#:#This setting handles the participants' access to their test results. If results can be accessed after the test is finished, the participants can access their test results after they completed a test pass for the first time. Even if a test has more than one allowed test pass, participants can access their test results after finishing the first pass. If you choose a date access restriction, the participants will not be able to access their test results until the specified date and time is reached. You must choose this option if you want to use the ECTS scoring system or if you have to score questions manually. If "Always" is selected, the participants can access their test results at any time even if the did not finish the test yet. If "Never" is selected, the access to test results is not available at any time.
 assessment#:#tst_results_access_finished#:#After Test is Finished
 assessment#:#tst_results_access_never#:#Never
 assessment#:#tst_results_access#:#Access to Test Results
@@ -999,7 +1027,13 @@ assessment#:#tst_results_back_introduction#:#Back to Introductory Message
 assessment#:#tst_results_back_overview#:#Back to Results Overview
 assessment#:#tst_results_overview_pass#:#Results Overview for Pass %s
 assessment#:#tst_results_overview#:#Pass Overview of the Test Results
-assessment#:#tst_results_presentation_description#:#If "Show Pass Details for running tests" is selected, the question titles and the reached points for every question in the test pass are available if the test is not finished. If "Show Solutions in Test Results" is selected, the detailed question solution is available to participants in the test results presentation. This includes the exact scoring of every answer, otherwise only an overview with the question titles and the reached points is shown. If the list of answers is selected, an overview of all questions with the answers of the participant is generated. This list will be offered on the Info Page and at the end of a test prior to the final submission. If "Show Answer-Specific Feedback in Test Results" is selected, the answer specific feedback will be shown in the test results next to the questions. If "Results print view (answers only)" is selected, the ILIAS content you place around a question using the "Edit content" tab page will not be visible in a print-out. If you want to save some paper space, select this option. If "Show Signature Placeholder" is selected, a signature placeholder will be shown for printout. If "Show Suggested Solution" is selected, the suggested solutions of questions (if existent) will be shown in the test results overview.
+assessment#:#tst_show_pass_details_desc#:#If selected, the question titles and the reached points for every question in the test pass are available if the test is not finished.
+assessment#:#tst_show_solution_details_desc#:#If selected, the detailed question solution is available to participants in the test results presentation. This includes the exact scoring of every answer, otherwise only an overview with the question titles and the reached points is shown.
+assessment#:#tst_show_solution_printview_desc#:#If selected, an overview of all questions with the answers of the participant is generated. This list will be offered on the Info Page and at the end of a test prior to the final submission.
+assessment#:#tst_show_solution_feedback_desc#:#If is selected, the answer specific feedback will be shown in the test results next to the questions.
+assessment#:#tst_show_solution_answers_only_desc#:#If is selected, the ILIAS content you place around a question using the "Edit content" tab page will not be visible in a print-out. If you want to save some paper space, select this option.
+assessment#:#tst_show_solution_signature_desc#:#If is selected, a signature placeholder will be shown for printout.
+assessment#:#tst_show_solution_suggested_desc#:#If is selected, the suggested solutions of questions (if existent) will be shown in the test results overview.
 assessment#:#tst_results_presentation#:#Test Results Presentation
 assessment#:#tst_results#:#Test Results
 assessment#:#tst_resume_test#:#Resume the Test
@@ -1097,8 +1131,11 @@ assessment#:#tst_type_comment#:#Warning: Changing the test type of a running tes
 assessment#:#tst_type#:#Test Type
 assessment#:#tst_types#:#Test Types
 assessment#:#exam_id#:#Exam Id: 
-assessment#:#examid_in_kiosk#:#Display Exam Id in Kiosk mode 
-assessment#:#show_exam_id#:#Display Exam Id 
+assessment#:#examid_in_test_pass#:#Display Exam ID
+assessment#:#examid_in_test_pass_desc#:#A testpass ID is diplayed in the test. A new ID is generated for every testpass.
+assessment#:#show_exam_id#:#Display Exam ID
+assessment#:#examid_in_test_res#:#Display Exam ID
+assessment#:#examid_in_test_res_desc#:#The ILIAS Testpass ID will be included in the test results.
 assessment#:#tst_use_javascript#:#Use Javascript for drag and drop actions
 assessment#:#tst_use_previous_answers_description#:#If checked, a participant may choose to use previous answers as default values in future test passes, otherwise previous answers are not shown in future test passes. An option is shown on the information screen, which is deactivated by default.
 assessment#:#tst_use_previous_answers_user#:#Use my previous answers as default values in future test passes
@@ -1151,7 +1188,7 @@ assessment#:#tst_highscore_options#:#High Score
 assessment#:#tst_highscore_enabled#:#High Score display activated
 assessment#:#tst_highscore_description#:#Should the display of high scores be available?
 assessment#:#tst_highscore_anon#:#Anonymization of the entries.
-assessment#:#tst_highscore_anon_description#:#Controls, if names are anonymized with the ranks. This option may be overriden by the test anonymization switch.
+assessment#:#tst_highscore_anon_description#:#Controls, if names are anonymized with the ranks. This option may be overridden by the test anonymization switch.
 assessment#:#tst_highscore_achieved_ts#:#Show date of test
 assessment#:#tst_highscore_achieved_ts_description#:#Controls, if a column with the test date should be shown.
 assessment#:#tst_highscore_score#:#Show score
@@ -1181,12 +1218,22 @@ assessment#:#tst_question_set_type_dynamic_desc#:#With this mode exactly one que
 assessment#:#tst_change_quest_set_type_from_old_to_new_with_conflict#:#You are about to change the test mode from <b>%s</b> to <b>%s</b>, although a questions/questionpool configuration dependent on the current test mode already exists.<br />This already existing configuration will be lost.
 assessment#:#tst_msg_dynamic_question_set_config_modified#:#Continues question selection configuration has been modified.
 assessment#:#tst_msg_cannot_modify_dynamic_question_set_conf_due_to_part#:#Continues question selection configuration cannot be modified due to existing participant data.
+assessment#:#tst_msg_cannot_modify_random_question_set_conf_due_to_part#:#The random question set configuration cannot be modified due to existing participant data.
+assessment#:#tst_delete_dyn_test_results_btn#:#Delete Test Results
+assessment#:#tst_dyn_test_msg_pass_deletion_link#:#Delete Previous Answers
+assessment#:#tst_dyn_test_pass_deletion_button#:#Reset All Testanswers
 assessment#:#tst_form_dynamic_question_set_config#:#Continues Question Selection
 assessment#:#tst_input_dynamic_question_set_source_questionpool#:#Source Question Pool
 assessment#:#tst_dynamic_question_set_source_questionpool_summary_string#:#%s (Path: %s) [%s Questions]
 assessment#:#tst_dyn_quest_set_src_qpl_summary_string_trashed#:#%s (Deleted) [%s Questions]
 assessment#:#tst_dyn_quest_set_src_qpl_summary_string_deleted#:#%s (Deleted Permanently)
 assessment#:#tst_input_dynamic_question_set_taxonomie_filter_enabled#:#Provide Taxonomy Filter
+assessment#:#tst_input_dyn_quest_set_answer_status_filter_enabled#:#Provide Answer Status Filter
+assessment#:#tst_input_dyn_quest_set_prev_quest_list_enabled#:#Provide List of Previously Answered Questions
+assessment#:#tst_question_answer_status#:#Answer Status
+assessment#:#tst_question_answer_status_all_non_correct#:#All Questions (Except Correct Answered Ones)
+assessment#:#tst_question_answer_status_non_answered#:#Non Answered Questions
+assessment#:#tst_question_answer_status_wrong_answered#:#Wrong Answered Questions
 assessment#:#tst_input_dynamic_question_set_question_ordering#:#Question Ordering
 assessment#:#tst_input_dynamic_question_set_question_ordering_by_date#:#Order Questions by Date
 assessment#:#tst_inp_dyn_quest_set_quest_ordering_by_date_desc#:#The presentation order for the questions bases upon the question's last editing date.
@@ -1198,9 +1245,17 @@ assessment#:#tst_start_dyn_test_with_cur_quest_sel#:#Start Test with Current Que
 assessment#:#tst_resume_dyn_test_with_cur_quest_sel#:#Resume Test with Current Question Selection
 assessment#:#tst_back_dyn_test_with_cur_quest_sel#:#Back to Test with Current Question Selection
 assessment#:#tst_tracked_question_list#:#Previously Answered Questions
-assessment#:#tst_filtered_question_list#:#Test Question Selection
+assessment#:#tst_dynamic_question_set_selection#:#Test Question Selection and Selection-Statistic
+assessment#:#tst_dynamic_question_set_complete#:#Total-Statistic
+assessment#:#tst_num_all_questions#:#Number of All Questions
+assessment#:#tst_num_selected_questions#:#Number of Selected Questions
+assessment#:#tst_num_non_answered_questions#:#Non Answered Questions
+assessment#:#tst_num_wrong_answered_questions#:#Wrong Answered Questions
+assessment#:#tst_num_correct_answered_questions#:#Correct Answered Questions
+assessment#:#tst_num_postponed_questions#:#Postponed Questions
+assessment#:#tst_num_marked_questions#:#Marked Questions
 assessment#:#tst_change_dyn_test_question_selection#:#Change Current Question Selection
-assessment#:#tst_dyn_test_msg_currently_finished_completely#:#Currently you have answered all questions from the selected questin pool successfully. When there are new or edited questions in the question pool you can proceed the test.
+assessment#:#tst_dyn_test_msg_currently_finished_completely#:#Currently you have answered all questions from the selected question pool successfully. You can proceed the test when there are new or edited questions in the question pool.
 assessment#:#tst_dyn_test_msg_currently_finished_selection#:#With the current question selection you have answered all questions successfully. Change the question selection to proceed the test.
 assessment#:#feedback_setting#:#Mode of answer specific feedback.
 assessment#:#feedback_all#:#Show answer specific feedback for all answers.
@@ -1384,8 +1439,8 @@ certificate#:#certificate_delete#:#Delete Certificate Data
 certificate#:#certificate_edit#:#Create/Edit a Certificate Template
 certificate#:#certificate_enabled_scorm_introduction#:#If checked, the certificate will be offered for all users who finished the SCORM learning module.
 certificate#:#certificate_enabled_scorm#:#Enabled
-certificate#:#certificate_error_import#:#An error occured during the import of a certificate!
-certificate#:#certificate_error_upload_bgimage#:#An error occured during the upload of the background image!
+certificate#:#certificate_error_import#:#An error occurred during the import of a certificate!
+certificate#:#certificate_error_upload_bgimage#:#An error occurred during the upload of the background image!
 certificate#:#certificate_export#:#Export Certificate
 certificate#:#certificate_failed#:#failed
 certificate#:#certificate_left#:#Left
@@ -2315,7 +2370,7 @@ common#:#exc_schedule#:#Schedule
 common#:#exc_search_for#:#Search for
 common#:#exc_select_one_file#:#Please select exactly one file.
 common#:#exc_send_exercise#:#Send exercise by mail
-common#:#exc_sent_at#:#Sent at <br />%s
+common#:#exc_sent_at#:#Sent on <br />%s
 common#:#exc_sent#:#The exercise has been sent to the selected users
 common#:#exc_status_resubmitted#:#Resubmitted
 common#:#exc_status_saved#:#Exercise updated
@@ -2441,8 +2496,8 @@ common#:#folder#:#Folder
 common#:#folders#:#Folders
 common#:#force_accept_usr_agreement#:#You must accept the user agreement!
 common#:#forename#:#Forename
-common#:#forgot_password#:#Forgot password?
-common#:#forgot_username#:#Forgot username?
+common#:#forgot_password#:#Forgot your password?
+common#:#forgot_username#:#Forgot your username?
 common#:#form_empty_fields#:#Please complete these fields:
 common#:#form_input_not_valid#:#Some data is incomplete or not valid. Please correct the form input.
 common#:#forum_attachments#:#Forum attachments
@@ -2705,7 +2760,7 @@ common#:#html_block#:#HTML Block
 common#:#http_not_possible#:#This server is not supporting http requests.
 common#:#http_path#:#HTTP Path
 common#:#http#:#HTTP
-common#:#https_not_possible#:#This server is not supporting HTTPS connnections.
+common#:#https_not_possible#:#This server is not supporting HTTPS connections.
 common#:#i2passwd#:#ILIAS 2 password
 common#:#icon_settings#:#Custom Icons
 common#:#icon#:#Icon
@@ -2905,7 +2960,7 @@ common#:#licenses#:#Licenses
 common#:#link_all#:#Link all
 common#:#link_check_body_top#:#You receive mail from ILIAS because you want to be informed about invalid links of the following learning modules:
 common#:#link_check_message_b#:#If enabled, you will be informed about invalid links by mail.
-common#:#link_check_message_disabled#:#Messages diabled
+common#:#link_check_message_disabled#:#Messages disabled
 common#:#link_check_message_enabled#:#Messages enabled
 common#:#link_check_subject#:#[ILIAS] Weblink check
 common#:#link_check#:#Weblink Check
@@ -3285,7 +3340,7 @@ common#:#newline#:#Newline
 common#:#news#:#News
 common#:#next#:#Next
 common#:#nickname#:#Nickname
-common#:#no_access_item_public#:#To access this item you need to be logged in and to have appropriate permissons.
+common#:#no_access_item_public#:#To access this item you need to be logged in and to have appropriate permissions.
 common#:#no_access_item#:#You have no permission to access this item.
 common#:#no_access_link_object#:#You are not allowed to link this object
 common#:#no_agreement_description#:#There is currently no user agreement text provided with this installation. Please contact the <a href="%1$s">system administrator</a>.
@@ -3708,7 +3763,7 @@ rbac#:#ps_export_member_data#:#User can export member data in courses and groups
 rbac#:#ps_read#:#User has read access to Privacy/Security administration
 rbac#:#ps_visible#:#Privacy/Security administration is visible
 rbac#:#ps_write#:#User can edit settings in Privacy/Security administration
-common#:#pub_section_info#:#If enabled, parts of the system (e.g. repository, workspace, user profiles) can be made available to the internet without authentification. The permissions of the "Anonymous" role will control the access to repository resources.
+common#:#pub_section_info#:#If enabled, parts of the system (e.g. repository, workspace, user profiles) can be made available to the internet without authentication. The permissions of the "Anonymous" role will control the access to repository resources.
 common#:#pub_section#:#Anonymous Access
 common#:#public_notes#:#Public Notes
 common#:#public_profile_not_visible#:#The profile is not public
@@ -3990,7 +4045,7 @@ common#:#settings#:#Settings
 common#:#setUserLanguage#:#Set User Language
 common#:#shib_active#:#Enable Shibboleth support
 common#:#shib_city#:#Attribute for city
-common#:#shib_configure#:#Configure Shibboleh Authentication
+common#:#shib_configure#:#Configure Shibboleth Authentication
 common#:#shib_country#:#Attribute for country
 common#:#shib_data_conv_warning#:#The data manipulation API file you specified cannot be read
 common#:#shib_data_conv#:#Absolute path to data manipulation API
@@ -4812,7 +4867,7 @@ content#:#cont_id_ref#:#identifierref
 content#:#cont_imagemap#:#Image Map
 content#:#cont_import_id#:#identifier
 content#:#cont_import_tracking#:#Import Tracking Data
-content#:#cont_import_validation_errors#:#Some errors occured during validation of the learning module. The presentation of the learning module may be ok, but it is likely that you are not able to edit the pages that contain errors.
+content#:#cont_import_validation_errors#:#Some errors occurred during validation of the learning module. The presentation of the learning module may be ok, but it is likely that you are not able to edit the pages that contain errors.
 content#:#cont_insert_as_chapter#:#Insert as Chapter
 content#:#cont_insert_as_subchapter#:#Insert as Subchapter
 content#:#cont_insert_chapter_from_clip#:#Paste Chapters from Clipboard
@@ -5046,7 +5101,6 @@ content#:#cont_resource_size#:#Original Resource Size
 content#:#cont_resource_type#:#type
 content#:#cont_resource#:#Resource
 content#:#cont_resources#:#Resources
-content#:#cont_Ressources#:#Ressources
 content#:#cont_revision#:#Revision
 content#:#cont_right_float#:#Right, Floating
 content#:#cont_right#:#Right
@@ -5341,7 +5395,7 @@ crs#:#crs_archive_type#:#Archive type
 crs#:#crs_archive#:#Archives
 crs#:#crs_archives_deleted#:#The archive(s) have been deleted
 crs#:#crs_auto_fill#:#Auto Fill
-crs#:#crs_availability_limitless_info#:#Choose this mode to give course members unlimited access to the cours.
+crs#:#crs_availability_limitless_info#:#Choose this mode to give course members unlimited access to the course.
 crs#:#crs_availability_until_info#:#Choose this mode to give course members access to the course for a fixed period of time.
 crs#:#crs_blocked_member_body#:#your membership for course "%s" has been blocked.
 crs#:#crs_blocked_member#:#Membership blocked in course "%s"
@@ -5353,7 +5407,7 @@ crs#:#crs_cancel_subscription#:#User left course "%s"
 crs#:#crs_change_status#:#Changes status of objective:
 crs#:#crs_chapter_already_assigned#:#These chapters are already assigned.
 crs#:#crs_contact_consultation#:#Consultation
-crs#:#crs_contact_email_info#:#Enter one or more (comma seperated) E-mail addresses.
+crs#:#crs_contact_email_info#:#Enter one or more (comma seperated) e-mail addresses.
 crs#:#crs_contact_email#:#E-Mail
 crs#:#crs_contact_name#:#Name
 crs#:#crs_contact_phone#:#Telephone
@@ -5420,7 +5474,7 @@ crs#:#crs_grp_no_course_selected#:#Please select one course.
 crs#:#crs_grp_no_courses_assigned#:#No assigned courses.
 crs#:#crs_grp_table_assigned_courses#:#Assigned courses
 crs#:#crs_header_archives#:#Course Archives
-crs#:#crs_header_delete_members#:#Delete Members
+crs#:#crs_header_delete_members#:#Would you like to remove the following members from this course?
 crs#:#crs_header_delete_subscribers#:#Delete subscribers
 crs#:#crs_header_edit_members#:#Edit Members
 crs#:#crs_header_members#:#Course members
@@ -6020,9 +6074,12 @@ dateplaner#:#cal_type_usr#:#Personal Calendar
 dateplaner#:#cal_unshare_cal#:#Stop Sharing
 dateplaner#:#cal_unshared_selected_usr#:#Stopped sharing the calendar with the selected users.
 dateplaner#:#cal_user_settings#:#Calendar Settings
+dateplaner#:#cal_user_timezone#:#ILIAS-Timezone
+dateplaner#:#cal_export_timezone#:#Timezone for Calendar Export
+dateplaner#:#cal_export_timezone_tz#:#Use ILIAS-Timezone
+dateplaner#:#cal_export_timezone_utc#:#Use Timezone UTC (compatible with MS Outlook)
 dateplaner#:#cal_user_date_format#:#Date Input Format
 dateplaner#:#cal_user_time_format#:#Time Format
-dateplaner#:#cal_user_timezone#:#Timezone
 dateplaner#:#cal_week_abbrev#:#W
 dateplaner#:#cal_week_month_view#:#Week/Month View Settings
 dateplaner#:#cal_week_overview#:#Week Overview
@@ -6256,7 +6313,7 @@ delic#:#delic_settings#:#Delicious Settings
 delic#:#delic_user_profile#:#Enable Delicious Account Setting in User Profile
 ecs#:#cert_serial#:#Certificate Serial Number
 ecs#:#ecs_abr#:#Abbreviation
-ecs#:#ecs_account_duration_info#:#New ECS-User accounts are limited to the session duration. After assigning an user to a course the activation period will be extended by the given number months.
+ecs#:#ecs_account_duration_info#:#New ECS-User accounts are limited to the session duration. After assigning a user to a course the activation period will be extended by the given number months.
 ecs#:#ecs_account_duration#:#Activation Period Extension
 ecs#:#ecs_active_header#:#Import/Export Allowed
 ecs#:#ecs_active#:#Enable ECS Functionalities
@@ -6678,7 +6735,7 @@ grp#:#grp_reg_end#:#Registration End:
 grp#:#grp_reg_limit_num_info#:#Limited Registration Period
 grp#:#grp_reg_limit_num#:#Maximum Number of Users
 grp#:#grp_reg_limit_time#:#Enabled
-grp#:#grp_reg_limited#:#Self-Registration
+grp#:#grp_reg_limited#:#Limited Registration Period
 grp#:#grp_reg_max_members_info#:#Define the maximum number of users that can be assigned to this group.
 grp#:#grp_reg_passwd_info_screen#:#If a group administrator has given you the group password, you can join this group.
 grp#:#grp_reg_password_info#:#Users need to type in this password when joining the group.
@@ -6719,7 +6776,7 @@ jscalendar#:#def_date_format#:#%Y-%m-%d
 jscalendar#:#drag_to_move#:#Drag to move
 jscalendar#:#go_today#:#Go Today
 jscalendar#:#l_01#:#January
-jscalendar#:#l_02#:#Feburary
+jscalendar#:#l_02#:#February
 jscalendar#:#l_03#:#March
 jscalendar#:#l_04#:#April
 jscalendar#:#l_05#:#May
@@ -6844,7 +6901,7 @@ ldap#:#ldap_role_at_value#:#Attribute Value
 ldap#:#ldap_role_bind_pass_info#:#Password
 ldap#:#ldap_role_bind_pass#:#Password
 ldap#:#ldap_role_bind_user_info#:#Please enter a distinguished name of a LDAP user account. This user needs write access for the LDAP groups.
-ldap#:#ldap_role_bind_user#:#Usern DN
+ldap#:#ldap_role_bind_user#:#Users DN
 ldap#:#ldap_role_by_attribute#:#LDAP Attribute
 ldap#:#ldap_role_by_group#:#Groupmembership
 ldap#:#ldap_role_by_plugin#:#By Plugin
@@ -6875,7 +6932,7 @@ ldap#:#ldap_server_name#:#Name of LDAP Configuration
 ldap#:#ldap_server_security_settings#:#Security Settings
 ldap#:#ldap_server_short#:#Server URL:
 ldap#:#ldap_server_url_info#:#A fully qualified URL for specifying the protocol, url and port to connect to. E.g "ldap://ldap.ilias.de:389".  You may add multiple servers with commas separated.
-ldap#:#ldap_server_version_info#:#LDAP version to use, ususally 3.
+ldap#:#ldap_server_version_info#:#LDAP version to use, usually 3.
 ldap#:#ldap_settings#:#Server Settings
 ldap#:#ldap_sync_cron#:#Per Cron-Job
 ldap#:#ldap_sync_login#:#On Login
@@ -6894,7 +6951,7 @@ license#:#arbitrary#:#arbitrary
 license#:#course_licenses_exceeded#:#By adding users the potential accesses will exceed the available licenses. Look at the tab "Licenses" to see which licenses have to be extended.
 license#:#course_licenses_rare#:#Warning: only %s licenses are available for a course object. Look at the tab "Licenses" to see which licenses have to be extended.
 license#:#edit_license#:#Edit license
-license#:#existing_licenses#:#Existng licenses
+license#:#existing_licenses#:#Existing licenses
 license#:#license_counter_info#:#Allows counting used licenses of purchased SCORM and HTML learning modules
 license#:#license_counter#:#License counter
 license#:#license_updated#:#The license data was updated.
@@ -6912,6 +6969,8 @@ mail#:#advice_mail_body_secured#:#Because of security reasons ILIAS removed some
 mail#:#also_as_email#:#Also as E-Mail
 mail#:#bc#:#BCC
 chatroom#:#chat_select_room#:#Select Chat Room
+mail#:#back_to_folder#:#Back to Folder
+mail#:#current_folder#:#Current Folder: %s
 mail#:#chat_users_have_been_invited#:#The following users have been invited:
 mail#:#chat_users_without_login#:#The following users don't have an ILIAS account and can't be invited to a chat room:
 mail#:#chat_users_without_permission#:#The following users don't have access to the selected chat room:
@@ -7752,7 +7811,7 @@ news#:#news_enable_internal_news_info#:#Activates news blocks for categories, co
 news#:#news_enable_internal_news#:#Enable Internal News
 news#:#news_enable_internal_rss_info#:#Allows publishing news items via RSS. These items will be accessible outside of the system without authentication.
 news#:#news_enable_internal_rss#:#Enable RSS for Internal News
-news#:#news_enable_private_feed_info#:#If this option is enabled, public and private news can be obtained by personal RSS feeds outside of ILIAS. Authentification is provided by password.
+news#:#news_enable_private_feed_info#:#If this option is enabled, public and private news can be obtained by personal RSS feeds outside of ILIAS. Authentication is provided by password.
 news#:#news_enable_private_feed#:#Enable private Newsfeed
 news#:#news_feed_url_for#:#Feed URL for '%s'
 news#:#news_feed_url#:#Feed URL
@@ -7781,7 +7840,7 @@ news#:#news_news_item_visibility#:#Access
 news#:#news_news_items#:#News Item(s)
 news#:#news_no_js_click_here#:#If news are not displayed, click here.
 news#:#news_no_news_items#:#No news available.
-news#:#news_notifications_public_info#:#If this option is enabled, notifications can be obtained by personal RSS feeds outside of ILIAS. Please note that this makes notifications accessible without authentification.
+news#:#news_notifications_public_info#:#If this option is enabled, notifications can be obtained by personal RSS feeds outside of ILIAS. Please note that this makes notifications accessible without authentication.
 news#:#news_notifications_public#:#Public Notifications
 news#:#news_notifications#:#Notifications
 news#:#news_nr_of_items_info#:#Number of news items that are kept for an object (e.g. a file or a learning module) in the database. Please note, that container objects (e.g. categories, courses) may list more items, because they aggregate news of subobjects.
@@ -7812,7 +7871,7 @@ news#:#priv_feed_disabled#:#Private Newsfeed disabled.
 news#:#priv_feed_no_access_body#:#Please contact the system administrator for further information.
 news#:#priv_feed_no_access_title#:#Private Newsfeed is disabled
 news#:#priv_feed_no_auth_body#:#Please make sure you enabled your private Newsfeed and entered the password correctly.
-news#:#priv_feed_no_auth_title#:#Authentification failed
+news#:#priv_feed_no_auth_title#:#Authentication failed
 news#:#priv_feed_settings#:#Private Newsfeed settings
 notes#:#notes_activate_comments#:#Activate Public Comments
 notes#:#notes_add_comment#:#Add Comment
@@ -7952,14 +8011,14 @@ payment#:#pay_unpayed_bill#:#Please wire the open balance to the given bank acco
 payment#:#pay_payed_credit_card#:#The order was paid by credit card.
 payment#:#pay_payed_debit_entry#:#The order was paid by debit entry.
 payment#:#pay_payed_paypal#:#The order was paid by PayPal.
-payment#:#pay_paypal_error_fails#:#PayPal reports errors that occured during the transaction.
+payment#:#pay_paypal_error_fails#:#PayPal reports errors that occurred during the transaction.
 payment#:#pay_paypal_error_info#:#If necessary feel free to contact the system administrator of this ILIAS installation.
 payment#:#pay_paypal_error_not_completed#:#The transaction isn't totally completed yet.
 payment#:#pay_paypal_error_prev_trans_id#:#The transaction id given by PayPal was already used before.
 payment#:#pay_paypal_error_wrong_customer#:#Checking this transaction resulted in no match of the customer.
 payment#:#pay_paypal_error_wrong_items#:#Checking this transaction resulted in no match of the sold items.
 payment#:#pay_paypal_error_wrong_vendor#:#Checking this transaction resulted in no match of the vendor.
-payment#:#pay_paypal_failed#:#Your puchase of ILIAS objects using PayPal failed!
+payment#:#pay_paypal_failed#:#Your purchase of ILIAS objects using PayPal failed!
 payment#:#pay_paypal_success#:#Thanks for your purchase of ILIAS objects using PayPal! You'll receive a written confirmation in PDF format by e-mail.
 payment#:#pay_paypal_unreachable#:#The connection to the payment server of PayPal failed.
 payment#:#pay_personal_settings#:#Personal Settings
@@ -7971,10 +8030,10 @@ payment#:#pay_send_order#:#Send order
 payment#:#pay_shopping_cart_empty#:#Your shopping cart is empty.
 payment#:#pay_sorting_value#:#Sorting Value
 payment#:#pay_starting#:#starts with
-payment#:#pay_step1#:#Your order - Schritt 1/3: Enter your personal data
-payment#:#pay_step2#:#Your order - Schritt 2/3: Choose kind of payment
-payment#:#pay_step3_credit_card#:#Your order - Schritt 3/3: Enter your credit card data and send your order
-payment#:#pay_step3_debit_entry#:#Your order - Schritt 3/3: Enter your bank data and send your order
+payment#:#pay_step1#:#Your order - Step 1/3: Enter your personal data
+payment#:#pay_step2#:#Your order - Step 2/3: Choose kind of payment
+payment#:#pay_step3_credit_card#:#Your order - Step 3/3: Enter your credit card data and send your order
+payment#:#pay_step3_debit_entry#:#Your order - Step 3/3: Enter your bank data and send your order
 payment#:#pay_thumbnail#:#Thumbnail
 payment#:#pay_topics_allow_custom_sorting_info#:#If enabled, every user can determine the sorting of topics in the webshop independently.
 payment#:#pay_topics_allow_custom_sorting#:#Custom Sorting of Topics
@@ -8044,7 +8103,7 @@ payment#:#paya_coupons_type#:#Coupon Type
 payment#:#paya_coupons_unassigned_objects#:#Unassigned Objects
 payment#:#paya_coupons_usage_of_codes#:#Usage of Codes
 payment#:#paya_coupons_value#:#Value
-payment#:#paya_customer_added_successfully#:#The selling process was added to the statistics sucessfully.
+payment#:#paya_customer_added_successfully#:#The selling process was added to the statistics successfully.
 payment#:#paya_customer#:#Customer
 payment#:#paya_delete_price#:#Delete price
 payment#:#paya_delete_trustee_msg#:#Deleted selected trustees.
@@ -8058,9 +8117,9 @@ payment#:#paya_edit_pay_method#:#Edit Pay Method
 payment#:#paya_edit_prices_first#:#Please edit the prices first.
 payment#:#paya_edit_prices#:#Edit Prices
 payment#:#paya_enabled#:#Enabled
-payment#:#paya_enter_login#:#Please enter an user name.
+payment#:#paya_enter_login#:#Please enter a user name.
 payment#:#paya_err_adding_object#:#Error adding object
-payment#:#paya_error_adding_customer#:#An error occured while adding the selling process to the statistics.
+payment#:#paya_error_adding_customer#:#An error occurred while adding the selling process to the statistics.
 payment#:#paya_error_mandatory_fields#:#Please fill in all mandatory fields (*).
 payment#:#paya_error_no_object_id_given#:#Please choose an object.
 payment#:#paya_error_update_booking#:#Error saving statistic data.
@@ -8150,7 +8209,7 @@ payment#:#payment_shop_not_objects_found#:#No buyable objects could be found.
 payment#:#payment_tax_rates#:#Tax Rates
 payment#:#payment_vat_administration#:#Administration
 payment#:#payment_vat_already_created#:#A VAT with this rate is already created.
-payment#:#payment_vat_deleted_successfully#:#Den/de valgte satser blev slettet.
+payment#:#payment_vat_deleted_successfully#:#VAT was deleted successfully.
 payment#:#payment_vat_has_to_be_defined_by_administration_short#:#----
 payment#:#payment_vat_input_invalid#:#Please insert a valid value for the VAT rate.
 payment#:#payment_vat_rate_info#:#Please insert the VAT rate (without the %-sign), e.g. 7.
@@ -8204,10 +8263,10 @@ payment#:#pays_epay_server_path#:#Server path
 payment#:#pays_epay_settings_not_valid#:#The ePay settings could not be saved because they are invalid.
 payment#:#pays_epay_settings#:#ePay configuration
 payment#:#pays_epay#:#ePay
-payment#:#pays_erp_bad_settings#:#Please change the settings for %s as they are not vaild.
+payment#:#pays_erp_bad_settings#:#Please change the settings for %s as they are not valid.
 payment#:#pays_erp_connection_established#:#Connection established with %s successfully.
 payment#:#pays_erp_error#:#Error interacting with %s!
-payment#:#pays_erp_info#:#Enterprice, Resource and Planning systems setup. Integrates ILIAS with accounting systems.
+payment#:#pays_erp_info#:#Enterprise, Resource and Planning systems setup. Integrates ILIAS with accounting systems.
 payment#:#pays_erp_invoice_attached#:#Your invoice is attached this message.
 payment#:#pays_erp_invoice_copies_info#:#Copies will be saved in:
 payment#:#pays_erp_invoice_copies#:#Save copies of generated invoices
@@ -8220,7 +8279,7 @@ payment#:#pays_erp_system#:#ERP System
 payment#:#pays_erp_tst_billed#:#billed for
 payment#:#pays_erp_tst_existing#:#Existing Debtor
 payment#:#pays_erp_tst_new#:#New Debtor
-payment#:#pays_erp_tst_product#:#This is just a test invoice. In an actual purchace the name of the course or file will be printed here.
+payment#:#pays_erp_tst_product#:#This is just a test invoice. In an actual purchase the name of the course or file will be printed here.
 payment#:#pays_erp_updated_settings#:#ERP settings updated and %s set active.
 payment#:#pays_erp#:#ERP
 payment#:#pays_general_settings_not_valid#:#Your general settings aren't valid. Please check out whether all fields are filled out correctly.
@@ -8386,7 +8445,7 @@ ps#:#ps_password_max_age_info#:#Sets the maximum age of passwords in days. Set t
 ps#:#ps_password_max_age#:#Maximum Password Age
 ps#:#ps_password_max_length_info#:#Sets the maximum size of account passwords. Set this to 0 for disabling this option.
 ps#:#ps_password_max_length#:#Maximum Password Size
-ps#:#ps_password_min_length_info#:#Sets the minimum size of account passwords. If set to 0 the passwords anyway have to have a minimum size of 1.
+ps#:#ps_password_min_length_info#:#Sets the minimum size of account passwords. If set to 0, the passwords anyway have to have a minimum size of 1. If the required length is altered, the new requirement will be applied only to those accounts that were created or changed after the new length was set. Existing accounts are not affected.
 ps#:#ps_password_min_length#:#Minimum Password Size
 ps#:#ps_password_special_chars_enabled_info#:#If enabled, passwords have to contain special characters.
 ps#:#ps_password_special_chars_enabled#:#Force Special Characters
@@ -8707,7 +8766,7 @@ search#:#lucene_settings_tab#:#Lucene
 search#:#lucene_settings_title#:#Lucene Settings
 search#:#lucene_show_relevance_info#:#Search results are sorted by their relevance. If activated, the relevance is shown as additional information for each search result.
 search#:#lucene_show_relevance#:#Show Relevance
-search#:#lucene_size_frag_info#:#Please choose the maximum size of highlighted test fragments.
+search#:#lucene_size_frag_info#:#Please choose the maximum size of highlighted text fragments.
 search#:#lucene_size_fragments#:#Size of Text Fragments
 search#:#lucene_tbl_create_ini#:#Create Java-Server Ini-File
 search#:#search_active#:#Include active users
@@ -8870,7 +8929,7 @@ style#:#sty_characteristic_already_exists#:#A style class with this title alread
 style#:#sty_clear#:#Clear
 style#:#sty_col_foot_class#:#Column Footer
 style#:#sty_col_head_class#:#Column Header
-style#:#sty_color_already_exists#:#A color with this name already exisits in this style.
+style#:#sty_color_already_exists#:#A color with this name already exists in this style.
 style#:#sty_color_code#:#Color Code
 style#:#sty_color_flavors#:#Color Flavors
 style#:#sty_color_info#:#Predefined colors make it easy to reuse a color for different purposes. You refer to a predefined color by using its name with a leading "!" for any color attribute in your style classes. To use a flavor, append a lightness value in brackets to the color name, e.g. !MyColor(20).
@@ -8878,7 +8937,7 @@ style#:#sty_color_name#:#Color Name
 style#:#sty_color#:#Color
 style#:#sty_colors#:#Colors
 style#:#sty_commands#:#Commands
-style#:#sty_confirm_char_deletion#:#Are you sure that you want to delete the following style classe(s)?
+style#:#sty_confirm_char_deletion#:#Are you sure that you want to delete the following style class(es)?
 style#:#sty_confirm_color_deletion#:#Confirm Color Deletion
 style#:#sty_confirm_del_ind_styles_desc#:#All learning modules with individual styles will be assigned to style '%s'. This will also delete all individual content styles. Are you sure to continue?
 style#:#sty_confirm_del_ind_styles#:#Confirm Deletion of Individual Content Styles
@@ -8942,7 +9001,7 @@ style#:#sty_media_char#:#Media
 style#:#sty_min_height#:#Minimum Height
 style#:#sty_move_lm_styles#:#Change Style of Learning Modules
 style#:#sty_move_style#:#Change Style
-style#:#sty_msg_characteristic_already_exists#:#A style class with this title already exisits in this style.
+style#:#sty_msg_characteristic_already_exists#:#A style class with this title already exists in this style.
 style#:#sty_msg_characteristic_must_only_include#:#The title of style classes may only include the following characters:
 style#:#sty_msg_color_must_only_include#:#The color name may only include the following characters:
 style#:#sty_msg_input_must_be_numeric#:#Input must be numeric.
@@ -9580,7 +9639,7 @@ trac#:#found_too_much_objects#:#Thereby more than %s objects totally were found.
 trac#:#info_all_objects#:#The following user tracking refers to all objects of the type '%s'.
 trac#:#info_dwell_time#:#Attention: The total dwell time of an object isn't addicted to the given period of time!
 trac#:#info_found_objects#:#The user tracking refers to the following objects of the type '%s' that were found according to your search terms.
-trac#:#info_valid_request#:#The maximum valid time between two requests of an user.
+trac#:#info_valid_request#:#The maximum valid time between two requests of a user.
 trac#:#last_login#:#Last Login
 trac#:#meta_typical_learning_time#:#Typical learning time
 trac#:#newUT_settings#:#Learning Module Statistics
@@ -9704,7 +9763,7 @@ trac#:#trac_crs_relevant_items#:#Course Materials
 trac#:#trac_edit_collection#:#Please assign materials. If the status of all assigned items is 'Completed' the overall status is completed by the user.
 trac#:#trac_edit_progress#:#Edit Learning Progress
 trac#:#trac_edit_time#:#Processing Time
-trac#:#trac_edit_visits#:#Please define the number of visits that is neccessary to complete this object.
+trac#:#trac_edit_visits#:#Please define the number of visits that is necessary to complete this object.
 trac#:#trac_edited_scos#:#Processed Content
 trac#:#trac_editing_time_passed#:#Editing Time Passed
 trac#:#trac_failed#:#Failed
@@ -9752,7 +9811,7 @@ trac#:#trac_mode_scorm_package#:#Automatic by SCORM Course Status
 trac#:#trac_mode_scorm#:#Automatic by Collection of SCORM Items
 trac#:#trac_mode_test_finished_info#:#Users have to finish a test completely.
 trac#:#trac_mode_test_finished#:#Test Finished
-trac#:#trac_mode_test_passed_info#:#The test has to be passed by an user to receive the status 'Completed'.
+trac#:#trac_mode_test_passed_info#:#The test has to be passed by a user to receive the status 'Completed'.
 trac#:#trac_mode_test_passed#:#Test Passed
 trac#:#trac_mode_tlt_info#:#Users who reached the Typical Learning Time will gain the status 'Completed'. Two requests of a user within %s seconds will be counted as one coherent visit.
 trac#:#trac_mode_tlt#:#Typical Learning Time
@@ -9912,7 +9971,7 @@ common#:#session_config#:#Session Settings
 common#:#session_config_maintenance_enabled#:#Maintenance by client allowed
 common#:#session_config_maintenance_disabled#:#Maintenance by client not allowed
 common#:#session_max_count#:#Max active sessions
-common#:#session_max_count_info#:#Defines the maximum number of sessions that can be created simultaniously. Setting this to "0" disables the feature.
+common#:#session_max_count_info#:#Defines the maximum number of sessions that can be created simultaneously. Setting this to "0" disables the feature.
 common#:#session_min_idle#:#Min session idle (in minutes)
 common#:#session_min_idle_info#:#When a user idles for at least this period of time the session can be destroyed if another session should be opened for another user and the maximum number of existing sessions is reached.
 common#:#session_max_idle#:#Max session idle (in minutes)
@@ -9940,7 +9999,7 @@ content#:#cont_select_file#:#Select File
 content#:#cont_create_link#:#Create Link
 rep#:#rep_dependencies#:#Dependencies
 rep#:#rep_object_to_delete#:#To Delete
-rep#:#rep_dependent_object#:#Ressource with dependence
+rep#:#rep_dependent_object#:#Resource with dependence
 rep#:#rep_dependency#:#Dependency
 content#:#glo_used_in_scorm#:#The glossary is used by the SCORM module. If deleted, references to the glossary cannot be resolved anymore.
 content#:#glo_presentation_view#:#Presentation View
@@ -10027,9 +10086,9 @@ user#:#enable_local_user_administration_info#:#If enabled, local user accounts c
 user#:#restrict_user_access#:#Restricted Access to User Accounts
 user#:#restrict_user_access_info#:#Enabled this option only if you want to restrict the access to user accounts. If enabled access to local and global user accounts is only granted when a role has the permission "Read Access to User Account".
 common#:#backto_lua#:#Back to Local User Administration
-common#:#sort_activation_header#:#Nach Zeitvorgaben
+common#:#sort_activation_header#:#By timings
 common#:#sort_inherit_prefix#:#Default
-common#:#sorting_info_inherit#:#The sorting mode is adopted from a parent course.
+common#:#sorting_info_inherit#:#The sorting mode is adopted from a parent course/group.
 content#:#cont_alignment#:#Alignment
 content#:#cont_set_alignment#:#Set Alignment
 rbac#:#rbac_msg_user_already_assigned#:#The chosen users are already assigned to this role.
@@ -10065,7 +10124,7 @@ dateplaner#:#cal_adm_notification_info#:#Choose this option, to send optional ma
 rbac#:#rbac_add_new_local_role#:#Add New Local Role
 search#:#search_item_filter#:#Search by Type
 search#:#search_item_filter_form#:#Search by Type
-search#:#search_item_filter_form_info#:#If enabled, a search can be restricted to the chosen item types.
+search#:#search_item_filter_form_info#:#Search can be restricted to the chosen file types.
 administration#:#group_export#:#Visible in Groups
 tbl#:#tbl_export_csv#:#Export .csv
 tbl#:#tbl_export_excel#:#Export .xls
@@ -10109,7 +10168,7 @@ dateplaner#:#cal_delete_recurrences#:#Delete all recurrences
 dateplaner#:#cal_back_to_cal#:#Back to Calendar
 rbac#:#cals_add_consultation_hours#:#User can offer and edit consultation hours in calendar
 dateplaner#:#cal_ch_form_header#:#Consultation Hours
-dateplaner#:#cal_ch_form_info#:#This option enables the managment of personal consultation hours in the calendar.
+dateplaner#:#cal_ch_form_info#:#This option enables the management of personal consultation hours in the calendar.
 dateplaner#:#cal_ch_form#:#Enable Consultation Hours
 dateplaner#:#app_consultation_hours#:#Consultation Hours
 rbac#:#log#:#Log
@@ -10185,11 +10244,11 @@ dateplaner#:#cal_cancel_booking_confirmed#:#The booking has been cancelled succe
 crs#:#crs_reg_code#:#Admission per Link
 crs#:#crs_reg_code_link#:#Link for Direct Admission
 crs#:#crs_reg_code_value#:#Link
-crs#:#crs_reg_code_enabled_info#:#Besides the chosen registration procedure this option allows users to enter directly by using the following link.
+crs#:#crs_reg_code_enabled_info#:#Besides the chosen registration procedure and permissions this option allows users to enter directly by using the following link.
 grp#:#grp_reg_code#:#Admission per Link
 grp#:#grp_reg_code_link#:#Link for Direct Admission
 grp#:#grp_reg_code_value#:#Link
-grp#:#grp_reg_code_enabled_info#:#Besides the chosen registration procedure this option allows users to enter directly by using the following link.
+grp#:#grp_reg_code_enabled_info#:#Besides the chosen registration procedure and permissions this option allows users to enter directly by using the following link.
 forum#:#add_re_to_subject#:#Add 'Re: ' to subject on reply
 forum#:#add_re_to_subject_info#:#If activated, 'Re: ' is added to the subject on reply.
 forum#:#enter_new_subject#:#Please enter a new subject
@@ -10388,7 +10447,7 @@ book#:#book_reservation_block#:#Block
 book#:#book_log#:#Reservations
 book#:#book_reservations_list#:#Reservations
 book#:#book_cal_entry#:#Booking of:
-dateplaner#:#cal_ch_booking#:#Ressource Booking
+dateplaner#:#cal_ch_booking#:#Resource Booking
 dateplaner#:#cal_ch_personal_book#:#Personal Bookings
 ps#:#ps_cdf_data_fields#:#Available User Fields
 ps#:#ps_cdf_edit_field#:#Edit Data Field
@@ -10543,7 +10602,7 @@ administration#:#apache_auth_username_direct_mapping_fieldname#:#Field for assig
 administration#:#auth_apache#:#Apache
 administration#:#apache_settings_changed_success#:#Configuration saved
 common#:#err_auth_apache_failed#:#The authentication has failed. Maybe you have no valid user certificate or your smartcard is not inserted.
-administration#:#apache_auth_authenticate_on_login_page#:#Try apache authenticaton when entering the login page
+administration#:#apache_auth_authenticate_on_login_page#:#Try Apache authentication when entering the login page
 wiki#:#wiki_change_notification_salutation#:#Hello %s,
 assessment#:#tst_export_settings#:#Export settings
 assessment#:#tst_exp_sc_short#:#Create shortened overview for single choice questions
@@ -10702,7 +10761,7 @@ rbac#:#precondition_obligatory_settings#:#Precondition Settings
 rbac#:#precondition_num_obligatory#:#Number of Required Materials
 common#:#payment_notification#:#Send Shop Notification
 common#:#payment_notification_desc#:#If enabled, users get a reminder to extend the duration of bought objects
-common#:#payment_reminder_notification_subject#:#The access duration af bought objects is ending soon.
+common#:#payment_reminder_notification_subject#:#The access duration of bought objects is ending soon.
 common#:#bought_objects_expire_soon#:#For some of your bought objects the access duration is ending soon. You are able to extend the access duration, by buying an extension for these objects.
 common#:#access_enddate#:#Access Enddate
 payment#:#buy_extension#:#Buy Extension
@@ -10749,6 +10808,8 @@ survey#:#survey_has_datasets_warning_page_view_link#:#Edit Participants
 survey#:#survey_using_template#:#This survey uses the template %s. If you do not want to use a template and have access to all settings, please click here: %s.
 survey#:#survey_using_template_link#:#Do not use template anymore
 common#:#toggle_hidden_sections#:#Show More Information
+common#:#show_hidden_sections#:#Show More Information &raquo;
+common#:#hide_visible_sections#:#Hide More Information &raquo;
 assessment#:#test_enable_views#:#Enabled views
 assessment#:#test_enable_view_both#:#Table- and Page View
 assessment#:#test_enable_view_express#:#Page View
@@ -10764,7 +10825,7 @@ assessment#:#adm_settings_templates#:#Settings Templates
 survey#:#survey_confirm_template_reset#:#Are you sure that you do not want to use the template anymore?
 survey#:#survey_template_reset#:#The template has been removed.
 survey#:#survey_introduction_info#:#This message appears at the beginning of the survey.
-survey#:#survey_auth_mode#:#Authentication Mode
+survey#:#survey_auth_mode#:#Mode
 survey#:#survey_question_pool#:#Question Pool
 survey#:#survey_question_pool_usage#:#Question Pool
 survey#:#survey_pool_selection#:#Pool Selection
@@ -10881,7 +10942,7 @@ content#:#cont_tex#:#Latex Code
 payment#:#terms_conditions#:#GTC
 payment#:#accept_terms_conditions#:#Please accept the %s to continue the purchasing process.
 payment#:#documents#:#Documents
-payment#:#activate_placeholders#:#Aktivate Placeholders
+payment#:#activate_placeholders#:#Activate Placeholders
 payment#:#billing_mail#:#Billing-Email
 payment#:#select_subtype#:#Suboption
 payment#:#pay_hide_shop_info#:#Hide Shop-Information
@@ -10893,7 +10954,7 @@ payment#:#special_info#:#If enabled, this object will be shown on the entire sho
 common#:#object_purchased_date#:#Purchase-Date
 common#:#object_duration#:#Access-Duration
 common#:#new_customer#:#Are you a new customer?
-common#:#new_customer_info#:#Please klick here if you do not have an user account.
+common#:#new_customer_info#:#Please click here if you do not have a user account.
 payment#:#shop_url#:#Link to shop
 payment#:#shop_bought_objects_url#:#Link to bought objects
 tstv#:#tstv_create#:#Create Test Certificate
@@ -10977,7 +11038,7 @@ content#:#cont_new_marker#:#New Marker
 content#:#cont_edit_overlay_position#:#Edit Overlay Position
 content#:#cont_edit_marker_position#:#Edit Marker Position
 content#:#cont_edit_popup_position#:#Edit Popup Position
-common#:#object_not_found#:#Objekt not found
+common#:#object_not_found#:#Object not found
 common#:#user_not_found#:#User not found
 content#:#cont_drag_element_click_save#:#Drag and drop the element to the desired position. Then hit "Save".
 common#:#cont_iim_create_info#:#Please upload the background picture for the interactive image.
@@ -11073,7 +11134,7 @@ payment#:#position#:#Pos.
 payment#:#amount#:#Amount
 payment#:#external_bill_no#:#%s Billing-No.
 payment#:#day_of_service_provision#:#Day of service provision
-payment#:#total_netprice#:#Total netprice (ohne USt)
+payment#:#total_netprice#:#Total netprice (without VAT)
 payment#:#unit_price#:#Unit price
 payment#:#plus_vat#:#Plus VAT
 payment#:#credit#:#Credit
@@ -11129,7 +11190,7 @@ wsp#:#wsp_move_to_repository#:#Move to Repository
 wsp#:#wsp_status_shared#:#Shared
 sahs#:#sahs_desc_objectives#:#Description/Objectives
 content#:#cont_localization#:#Localization
-content#:#cont_localization_info#:#Language used for predifined texts, e.g. "Previous" and "Next".
+content#:#cont_localization_info#:#Language used for predefined texts, e.g. "Previous" and "Next".
 book#:#book_schedule_warning_edit#:#Currently, there is no schedule available. To use the booking pool you need to create a schedule for booking (or switch to a different type of pool).
 book#:#book_type_warning#:#Currently, there are no booking objects available. To use the booking pool you need to create booking objects.
 prtf#:#prtf_first_page_title#:#Type of first page
@@ -11257,7 +11318,7 @@ skmg#:#skmg_selectable_info#:#Allows user to select this category as a personal 
 assessment#:#test_is_offline#:#You cannot start the test! The test is offline.
 skmg#:#skmg_materials#:#Materials
 skmg#:#skmg_remove_skills#:#Remove Competences
-skmg#:#skmg_really_remove_skills#:#Do you really want to remove the followig competences from your list?
+skmg#:#skmg_really_remove_skills#:#Do you really want to remove the following competences from your list?
 forum#:#mark_moderator_posts#:#Mark moderator posts
 forum#:#mark_moderator_posts_desc#:#If activated moderator posts will be highlighted
 dateplaner#:#cal_cache_settings#:#Cache
@@ -11277,7 +11338,7 @@ ecs#:#ecs_node_mapping_activate#:#Enable Directory Mapping
 ecs#:#ecs_node_mapping_create_empty#:#Create Categories only, which contain Courses
 ecs#:#ecs_node_mapping_create_empty_info#:#Usable only in combination with course mapping, which will be activated automatically.
 ecs#:#ecs_campus_connect_title#:#CampusConnect Mappings
-ecs#:#ecs_invalid_import_type_cms#:#The import type "Campus Managment" can be chosen only once.
+ecs#:#ecs_invalid_import_type_cms#:#The import type "Campus Management" can be chosen only once.
 ecs#:#ecs_cc_mapping_overview#:#Mapping Overview
 ecs#:#ecs_cms_dir_tree#:#CMS Directory Trees
 registration#:#registration_code_no_role#:#The registration code given does not specify a role and can not be used currently. Please contact your administrator.
@@ -11521,7 +11582,7 @@ scormdebug#:#scormdebug_global_activate_info#:#If enabled, the SCORM test tool c
 content#:#cont_debug_deactivate#:#The test tool can be globally deactivated in the ILIAS administration (Administration » Learning Resources).
 content#:#cont_debug_deactivated#:#The test tool is currently globally deactivated in the ILIAS administration (Administration » Learning Resources).
 scormdebug#:#error0#:#No error
-scormdebug#:#error101#:#General Exeption
+scormdebug#:#error101#:#General Exception
 scormdebug#:#error102#:#General Initialization Failure
 scormdebug#:#error103#:#Already Initialized
 scormdebug#:#error104#:#Content Instance Terminated
@@ -11656,7 +11717,7 @@ scormdebug#:#summary_for_SCO_with_test#:#Summary for a SCO with a test
 scormdebug#:#no_missing_API-calls#:#Missing API-calls had not been recognized.
 scormdebug#:#missing_API-calls#:#These API-calls are missing:
 scormdebug#:#summary_csv#:#Summary is generated as CSV-file to import for example in Excel
-scormdebug#:#summary_download#:#You can klick to 'Logs' and download it when you start this tool again.
+scormdebug#:#summary_download#:#You can click to 'Logs' and download it when you start this tool again.
 scormdebug#:#debugwindow_console#:#Console
 scormdebug#:#debugwindow_logs#:#Logs
 scormdebug#:#debugwindow_comment#:#comment
@@ -11801,7 +11862,7 @@ didactic#:#didactic_not_changed#:#The didactic template setting is unchanged.
 didactic#:#didactic_selected_tpl_option#:#Applied didactic template:
 didactic#:#didactic_template_applied#:#Applied didactic template.
 didactic#:#didactic_confirm_apply_new_template#:#Do you really want to apply the chosen didactic template? All current permission settings will get lost!
-chatroom#:#chatserver_address#:#IP-Adress of Chatservers
+chatroom#:#chatserver_address#:#IP-Address of Chatservers
 chatroom#:#chatserver_port#:#Port of Chatservers
 chatroom#:#instance_name#:#Unique Identifier
 chatroom#:#ilias_url#:#Base-URL of your ILIAS Installation
@@ -11836,7 +11897,7 @@ chatroom_adm#:#public_chat_permissions#:#Public Chatroom Permissions
 chatroom_adm#:#play_invitation_sound#:#Play a sound when receiving a new invitation
 chatroom#:#create_private_room_text#:#Private room name
 chatroom#:#invite_username#:#Username
-notes#:#comments_feature_currently_not_activated_for_object#:#The public comments feature is currently not ativated for this resource.
+notes#:#comments_feature_currently_not_activated_for_object#:#The public comments feature is currently not activated for this resource.
 chatroom#:#layout#:#Layout
 chatroom#:#show_settings#:#Show Settings
 chatroom#:#hide_settings#:#Hide Settings
@@ -11927,7 +11988,7 @@ exc#:#exc_direct_submit_blog#:#Would you like to submit the current version of t
 exc#:#exc_direct_submit_portfolio#:#Would you like to submit the current version of the portfolio right now? You can do it anytime from the portfolio editor later on.
 prtf#:#prtf_preview_banner_info#:#Default size is 880x100 pixels.
 blog#:#blog_preview_banner_info#:#Default size is 880x100 pixels.
-exc#:#exc_no_assignments_available#:#No assignments created yet. Please open "Assigments" and "Edit" to create a first assignment.
+exc#:#exc_no_assignments_available#:#No assignments created yet. Please open "Assignments" and "Edit" to create a first assignment.
 wsp#:#wsp_invalid_password#:#The given password is invalid.
 wiki#:#wiki_navigation_info#:#Here you can add and remove links to existing wiki pages to the navigation block in the wiki.
 common#:#top_of_page#:#Top of page
@@ -11992,8 +12053,8 @@ rbac#:#rbac_edit_condition#:#Edit Precondition
 rbac#:#rbac_condition_delete_sure#:#Are you sure you want to delete the following preconditions?
 crs#:#crs_starter_delete_sure#:#Are you sure you want to delete the following start objects?
 common#:#statutory_regulations#:#Statutory Regulations
-common#:#show_sr_shoppingcart#:#Im Warenkorb anzeigen
-common#:#attach_sr_invoice#:#An Email anhängen
+common#:#show_sr_shoppingcart#:#Show in Shopping Cart
+common#:#attach_sr_invoice#:#Attach at e-mail
 common#:#show_sr_shoppingcart_info#:#If enabled, the statutory regulations will be shown within the shoppingcart
 common#:#attach_sr_invoice_info#:#If enabled, the statutory regulations will be attached to the billing email
 rbac#:#tst_tst_statistics#:#User has access to test statistics
@@ -12013,9 +12074,9 @@ ecs#:#ecs_cms_directory_trees_tbl#:#CMS Directory Trees
 ecs#:#ecs_node_mapping_status_1#:#Mapping of the Whole Tree
 ecs#:#ecs_node_mapping_status_2#:#Manual Mapping
 ecs#:#ecs_node_mapping_status_3#:#Unmapped
-ecs#:#ecs_confirm_delete_tree#:#Do you really want to delete all assignments for this campus managment tree?
-ecs#:#ecs_cms_tree_deleted#:#The campus managment tree assignments have been deleted.
-ecs#:#ecs_cms_id#:#Root-Id in the Campus-Managment-System
+ecs#:#ecs_confirm_delete_tree#:#Do you really want to delete all assignments for this campus management tree?
+ecs#:#ecs_cms_tree_deleted#:#The campus management tree assignments have been deleted.
+ecs#:#ecs_cms_id#:#Root-Id in the Campus-Management-System
 ecs#:#ecs_title_updates#:#Transfer Title Updates
 ecs#:#ecs_tree_updates#:#Transfer Tree Updates
 ecs#:#ecs_position_updates#:#Transfer Position Updates
@@ -12110,7 +12171,7 @@ assessment#:#tst_manscoring_maxpoints_exceeded_input_alert#:#The maximum of %s p
 assessment#:#tst_manscoring_input_max_points_for_question#:#Maximum Points for Question
 assessment#:#tst_manscoring_input_question_and_user_solution#:#Question and User Solution
 assessment#:#tst_manscoring_input_best_solution#:#Best Solution
-assessment#:#tst_notify_manscoring_done_body_msg_subject#:#Manual Scoring for Test "%s" comitted
+assessment#:#tst_notify_manscoring_done_body_msg_subject#:#Manual Scoring for Test "%s" committed
 assessment#:#tst_notify_manscoring_done_body_msg_topic#:#Your test has been graded manually:
 assessment#:#tst_notify_manscoring_done_body_msg_reason#:#You have received this notification, because you participated in this test.
 crs#:#crs_subject_course_group_notification#:#Daily Mail for %s
@@ -12150,7 +12211,7 @@ mcst#:#mcst_ordering_manual#:#Manual
 user#:#user_store_last_visited#:#Last Visited
 user#:#user_lv_keep_entries#:#Remember last visited
 user#:#user_lv_keep_only_for_session#:#Remember only during current session
-user#:#user_lv_do_not_store#:#Never remeber last visited
+user#:#user_lv_do_not_store#:#Never remember last visited
 common#:#remove_entries#:#Remove Entries
 exc#:#exc_no_deadline_specified#:#No deadline specified.
 mcst#:#mcst_save_order#:#Save Order
@@ -12280,7 +12341,7 @@ rep#:#rep_activation_limited_start#:#Start Time
 rep#:#rep_activation_limited_end#:#Finish Time
 rep#:#rep_activation_limited_visibility#:#Always Visible
 crs#:#crs_activation_limited_visibility_info#:#If chosen, the course is visible even outside of the given availability.
-tax#:#tax_delete_taxonomy#:#Delete Taxononmy
+tax#:#tax_delete_taxonomy#:#Delete Taxonomy
 tax#:#tax_confirm_deletion#:#Do you really want to delete the whole taxonomy and all its relations?
 tax#:#tax_tax_deleted#:#The taxonomy has been deleted.
 tax#:#tax_add_taxonomy#:#Add Taxonomy
@@ -12395,7 +12456,7 @@ dcl#:#dcl_edit_type_non_info#:#Creating New Records needs edit settings permissi
 dcl#:#dcl_edit_type_unlim#:#Unlimited
 dcl#:#dcl_edit_type_unlim_info#:#Users with add/edit permission can add/edit entries
 dcl#:#dcl_edit_type_lim#:#Limited
-dcl#:#dcl_edit_type_lim_info#:#Acces for users with add/edit permission is limited to the following daterange
+dcl#:#dcl_edit_type_lim_info#:#Access for users with add/edit permission is limited to the following daterange
 dcl#:#dcl_edit_start#:#Start-Date
 dcl#:#dcl_edit_end#:#End-Date
 dcl#:#dcl_export#:#Export
@@ -12737,7 +12798,7 @@ fm#:#fm_settings_filesize_info#:#Enter the maximum allowed filesize for uploaded
 blog#:#blog_authors#:#Authors
 blog#:#blog_author#:#Author
 blog#:#blog_enable_approval#:#Approval
-blog#:#blog_enable_approval_info#:#Before being published all postings need to be approved by an user with permission "Edit Settings" for this blog.
+blog#:#blog_enable_approval_info#:#Before being published all postings need to be approved by a user with permission "Edit Settings" for this blog.
 blog#:#blog_approve#:#Approve
 blog#:#blog_needs_approval#:#Needs Approval
 sess#:#sess_copy#:#Copy Session
@@ -12779,7 +12840,7 @@ blog#:#blog_add_contributor#:#Add Contributor
 blog#:#blog_search_users#:#Search Users
 common#:#il_blog_contributor#:#Blog Contributor
 rbac#:#blog_contribute#:#User can contribute
-blog#:#blog_contribute_other_roles#:#The following roles give an active "contribute" permission: %s.
+blog#:#blog_contribute_other_roles#:#In addition to the list of 'Contributors', users with one of the following roles can also add postings: %s
 dcl#:#dcl_no_content_warning#:#Attention, the Data Collection is online but does not have content yet!
 dcl#:#dcl_visible#:#Visible for all users
 dcl#:#dcl_empty_view#:#Delete this View
@@ -12787,7 +12848,7 @@ dcl#:#dcl_confirm_delete_field#:#Do you really want to delete this field?
 dcl#:#dcl_table_info_title#:#Info
 dcl#:#dcl_confirm_delete_view_title#:#Do you really want to delete this view?
 dcl#:#dcl_confirm_delete_view_text#:#The Viewdefinition of the records of this table will be removed irreversibly, the records and fields themselfs will not be changed.
-dcl#:#dcl_empty_view_success#:#The Viewdefinition has successfuly been deleted.
+dcl#:#dcl_empty_view_success#:#The Viewdefinition has been deleted successfully.
 dcl#:#dcl_permissions_form#:#User rights
 rating#:#rating_number_votes#:#%s Ratings
 administration#:#system_check_no_owner#:#Ownerless Objects
@@ -12965,6 +13026,7 @@ tos#:#tos_period_from#:#From
 tos#:#tos_period_until#:#Until
 tos#:#tos_acceptance_datetime#:#Date
 tos#:#tos_no_documents_exist#:#Currently there are no terms of service for any of the installed languages.
+tos#:#tos_no_documents_exist_cant_save#:#Currently there are no terms of service for any of the installed languages. Please add at least one document for any of the installed languages.
 ecs#:#ecs_sync_trees#:#Synchronise Directory Trees
 survey#:#svy_invite_action#:#Invite users to a survey
 rbac#:#chtr_delete#:#User can move or delete course
@@ -13036,6 +13098,7 @@ cron#:#cron_action_activate_success#:#Cron-Job activated.
 cron#:#cron_action_deactivate_success#:#Cron-Job deactivated.
 cron#:#cron_action_reset_success#:#Cron-Job reset.
 cron#:#cron_action_edit_success#:#Schedule updated.
+cron#:#cron_no_executable_job_selected#:#Please select at least one executable cron-job.
 dcl#:#dcl_no_warnings#:#The import terminated with no warnings.
 dcl#:#dcl_not_supported_in_import#:#This type of field is not supported in the import
 dcl#:#dcl_no_such_reference#:#The following value is not available in the reference table:
@@ -13051,6 +13114,16 @@ dcl#:#dcl_multiple_selection#:#Multiple Selection
 dcl#:#dcl_field_title_unique#:#There exists already a field with this title. Title must be unique.
 dcl#:#dcl_table_title_unique#:#There exists already a table with this title. Title must be unique.
 dcl#:#dcl_please_select#:#--- Please select ---
+dcl#:#dcl_id#:#ID
+dcl#:#dcl_id_description#:#The internal ID.
+dcl#:#dcl_creation_date#:#Creation Date
+dcl#:#dcl_creation_date_description#:#The date on which the entry was created.
+dcl#:#dcl_last_update#:#Last Edited
+dcl#:#dcl_last_update_description#:#The date the entry was last edited.
+dcl#:#dcl_owner#:#Owner
+dcl#:#dcl_owner_description#:#The owner of the entry.
+dcl#:#dcl_last_edited_by#:#Last edited by
+dcl#:#dcl_last_edited_by_description#:#The user that edited this entry last.
 common#:#obj_bibl#:#Bibliography
 common#:#objs_bibl#:#Bibliographies
 bibl#:#bibl_new#:#New Bibliography
@@ -13313,6 +13386,7 @@ assessment#:#tst_imap_qst_mode_sc#:#Single Choice
 assessment#:#tst_imap_qst_mode_mc#:#Multiple Choice
 assessment#:#tst_test_execution#:#Test Execution
 assessment#:#redirect_after_finishing_tst#:#Redirect after finishing the test
+assessment#:#redirect_after_finishing_tst_desc#:#Teilnehmer werden nach Beenden des Tests automatisch zu einer definierten Webseite weitergeleitet. Dies geschieht nur, wenn der Test so konfiguriert wurde, dass die Teilnehmer ihre Testergebnisse nach Beenden des Tests nicht einsehen können.
 assessment#:#redirect_in_kiosk_mode#:#Redirect only in kiosk mode
 assessment#:#redirection_url#:#Redirection target
 assessment#:#exp_file_created#:#Export file created.
@@ -13335,7 +13409,7 @@ survey#:#survey_360_sure_appraisee_close_admin#:#Are you sure you want to close 
 assessment#:#question_id#:#Question ID
 assessment#:#question_id_short#:#ID
 mcst#:#mcst_download_videoalternative#:#Download Alternative File
-dateplaner#:#remote_pass_info#:#Please enter your account data if the access to the webcalendar ist protected.
+dateplaner#:#remote_pass_info#:#Please enter your account data if the access to the webcalendar is protected.
 prtf#:#prtf_allow_html#:#Allow HTML/Javascript
 prtf#:#prtf_allow_html_info#:#Enables users to include HTML and/or Javascript in their portfolio pages. This can lead to security issues.
 blog#:#blog_allow_html#:#Allow HTML/Javascript
@@ -13398,9 +13472,9 @@ cld#:#cld_upload_files#:#Upload Files
 cld#:#service_specific_settings#:#Specific Settings
 common#:#obj_cld#:#Cloud Object
 common#:#objs_cld#:#Cloud Objects
-assessment#:#tst_show_solution_compare#:#Compare Answer with Solution in List of Answers
-assessment#:#tst_header_participant#:#Result:
-assessment#:#tst_header_solution#:#Correct solution:
+assessment#:#tst_show_solution_compare#:#Show Best Solution in List of Answers
+assessment#:#tst_header_participant#:#Your Answer:
+assessment#:#tst_header_solution#:#Best Solution:
 rbac#:#delete_files#:#Delete Files
 rbac#:#cld_delete_files#:#Users can delete Files in the cloud object
 rbac#:#delete_folders#:#Delete Folders
@@ -13571,11 +13645,15 @@ prtf#:#prtf_create_template_from_portfolio_info#:#Select a portfolio to use its 
 prtf#:#prtf_template_import_quota_failure#:#This portfolio template cannot be copied because it would exceed your disk quota.
 cntr#:#prtf_create_portfolio_from_template#:#Create Portfolio From Template
 content#:#content_plugin_not_activated#:#The page content element plugin is currently not activated.
-administration#:#vc_information#:#Version Control Information
+administration#:#vc_information#:#Show Version Control Information
+administration#:#vc_information_not_determined#:#ILIAS could not determine any version control information.
 administration#:#svn_revision_current#:#Current Revision: %s
 administration#:#svn_revision_last_change#:#Last Changed Revision: %s
 administration#:#svn_root#:#Root: %s
 administration#:#svn_path#:#Path: %s
+administration#:#git_revision#:#Number: %s
+administration#:#git_hash_short#:#Commit Hash (short): %s
+administration#:#git_last_commit#:#Last Commit: %s
 content#:#cont_verification_placeh#:#Click and edit to insert certificate
 content#:#cont_verification_placehl#:#Certificate Placeholder
 content#:#cont_ed_plachverification#:#Placeholder Certificate
@@ -13611,13 +13689,13 @@ orgu#:#orgu_new#:#New Organisational Unit
 orgu#:#orgu_add#:#Add Organisational Unit
 orgu#:#orgu_import#:#Import Organisational Unit
 orgu#:#orgu_copy#:#Copy Organisational Unit
-orgu#:#obj_orgu_duplicate#:#Dublicate Organisational Unit
+orgu#:#obj_orgu_duplicate#:#Duplicate Organisational Unit
 orgu#:#local_staff#:#Employees %s
 orgu#:#rec_staff#:#Employees %s incl. Subunits
 orgu#:#placeholder#:#...
 orgu#:#simple_import#:#Simple XML Import
 orgu#:#simple_xml#:#Simple XML Export
-orgu#:#import_xml_file#:#Import Datei
+orgu#:#import_xml_file#:#Import File
 orgu#:#view_learning_progress_rec#:#View Learning Progress of Unit incl. Subunits
 orgu#:#lp_is_anonym#:#The learning progress can't be viewed because the data is stored anonymously.
 orgu#:#edit_translations#:#Title and Description
@@ -13626,8 +13704,8 @@ orgu#:#ext_id#:#External ID
 orgu#:#ext_id_updated#:#The external ID has been updated successfully.
 orgu#:#no_roles#:#There are no additional roles at this point.
 orgu#:#local_other_roles#:#Additional Local Roles %s
-orgu#:#backto_staff#:#Back to staff
-cld#:#cld_object_added#:#A new Cloud Objekt has been added
+orgu#:#backto_staff#:#Back to Staff
+cld#:#cld_object_added#:#A new Cloud object has been added
 exc#:#exc_peer_review_deadline#:#Feedback Deadline 
 exc#:#exc_peer_review_deadline_info#:#Feedback can be given up to this date and received feedback is only accessible from then on.
 exc#:#exc_peer_review_deadline_info_button#:#Deadline: %s
@@ -13694,8 +13772,8 @@ assessment#:#baseunit#:#Base Unit
 assessment#:#unit_placeholder#:#** New Unit **
 assessment#:#err_no_unitname#:#Please enter a unit name
 assessment#:#err_wrong_unitfactor#:#Please enter a correct factor for the unit
-assessment#:#err_unit_in_variables#:#The unit cannot be deleted. It is aleady in use in one or more test questions.
-assessment#:#err_unit_in_results#:#The unit cannot be deleted. It is aleady in use in one or more test questions.
+assessment#:#err_unit_in_variables#:#The unit cannot be deleted. It is already in use in one or more test questions.
+assessment#:#err_unit_in_results#:#The unit cannot be deleted. It is already in use in one or more test questions.
 assessment#:#err_unit_is_baseunit#:#The unit cannot be deleted. It is used as base unit by other units.
 assessment#:#err_rating_advanced_not_allowed#:#A rating other than simple rating is not allowed since you are offering multiple result units with an identical base unit.
 assessment#:#err_wrong_categoryname#:#The category already exists.
@@ -13783,7 +13861,7 @@ search#:#search_mime_image#:#Images
 search#:#lucene_show_sub_relevance#:#Show Subitem Relevance
 search#:#search_mime_filter_form#:#Mime Type Filter
 search#:#lucene_prefix_wildcard#:#Prefix Wildcard Queries
-search#:#lucene_prefix_wildcard_info#:#If enabled, prefix wildcard queries (*LIAS finds ILIAS) are supported.
+search#:#lucene_prefix_wildcard_info#:#Supports prefix wildcard queries: ‘*LIAS’ finds ‘ILIAS’
 content#:#cont_activate_multi_lang#:#Activate Multilinguality
 obj#:#obj_select_master_lang#:#Please select the master language. The current content will be assigned to the master language. The master language cannot be changed afterwards.
 assessment#:#show_answer_overview#:#Show Answer Overview
@@ -13805,8 +13883,8 @@ content#:#cont_current_lang#:#Current Language
 obj#:#obj_deactivate_content_lang#:#Deactivate Translation for Page Editing
 content#:#cont_edit_language_version#:#Edit Version
 content#:#cont_page_translation_does_not_exist#:#The translation page does not exist yet and will be created by copying the content of the current master page. Language of the translation page
-search#:#search_user_search_form#:#User Search
-search#:#search_user_search_info_form#:#If enabled, users data will be indexed and is searchable.
+search#:#search_user_search_form#:#Search in Personal Profiles
+search#:#search_user_search_info_form#:#Data in personal profiles of users is indexed and can be used to search for users.
 adve#:#adve_blocking_mode#:#Edit Lock
 adve#:#adve_minutes#:#Minutes
 adve#:#adve_minutes_info#:#Minutes of inactivity before an edit lock expires and a page can be edited by another user.
@@ -13847,6 +13925,9 @@ bibl#:#bib_default_url#:#URL
 bibl#:#bib_default_crossref#:#Cross Reference
 bibl#:#bib_default_keywords#:#Keywords
 bibl#:#bib_default_isbn#:#ISSN/ISBN
+bibl#:#bib_default_urldate#:#Date of URL visit
+bibl#:#bib_default_language#:#Language
+bibl#:#bib_default_series#:#Series
 bibl#:#bib_default_cite#:#Bib Cite
 bibl#:#ris_default_ty#:#Type
 bibl#:#ris_default_id#:#Reference ID
@@ -13900,6 +13981,8 @@ bibl#:#ris_default_do#:#DOI
 bibl#:#ris_default_ed#:#Further Persons
 bibl#:#ris_default_in#:#In
 bibl#:#ris_default_et#:#Edition
+bibl#:#ris_default_dp#:#Database Provider
+bibl#:#ris_default_st#:#Short Title
 content#:#cont_multilang_currently_deactivated#:#Multilinguality support is currently not activated.
 mail#:#mail_filter#:#Filter
 mail#:#mail_filter_sender#:#Sender
@@ -14001,11 +14084,11 @@ sop#:#sop_push_tracking#:#Import tracking data
 common#:#offline_mode#:#Use Offline
 sop#:#sop_msg_lm_not_exists#:#The learning module does either not exist or is inactive in the SCORM Offline Manager.
 sop#:#sop_msg_close_lm#:#The learning module is still open. Please close the SCORM Offline Player. 
-sop#:#sop_msg_export_failure#:#Transfering content or data to SCORM Offline Manager was not successfull.
-sop#:#sop_msg_export_ok#:#Transfering content and tracking data was successfull
-sop#:#sop_msg_export_content#:#Transfering content to SCORM Offline Manager. This might need a moment. Please be patient.
-sop#:#sop_msg_export_tracking#:#Transfering tracking data to SCORM Offline Manager. Please wait some seconds
-sop#:#sop_msg_push_tracking#:#Transfering tracking data to ILIAS. Please wait a moment.
+sop#:#sop_msg_export_failure#:#Transferring content or data to SCORM Offline Manager was not successful.
+sop#:#sop_msg_export_ok#:#Transferring content and tracking data was successful
+sop#:#sop_msg_export_content#:#Transferring content to SCORM Offline Manager. This might need a moment. Please be patient.
+sop#:#sop_msg_export_tracking#:#Transferring tracking data to SCORM Offline Manager. Please wait some seconds
+sop#:#sop_msg_push_tracking#:#Transferring tracking data to ILIAS. Please wait a moment.
 sop#:#sop_msg_push_tracking_failure#:#Transfer of tracking data was not successful.
 sop#:#sop_msg_push_tracking_ok#:#Transfer of tracking data was successful.
 content#:#glo_hide_taxonomy#:#Hide Taxonomy
@@ -14135,7 +14218,7 @@ survey#:#survey_reminder_cron_info#:#If activated, users will be reminded to par
 cron#:#cron_action_activate_sure_multi#:#Are you sure you want to activate the following cron-jobs?
 cron#:#cron_action_deactivate_sure_multi#:#Are you sure you want to deactivate the following cron-jobs?
 crs#:#crs_status_determination_lp_info#:#When the learning progress changes to "Completed", the course status "Passed" will be set automatically. Tutors still can overwrite the status manually.
-grp#:#grp_reg_no_selfreg#:#No self-enrolment
+grp#:#grp_reg_no_selfreg#:#No Self-enrolment
 crs#:#crs_mail_tutors_only_info#:#Only administrators and tutors can use the feature "Mail to Members" in the "Members" tab.
 crs#:#crs_mail_all_info#:#Members, administrators and tutors can use the feature "Mail to Members" in the "Members" tab.
 grp#:#grp_mail_tutors_only_info#:#Only administrators can use the feature "Mail to Members" in the "Members" tab.
@@ -14143,7 +14226,7 @@ grp#:#grp_mail_all_info#:#Members and administrators can use the feature "Mail t
 rep#:#rep_time_period#:#Period
 crs#:#crs_registration_period#:#Period
 crs#:#crs_registration_confirmation_info#:#Interested users can send a request/message to course administrator.
-crs#:#crs_reg_no_selfreg#:#No self-enrolment
+crs#:#crs_reg_no_selfreg#:#No Self-enrolment
 crs#:#crs_reg_password_info#:#Users need to type in this password when joining the course.
 cat#:#cat_more_translations#:#More Translations
 obj#:#obj_deactivate_content_transl_conf#:#Do you really want to deactivate translation for page editing? Only contents of the master language will be kept.
@@ -14220,7 +14303,7 @@ exc#:#exc_notification#:#Personal Notification
 exc#:#exc_passing_exc#:#Passing the Exercise
 exc#:#exc_publishing#:#Publishing
 exc#:#exc_min_nr_info#:#This value must be equal or higher than the number of obligatory assignments.
-exc#:#exc_passed_status_determination#:#Determination of Staus "Passed"
+exc#:#exc_passed_status_determination#:#Determination of Status "Passed"
 exc#:#exc_completion_by_tutor#:#Only manual by tutor
 exc#:#exc_your_text#:#Your Text
 exc#:#exc_peer_review_min_number_info#:#This number of other users work must be evaluated by a participant before the evaluation of his/her own work will be visible.
@@ -14232,9 +14315,47 @@ adve#:#advanced_editing_tst_editing_desc#:#Activates ILIAS Page Editor for feedb
 assessment#:#fq_precision_info#:#Enter the number of desired decimal places.
 assessment#:#result_units_info#:#The selected units are offered to the learner as part of an answer. The learner has to choose one unit.
 assessment#:#fq_no_restriction_info#:#Both decimals and fractions are accepted as input.
-assessment#:#additional_rating_info#:#Please note that the values ​​given here are expressed as percentages and these must add up to 100.
+assessment#:#additional_rating_info#:#Please note that the values given here are expressed as percentages and these must add up to 100.
 assessment#:#intprecision_info#:#"Divisible by" affects only the creation of variables, if the value for the precision is 0. In this case, you define for "Divisible by" an integer value, which must be divisible by with the created variable. A value of 10 thus generates only integers that are divisible by 10. A value of 5 produces integers that are divisible by 5, etc. For a precision of 0, "Divisible by" is a mandatory field and must contain a positive integer. The default value is 1 for any integers.
 assessment#:#tolerance_info#:#The tolerance specifies an allowable percentage deviation from the result value. With a tolerance of 0, only the exact result value is evaluated to be correct.
 assessment#:#result_unit_info#:#Please note that, the selected result unit must also be activated in the "available units."
 forum#:#merge_posts_into_thread#:#Merge Postings into other Thread
 forum#:#move_thread_to_forum#:#Move Thread to other Forum
+survey#:#spl_save_obligatory_state#:#Save Obligatory States
+forum#:#post_reply_count#:#Re(%s):
+forum#:#frm_max_notification_age#:#Max. Notification Age
+forum#:#frm_max_notification_age_unit#:#Day(s)
+forum#:#frm_max_notification_age_info#:#Please define the maximum age of postings to send notifications for. It is recommended to choose a higher value than the scheduled interval.
+dateplaner#:#cal_ical_url#:#iCal-URL
+survey#:#svy_eval_skipped_value#:#Results: "skipped"
+survey#:#svy_eval_skipped_value_lng#:#Use language file entry
+survey#:#svy_eval_skipped_value_lng_info#:#Current value: "%s"
+survey#:#svy_eval_skipped_value_custom#:#Use custom value
+survey#:#svy_eval_skipped_value_custom_info#:#Define any (or empty) value to use for skipped answers
+survey#:#svy_eval_skipped_value_custom_value#:#Value
+mail#:#mail_max_size_attachments_total#:#Please enter the maximum file size allowed as attachment per mail. This setting is not related to other resource limits, e.g. upload_max_filesize etc. (since you can attach multiple files). 
+mail#:#mail_max_size_attachments_total_error#:#The allowed attachment size is:
+user#:#passwd_generation_pre#:#Pre-defined Passwords
+content#:#cont_ie_compatibility#:#Internet Explorer 7 compatibility mode
+content#:#cont_ie_compatibility_info#:#Especially for older learning modules it can be helpful to activate the compatibility mode. Please note that the compatibility mode can be disabled in newer versions of Internet Explorer.
+content#:#cont_ie_force_render#:#Force Internet Explorer to render again
+content#:#cont_ie_force_render_info#:#Enable this option only if content of the learning module is not displayed correctly with Internet Explorer due to many frames or iframes. Additionally you have to set the option 'Display' to 'in new window'.
+exc#:#exc_peer_deadline_mismatch#:#As feedback is given after the deadline has passed the feedback deadline must not be earlier than the assignment deadline.
+mail#:#link_check_introduction#:#the following weblinks are invalid:
+mail#:#link_check_reason#:#You recife this mail because you enabled the notification for invalid links.
+mail#:#link_check_affected_links#:#Affected Links
+mail#:#link_check_perma_link#:#Permanent Link
+news#:#news_inactive_private_feed_info#:#Your private news feed is deactivated. Please set a password in the settings.
+adve#:#char_selector_msg_blocks_or_custom_needed#:#When you activate the selector, please choose a character block or enter a special selection!
+exc#:#exc_assignment_type#:#Type Of Submission
+ecs#:#ecs_refresh_participants#:#Refresh ECS-Participants
+search#:#search_minimum_info#:#Your search must be at least %s characters long
+assessment#:#user_has_finished_a_test#:#A participant has finished a test.
+assessment#:#tst_attached_xls_file#:#You find the test result for this participant in the attached Excel file.
+assessment#:#tst_notification_explanation_admin#:#You receive this mail from ILIAS because you activated the notification.
+grp#:#grp_admission_link_failure_registration_period#:#Can't registrate: Group is out of registration period.
+crs#:#crs_admission_link_failure_registration_period#:#Can't registrate: Course is out of registration period.
+grp#:#grp_admission_link_failure_membership_limited#:#Can't registrate: Group membership is limited.
+crs#:#crs_admission_link_failure_membership_limited#:#Can't registrate: Course membership is limited.
+grp#:#grp_admission_link_success_registration#:#Successfully registrated to group "%s".
+crs#:#crs_admission_link_success_registration#:#Successfully registrated to course "%s".

@@ -1,7 +1,7 @@
 <?php
 
 // Translation: Rzoock (rzoock@wp.pl)
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.10
 // original charset: CP 1250
 

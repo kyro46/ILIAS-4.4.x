@@ -7,7 +7,7 @@ include_once ('./Services/Object/classes/class.ilObject2GUI.php');
 * GUI class for test verification
 *
 * @author Jörg Lützenkirchen <luetzenkirchen@leifos.com>
-* @version $Id: class.ilObjTestVerificationGUI.php 46165 2013-11-12 11:59:55Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjTestVerificationGUI: ilWorkspaceAccessGUI
 *

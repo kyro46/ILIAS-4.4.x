@@ -6,7 +6,7 @@
 * Adapter class to provide certificate data for the certificate generator
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilCertificateAdapter.php 48007 2014-02-19 08:00:00Z mjansen $
+* @version	$Id$
 * @ingroup Services
 */
 abstract class ilCertificateAdapter

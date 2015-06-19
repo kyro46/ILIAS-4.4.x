@@ -13,13 +13,13 @@ include_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version	$Id: class.assFlashQuestionGUI.php 44885 2013-09-20 11:28:43Z mbecker $
+ * @version	$Id$
  * 
  * @ingroup ModulesTestQuestionPool
  * 
  * @ilctrl_iscalledby assFlashQuestionGUI: ilObjQuestionPoolGUI
  */
-class assFlashQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringAdjustable
+class assFlashQuestionGUI extends assQuestionGUI //implements ilGuiQuestionScoringAdjustable
 {
 	private $newUnitId;
 	

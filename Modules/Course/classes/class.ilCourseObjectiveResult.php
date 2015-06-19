@@ -13,7 +13,7 @@ define('IL_OBJECTIVE_STATUS_PRETEST_NON_SUGGEST','pretest_non_suggest');
 * class ilcourseobjective
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilCourseObjectiveResult.php 32374 2011-12-30 11:36:13Z smeyer $
+* @version $Id$
 * 
 */
 class ilCourseObjectiveResult

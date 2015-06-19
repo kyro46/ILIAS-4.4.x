@@ -14,7 +14,7 @@ require_once("./Modules/MediaPool/classes/class.ilMediaPoolItem.php");
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* $Id: class.ilObjMediaPool.php 35098 2012-06-18 08:48:19Z akill $
+* $Id$
 *
 * @ingroup ModulesMediaPool
 */
@@ -718,10 +718,11 @@ class ilObjMediaPool extends ilObject
 					$new_page->setId($item->getId());
 					$new_page->create();
 					
-					// todo: make mobs being copied
-					$new_page->setXMLContent($page->copyXMLContent(true));
-					$new_page->buildDom();
-					$new_page->update();
+					// copy page
+					$page->copy($new_page->getId(), $new_page->getParentType(), $new_page->getParentId(), true);
+					//$new_page->setXMLContent($page->copyXMLContent(true));
+					//$new_page->buildDom();
+					//$new_page->update();
 					break;
 					
 				case "fold":

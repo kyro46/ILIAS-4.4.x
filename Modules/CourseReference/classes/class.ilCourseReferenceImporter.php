@@ -10,7 +10,7 @@ include_once './Services/ContainerReference/classes/class.ilContainerReferenceIm
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilCourseReferenceImporter.php 35412 2012-07-06 10:28:29Z smeyer $
+* @version $Id$
 *
 * @ingroup ModulesContainerReference
 */

@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/export/qti12/class.assQuestionE
 * assOrderingHorizontalExport is a class for single choice question exports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assOrderingHorizontalExport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assOrderingHorizontalExport extends assQuestionExport

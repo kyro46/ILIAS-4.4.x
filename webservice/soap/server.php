@@ -26,7 +26,7 @@
 * soap server
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: server.php 39214 2013-01-12 11:03:08Z rkuester $
+* @version $Id$
 *
 * @package ilias
 */

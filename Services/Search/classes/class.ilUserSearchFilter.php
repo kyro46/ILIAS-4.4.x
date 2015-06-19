@@ -31,7 +31,7 @@ include_once 'Services/Search/classes/class.ilSearchResult.php';
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilUserSearchFilter.php 41545 2013-04-19 09:56:15Z smeyer $
+* @version $Id$
 *
 * @package ServicesSearch
 *

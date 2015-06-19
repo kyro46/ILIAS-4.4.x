@@ -10,7 +10,7 @@ require_once "./Modules/File/classes/class.ilObjFileAccess.php";
 *
 * @author Sascha Hofmann <shofmann@databay.de> 
 * @author Stefan Born <stefan.born@phzh.ch> 
-* @version $Id: class.ilObjFileGUI.php 49368 2014-04-11 08:55:45Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjFileGUI: ilMDEditorGUI, ilInfoScreenGUI, ilPermissionGUI, ilShopPurchaseGUI, ilObjectCopyGUI
 * @ilCtrl_Calls ilObjFileGUI: ilExportGUI, ilWorkspaceAccessGUI, ilPortfolioPageGUI, ilCommonActionDispatcherGUI

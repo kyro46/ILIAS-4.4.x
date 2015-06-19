@@ -1,13 +1,15 @@
 <?php
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
+include_once("./Services/Utilities/classes/class.ilDOMUtil.php");
+
 /**
 * Class ilMediaAliasItem
 *
 * Media Alias Item, component of a media object (file or reference)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilMediaAliasItem.php 37237 2012-09-28 11:42:38Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */
@@ -605,6 +607,7 @@ class ilMediaAliasItem
 	{
 		$attributes = array("Shape" => $a_shape_type,
 			"Coords" => $a_coords, "Id" => $a_id);
+
 		$ma_node = ilDOMUtil::addElementToList($this->dom, $this->item_node,
 			"MapArea", array(), "", $attributes);
 

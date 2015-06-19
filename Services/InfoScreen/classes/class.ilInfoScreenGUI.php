@@ -8,7 +8,7 @@
 * Class ilInfoScreenGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilInfoScreenGUI.php 48902 2014-03-24 12:15:04Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilInfoScreenGUI: ilNoteGUI, ilColumnGUI, ilPublicUserProfileGUI
 * @ilCtrl_Calls ilInfoScreenGUI: ilCommonActionDispatcherGUI
@@ -527,7 +527,13 @@ class ilInfoScreenGUI
 		if ($ilUser->getId() != ANONYMOUS_USER_ID and $a_obj->getOwner())
 		{
 			include_once './Services/Object/classes/class.ilObjectFactory.php';
-			if(!$ownerObj = ilObjectFactory::getInstanceByObjId($a_obj->getOwner(),false))
+			include_once './Services/User/classes/class.ilObjUser.php';
+			
+			if(ilObjUser::userExists(array($a_obj->getOwner())))
+			{
+				$ownerObj = ilObjectFactory::getInstanceByObjId($a_obj->getOwner(),false);
+			}
+			else
 			{
 				$ownerObj = ilObjectFactory::getInstanceByObjId(6, false);	
 			}
@@ -748,13 +754,16 @@ class ilInfoScreenGUI
 		{
 			$this->setFormAction($ilCtrl->getFormAction($this));
 		}
+		
+		require_once 'Services/jQuery/classes/class.iljQueryUtil.php';
+		iljQueryUtil::initjQuery();
 
 		if($this->hidden)
 		{
 			$tpl->touchBlock("hidden_js");
 			if($this->show_hidden_toggle)
 			{
-				$this->addButton($lng->txt("toggle_hidden_sections"), "JavaScript:toggleSections();");
+				$this->addButton($lng->txt("show_hidden_sections"), "JavaScript:toggleSections(this, '".$lng->txt("show_hidden_sections") ."', '".$lng->txt("hide_visible_sections") ."');");
 			}
 		}
 		// add top buttons
@@ -1192,7 +1201,7 @@ class ilInfoScreenGUI
 	{
 		global $lng;
 		
-		return "<a onClick=\"toggleSections();\" href=\"#\">".$lng->txt("toggle_hidden_sections")." &raquo;</a>";
+		return "<a onClick=\"toggleSections(this, '".$lng->txt("show_hidden_sections") ."', '".$lng->txt("hide_visible_sections") ."');\" href=\"#\">".$lng->txt("show_hidden_sections")."</a>";
 	}
 }
 

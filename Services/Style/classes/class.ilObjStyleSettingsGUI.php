@@ -8,7 +8,7 @@ include_once("./Services/Style/classes/class.ilPageLayout.php");
  * Style settings GUI class
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilObjStyleSettingsGUI.php 44095 2013-08-13 09:51:12Z jluetzen $
+ * @version $Id$
  * 
  * @ilCtrl_Calls ilObjStyleSettingsGUI: ilPermissionGUI, ilPageLayoutGUI
  * 
@@ -278,7 +278,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 		}
 		
 		include_once("./Services/Style/classes/class.ilSystemStylesTableGUI.php");
-		$tab = new ilSystemStylesTableGUI($this, "editSystemStylesObject");
+		$tab = new ilSystemStylesTableGUI($this, "editSystemStyles");
 		$tpl->setContent($tab->getHTML());
 
 	}

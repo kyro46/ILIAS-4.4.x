@@ -17,7 +17,7 @@ define("IL_NOTE_CONTRA", 4);
 * Note class. Represents a single note.
 *
 * @author	Alex Killing <alex.killing@gmx.de>
-* @version	$Id: class.ilNote.php 47027 2014-01-05 15:37:44Z akill $
+* @version	$Id$
 *
 * @ingroup ServicesNotes
 */

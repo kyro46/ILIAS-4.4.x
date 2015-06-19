@@ -7,7 +7,7 @@
  *
  * @author Stefan Meyer <meyer@leifos.com>
  *
- * @version $Id: class.ilLPStatus.php 47859 2014-02-11 10:39:12Z jluetzen $
+ * @version $Id$
  *
  * @ingroup ServicesTracking
  *
@@ -192,7 +192,7 @@ class ilLPStatus
 	 * @param
 	 * @return
 	 */
-	function _updateStatus($a_obj_id, $a_usr_id, $a_obj = null, $a_percentage = false, $a_no_raise = false)
+	function _updateStatus($a_obj_id, $a_usr_id, $a_obj = null, $a_percentage = false, $a_no_raise = false, $a_force_raise = false)
 	{
 //global $ilLog;
 //$ilLog->write("ilLPStatus-_updateStatus-");
@@ -201,7 +201,8 @@ class ilLPStatus
 		$percentage = $this->determinePercentage($a_obj_id, $a_usr_id, $a_obj);
 		$changed = self::writeStatus($a_obj_id, $a_usr_id, $status, $percentage);
 		
-		if(!$a_no_raise && $changed)
+		if(!$a_no_raise && 
+			($changed || $a_force_raise)) // #15529
 		{
 			self::raiseEvent($a_obj_id, $a_usr_id, $status, $percentage);		
 		}
@@ -277,6 +278,7 @@ class ilLPStatus
 		// refresh status, if records are dirty or missing
 		if ($dirty || $missing)
 		{
+			require_once "Services/Tracking/classes/class.ilLPStatusFactory.php"; // #13330
 			$trac_obj = ilLPStatusFactory::_getInstance($a_obj_id);
 			$trac_obj->refreshStatus($a_obj_id, $a_users);
 		}

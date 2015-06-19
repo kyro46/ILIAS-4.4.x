@@ -27,7 +27,7 @@
 *
 * @author 		Alex Killing <alex.killing@gmx.de>
 * @author		Sascha Hofmann <saschahofmann@gmx.de>
-* @version		$Id: class.ilObjiLincClassroomListGUI.php 35525 2012-07-12 09:33:40Z bheyser $
+* @version		$Id$
 *
 * @extends ilObjectListGUI
 */

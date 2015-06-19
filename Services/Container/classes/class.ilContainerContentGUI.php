@@ -74,11 +74,23 @@ abstract class ilContainerContentGUI
 	*/
 	public function setOutput()
 	{
-		global $tpl;
+		global $tpl, $ilCtrl;
+
+		// note: we do not want to get the center html in case of
+		// asynchronous calls to blocks in the right column (e.g. news)
+		// see #13012
+		if ($ilCtrl->getNextClass() == "ilcolumngui" &&
+			$ilCtrl->isAsynch())
+		{
+			$tpl->setRightContent($this->getRightColumnHTML());
+		}
 		
 		// BEGIN ChangeEvent: record read event.
 		require_once('Services/Tracking/classes/class.ilChangeEvent.php');
 		global $ilUser;
+//global $log;
+//$log->write("setOutput");
+
 		$obj_id = ilObject::_lookupObjId($this->getContainerObject()->getRefId());
 		ilChangeEvent::_recordReadEvent(
 			$this->getContainerObject()->getType(),
@@ -86,8 +98,17 @@ abstract class ilContainerContentGUI
 			$obj_id, $ilUser->getId());
 		// END ChangeEvent: record read event.
 		
+
 		$tpl->setContent($this->getCenterColumnHTML());
-		$tpl->setRightContent($this->getRightColumnHTML());
+
+		// see above, all other cases (this was the old position of setRightContent,
+		// maybe the position above is ok and all ifs can be removed)
+		if ($ilCtrl->getNextClass() != "ilcolumngui" ||
+			!$ilCtrl->isAsynch())
+		{
+			$tpl->setRightContent($this->getRightColumnHTML());
+		}
+
 	}
 
 	/**
@@ -506,15 +527,15 @@ abstract class ilContainerContentGUI
 		)
 		{											
 			$pos = 1;
-						
+
 			include_once('./Services/Container/classes/class.ilContainerSorting.php');			
 			include_once('./Services/Object/classes/class.ilObjectActivation.php');			
 			$items = ilObjectActivation::getItemsByEvent($a_item_data['obj_id']);
 			$items = ilContainerSorting::_getInstance($this->getContainerObject()->getId())->sortSubItems('sess',$a_item_data['obj_id'],$items);
-			
-			
+			$items = ilContainer::getCompleteDescriptions($items);
+
 			$item_readable = $ilAccess->checkAccess('read','',$a_item_data['ref_id']);
-			
+
 			foreach($items as $item)
 			{				
 				// TODO: this should be removed and be handled by if(strlen($sub_item_html))

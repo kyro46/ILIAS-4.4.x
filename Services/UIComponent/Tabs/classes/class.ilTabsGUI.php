@@ -6,7 +6,7 @@
 * Tabs GUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilTabsGUI.php 45109 2013-09-30 15:46:28Z akill $
+* @version $Id$
 *
 */
 class ilTabsGUI

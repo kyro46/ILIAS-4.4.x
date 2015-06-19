@@ -7,7 +7,7 @@ require_once("./Services/FileSystem/classes/class.ilFileData.php");
 * This class handles all operations on files for the forum object.
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFileDataForum.php 34072 2012-04-06 15:48:36Z mjansen $
+* @version $Id$
 * 
 * @ingroup ModulesForum
 */

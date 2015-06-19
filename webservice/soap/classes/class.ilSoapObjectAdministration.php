@@ -26,7 +26,7 @@
    * Soap object administration methods
    *
    * @author Stefan Meyer <meyer@leifos.com>
-   * @version $Id: class.ilSoapObjectAdministration.php 48243 2014-02-27 14:43:26Z smeyer $
+   * @version $Id$
    *
    * @package ilias
    */

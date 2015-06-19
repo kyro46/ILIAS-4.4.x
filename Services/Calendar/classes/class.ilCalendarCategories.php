@@ -43,6 +43,7 @@ class ilCalendarCategories
 	const MODE_MANAGE = 6;
 	const MODE_CONSULTATION = 7;
 	const MODE_PORTFOLIO_CONSULTATION = 8;
+	const MODE_REMOTE_SELECTED = 9;
 	
 	protected static $instance = null;
 	
@@ -283,6 +284,10 @@ class ilCalendarCategories
 				}
 				break;
 				
+			case self::MODE_REMOTE_SELECTED:
+				$this->readSelectedCalendar($a_source_ref_id);
+				break;
+				
 			case self::MODE_PERSONAL_DESKTOP_MEMBERSHIP:
 				$this->readPDCalendars();
 				break;
@@ -504,6 +509,25 @@ class ilCalendarCategories
 		$this->readSelectedCategories(ilParticipants::_getMembershipByType($this->user_id,'grp'));
 		
 		$this->addSubitemCalendars();
+	}
+	
+	/**
+	 * Read info about selected calendar
+	 * @param type $a_cal_id
+	 */
+	protected function readSelectedCalendar($a_cal_id)
+	{
+		include_once './Services/Calendar/classes/class.ilCalendarCategory.php';
+		$cat = new ilCalendarCategory($a_cal_id);
+		if($cat->getType() == ilCalendarCategory::TYPE_OBJ)
+		{
+			$this->readSelectedCategories(array($cat->getObjId()));
+			$this->addSubitemCalendars();
+		}
+		else
+		{
+			$this->categories[] = $a_cal_id;
+		}
 	}
 	
 	/**
@@ -834,7 +858,7 @@ class ilCalendarCategories
 		{
 			return true;
 		}
-
+		
 		$query = "SELECT * FROM cal_categories ".
 			"WHERE type = ".$this->db->quote(ilCalendarCategory::TYPE_OBJ ,'integer')." ".
 			"AND ".$ilDB->in('obj_id',$a_obj_ids,false,'integer')." ".

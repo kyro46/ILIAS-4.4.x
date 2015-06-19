@@ -26,7 +26,7 @@
    * Soap grp administration methods
    *
    * @author Stefan Meyer <meyer@leifos.com
-   * @version $Id: class.ilSoapGroupAdministration.php 23143 2010-03-09 12:15:33Z smeyer $
+   * @version $Id$
    *
    * @package ilias
    */

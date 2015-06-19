@@ -75,12 +75,12 @@ class ilTestRandomQuestionSetSourcePoolDefinitionList implements Iterator
 		}
 	}
 
-	public function saveDefinitionsByTestId($testId)
+	public function cloneDefinitionsForTestId($testId)
 	{
 		foreach($this as $definition)
 		{
 			/** @var ilTestRandomQuestionSetSourcePoolDefinition $definition */
-			$definition->saveToDbByTestId($testId);
+			$definition->cloneToDbForTestId($testId);
 		}
 
 	}
@@ -145,6 +145,20 @@ class ilTestRandomQuestionSetSourcePoolDefinitionList implements Iterator
 		$row = $this->db->fetchAssoc($res);
 
 		return $row['cnt'] > 0;
+	}
+
+	public function hasTaxonomyFilters()
+	{
+		foreach($this as $definition)
+		{
+			/** @var ilTestRandomQuestionSetSourcePoolDefinition $definition */
+			if( $definition->getMappedFilterTaxId() && $definition->getMappedFilterTaxNodeId() )
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**

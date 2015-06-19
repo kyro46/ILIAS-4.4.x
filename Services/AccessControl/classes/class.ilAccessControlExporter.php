@@ -9,7 +9,7 @@ include_once './Services/Export/classes/class.ilXmlExporter.php';
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilAccessControlExporter.php 46324 2013-11-20 11:43:19Z smeyer $
+* @version $Id$
 *
 * @ingroup ServicesAccessControl
 */

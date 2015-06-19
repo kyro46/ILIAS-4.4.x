@@ -1222,6 +1222,8 @@ class ilExAssignment
 		$ass_ids = array();
 		foreach(self::getAssignmentDataOfExercise($a_exc_id) as $item)
 		{
+			self::updateStatusOfUser($item["id"], $a_user_id, "notgraded"); // #14900
+			
 			$ass_ids[] = $item["id"];
 		}		
 		if($ass_ids)
@@ -1627,6 +1629,7 @@ class ilExAssignment
 			$cache[$directory] = $directory;
 			ilUtil::makeDir ($directory);
 			$sourcefiles = scandir($sourcedir);
+			$duplicates = array();
 			foreach ($sourcefiles as $sourcefile) {
 				if ($sourcefile == "." || $sourcefile == "..")
 				{
@@ -1639,6 +1642,19 @@ class ilExAssignment
 				{						
 					$targetfile= substr($targetfile, $pos + 1);
 				}
+				
+				// #14536 
+				if(array_key_exists($targetfile, $duplicates))
+				{
+					$suffix = strrpos($targetfile, ".");						
+					$targetfile = substr($targetfile, 0, $suffix).
+						" (".(++$duplicates[$targetfile]).")".
+						substr($targetfile, $suffix);				
+				}
+				else
+				{
+					$duplicates[$targetfile] = 1;
+				}			
 				
 				$targetfile = $directory.DIRECTORY_SEPARATOR.$targetfile;
 				$sourcefile = $sourcedir.DIRECTORY_SEPARATOR.$sourcefile;
@@ -1858,28 +1874,24 @@ class ilExAssignment
 	function getMemberListData($a_exc_id, $a_ass_id)
 	{
 		global $ilDB;
-
+		
 		$mem = array();
 		
 		// first get list of members from member table
-		$set = $ilDB->query("SELECT * FROM exc_members ".
-			"WHERE obj_id = ".$ilDB->quote($a_exc_id, "integer"));
+		$set = $ilDB->query("SELECT ud.usr_id, ud.lastname, ud.firstname, ud.login".
+			" FROM exc_members excm".
+			" JOIN usr_data ud ON (ud.usr_id = excm.usr_id)".
+			" WHERE excm.obj_id = ".$ilDB->quote($a_exc_id, "integer"));
 		while($rec = $ilDB->fetchAssoc($set))
-		{
-			if (ilObject::_exists($rec["usr_id"]) &&
-				(ilObject::_lookupType($rec["usr_id"]) == "usr"))
-			{
-				$name = ilObjUser::_lookupName($rec["usr_id"]);
-				$login = ilObjUser::_lookupLogin($rec["usr_id"]);
-				$mem[$rec["usr_id"]] =
-					array(
-					"name" => $name["lastname"].", ".$name["firstname"],
-					"login" => $login,
-					"usr_id" => $rec["usr_id"],
-					"lastname" => $name["lastname"],
-					"firstname" => $name["firstname"]
-					);
-			}
+		{			
+			$mem[$rec["usr_id"]] =
+				array(
+				"name" => $rec["lastname"].", ".$rec["firstname"],
+				"login" => $rec["login"],
+				"usr_id" => $rec["usr_id"],
+				"lastname" => $rec["lastname"],
+				"firstname" => $rec["firstname"]
+				);			
 		}
 
 		$q = "SELECT * FROM exc_mem_ass_status ".
@@ -2436,22 +2448,42 @@ class ilExAssignment
 					unset($possible_peer_ids[$rater_id]);
 					
 					// already has linked peers
-					if(isset($matrix[$rater_id]))
+					if(array_key_exists($rater_id, $matrix))
 					{
 						$possible_peer_ids = array_diff($possible_peer_ids, $matrix[$rater_id]);
-						if(sizeof($possible_peer_ids))
-						{
-							$peer_id = array_rand($possible_peer_ids);
-							$matrix[$rater_id][] = $peer_id;	
-						}
-					}
-					// 1st peer
-					else
-					{
-						$peer_id = array_rand($possible_peer_ids);
-						$matrix[$rater_id] = array($peer_id);	
 					}
 					
+					// #15665 / #15883 
+					if(!sizeof($possible_peer_ids))
+					{
+						// no more possible peers left?  start over with all valid users
+						$run_ids = array_combine($user_ids, $user_ids);
+						
+						// see above
+						$possible_peer_ids = $run_ids;
+						
+						// may not rate himself
+						unset($possible_peer_ids[$rater_id]);
+
+						// already has linked peers
+						if(array_key_exists($rater_id, $matrix))
+						{
+							$possible_peer_ids = array_diff($possible_peer_ids, $matrix[$rater_id]);
+						}
+					}
+						
+					// #14947 
+					if(sizeof($possible_peer_ids))
+					{
+						$peer_id = array_rand($possible_peer_ids);
+						if(!array_key_exists($rater_id, $matrix))
+						{
+							$matrix[$rater_id] = array();															
+						}						
+						$matrix[$rater_id][] = $peer_id;						
+					}
+					
+					// remove peer_id from possible ids in this run
 					unset($run_ids[$peer_id]);
 				}
 			}	
@@ -2899,40 +2931,71 @@ class ilExAssignment
 	 * @param
 	 * @return
 	 */
-	function saveMultiFeedbackFiles($a_files, $a_user_id = 0)
-	{
-		global $ilUser;
-		
+	function saveMultiFeedbackFiles($a_files)
+	{				
 		$exc = new ilObjExercise($this->getExerciseId(), false);
 		
 		include_once("./Modules/Exercise/classes/class.ilFSStorageExercise.php");
 		$fstorage = new ilFSStorageExercise($this->getExerciseId(), $this->getId());
 		$fstorage->create();
 		
-		$mfu = $fstorage->getMultiFeedbackUploadPath($ilUser->getId());
-
-		if ($a_user_id == 0)
-		{
-			$a_user_id = $ilUser->getId();
-		}
+		$team_map = array();
 		
 		$mf_files = $this->getMultiFeedbackFiles();
 		foreach ($mf_files as $f)
 		{
-			if ($a_files[$f["user_id"]][$f["file"]] != "")
-			{
-				$fb_path = $fstorage->getFeedbackPath((int) $f["user_id"]);
-				$target = $fb_path."/".$f["file"];
-				if (is_file($target))
+			$user_id = $f["user_id"];
+			$file_path = $f["full_path"];				
+			$file_name = $f["file"];
+						
+			// if checked in confirmation gui
+			if ($a_files[$user_id][md5($file_name)] != "")
+			{						
+				// #14294 - team assignment
+				if ($this->getType() == ilExAssignment::TYPE_UPLOAD_TEAM)
 				{
-					unlink($target);
+					// just once for each user
+					if (!array_key_exists($user_id, $team_map))
+					{									
+						$team_id = $this->getTeamId($user_id);
+						$team_map[$user_id]["team_id"] = "t".$team_id;	
+
+						$team_map[$user_id]["noti_rec_ids"] = array();
+						foreach ($this->getTeamMembers($team_id) as $team_user_id)
+						{				
+							$team_map[$user_id]["noti_rec_ids"][] = $team_user_id;
+						}								
+					}
+
+					$feedback_id = $team_map[$user_id]["team_id"];
+					$noti_rec_ids = $team_map[$user_id]["noti_rec_ids"];
 				}
-				// rename file
-				rename($f["full_path"], $target);
-				$exc->sendFeedbackFileNotification($f["file"], (int) $f["user_id"],
-					(int) $this->getId());
+				else
+				{
+					$feedback_id = $user_id;
+					$noti_rec_ids = array($user_id);
+				}			
+				
+				if ($feedback_id)
+				{
+					$fb_path = $fstorage->getFeedbackPath($feedback_id);
+					$target = $fb_path."/".$file_name;
+					if (is_file($target))
+					{
+						unlink($target);
+					}
+					// rename file
+					rename($file_path, $target);
+				}
+				
+				if ($noti_rec_ids)
+				{
+					$exc->sendFeedbackFileNotification($file_name, $noti_rec_ids,
+						(int) $this->getId());
+				}
 			}
 		}
+		
 		$this->clearMultiFeedbackDirectory();
 	}
 

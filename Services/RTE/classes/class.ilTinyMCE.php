@@ -29,14 +29,13 @@ include_once "./Services/RTE/classes/class.ilRTE.php";
 * This class provides access methods for Tiny MCE
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilTinyMCE.php 41714 2013-04-24 09:13:17Z jluetzen $
+* @version	$Id$
 * @module   class.ilTinyMCE.php
 */
 class ilTinyMCE extends ilRTE
 {
 	protected $mode = "textareas";
-	protected $version = ""; // set default version here
-	//protected $version = "3.3.9.2"; // set default version here
+	protected $version = ""; // set default version here	
 	protected $vd = ""; // version directory suffix
 
 	/**
@@ -48,20 +47,23 @@ class ilTinyMCE extends ilRTE
 
 	function ilTinyMCE($a_version = "")
 	{
-		parent::ilRTE($a_version);
+		if(!$a_version)
+		{
+			$a_version = "3.5.11";
+		}
+		
+		parent::ilRTE($a_version);				
 
 		switch ($a_version)
-		{
-			case "3.3.9.2":
+		{			
+			case "3.4.7":			
+			case "3.5.11":			
 				$this->version = $a_version;
-				$this->vd = "_3_3_9_2";
+				$this->vd = "_".str_replace(".", "_", $a_version);
 				break;
 			
-			// #10991
-			case "3.4.7":
 			default:
-				$this->version = $a_version;
-				$this->vd = "_3_4_7";
+				// unknown/unsupported version?
 				break;
 		}
 		
@@ -119,11 +121,29 @@ class ilTinyMCE extends ilRTE
 		else
 		{
 			parent::addPlugin('ibrowser');
-
 			parent::removePlugin('ilimgupload');
 			$this->disableButtons('ilimgupload');
 
 			$this->setRemoveImgContextMenuItem(false);
+		}
+	}
+
+	/**
+	 * @param array $tags
+	 */
+	private function handleImagePluginsBeforeRendering(array $tags)
+	{
+		if(!in_array('img', $tags))
+		{
+			$this->setRemoveImgContextMenuItem(true);
+			parent::removePlugin('ilimgupload');
+			parent::removePlugin('ibrowser');
+			parent::removePlugin('image');
+			$this->disableButtons(array(
+				'ibrowser',
+				'image',
+				'ilimgupload'
+			));
 		}
 	}
 	
@@ -279,7 +299,8 @@ class ilTinyMCE extends ilRTE
 		{
 			$tpl = new ilTemplate(($cfg_template === null ? "tpl.tinymce.html" : $cfg_template), true, true, "Services/RTE");
 			$this->handleImgContextMenuItem($tpl);
-			$tags =& ilObjAdvancedEditing::_getUsedHTMLTags($a_module);
+			$tags = ilObjAdvancedEditing::_getUsedHTMLTags($a_module);
+			$this->handleImagePluginsBeforeRendering($tags);
 			if ($allowFormElements)
 			{
 				$tpl->touchBlock("formelements");
@@ -355,6 +376,7 @@ class ilTinyMCE extends ilRTE
 	*/
 	function addCustomRTESupport($obj_id, $obj_type, $tags)
 	{
+		$this->handleImagePluginsBeforeRendering($tags);
 		include_once "./Services/UICore/classes/class.ilTemplate.php";
 		$tpl = new ilTemplate("tpl.tinymce.html", true, true, "Services/RTE");
 		$this->handleImgContextMenuItem($tpl);

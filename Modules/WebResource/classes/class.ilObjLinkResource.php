@@ -30,7 +30,7 @@ include_once "./Services/Object/classes/class.ilObject.php";
 * Class ilObjLinkResource
 * 
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilObjLinkResource.php 46540 2013-12-02 13:48:59Z smeyer $
+* @version $Id$
 *
 * @ingroup ModulesWebResource
 */

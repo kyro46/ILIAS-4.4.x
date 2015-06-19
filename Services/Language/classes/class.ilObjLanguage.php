@@ -7,7 +7,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
  * Class ilObjLanguage
  *
  * @author Sascha Hofmann <shofmann@databay.de>
- * @version $Id: class.ilObjLanguage.php 33501 2012-03-03 11:11:05Z akill $
+ * @version $Id$
  *
  * @extends ilObject
  */

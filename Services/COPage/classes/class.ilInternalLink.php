@@ -7,7 +7,7 @@
 * Some methods to handle internal links
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilInternalLink.php 47314 2014-01-16 15:21:37Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

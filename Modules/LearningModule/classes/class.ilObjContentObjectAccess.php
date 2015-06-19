@@ -10,7 +10,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
  *
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilObjContentObjectAccess.php 33501 2012-03-03 11:11:05Z akill $
+ * @version $Id$
  *
  * @ingroup ModulesIliasLearningModule
  */

@@ -26,7 +26,7 @@
 * class ilCourseLMHistory
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilCourseLMHistory.php 29786 2011-07-07 08:15:16Z jluetzen $
+* @version $Id$
 * 
 * @extends Object
 */

@@ -27,7 +27,7 @@
 * Class for parsing search queries. An instance of this object is required for every Search class (MetaSearch ...)
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilQueryParser.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 * 
 * @package ilias-search
 *
@@ -40,6 +40,7 @@ class ilQueryParser
 	var $lng = null;
 
 	var $min_word_length = 0;
+	var $global_min_length = null;
 
 
 	var $query_str;
@@ -47,6 +48,7 @@ class ilQueryParser
 	var $message; // Translated error message
 	var $combination; // combiniation of search words e.g 'and' or 'or'
 	protected $settings = null;
+	protected $wildcards_allowed; // [bool]
 
 	/**
 	* Constructor
@@ -70,6 +72,8 @@ class ilQueryParser
 		{
 			$this->setMinWordLength(MIN_WORD_LENGTH);
 		}
+		
+		$this->setAllowedWildcards(false);
 	}
 
 	function setMinWordLength($a_length,$a_force = false)
@@ -88,6 +92,34 @@ class ilQueryParser
 	function getMinWordLength()
 	{
 		return $this->min_word_length;
+	}
+	
+	function setGlobalMinLength($a_value)
+	{
+		if($a_value !== null)
+		{
+			$a_value = (int)$a_value;
+			if($a_value < 1)
+			{
+				return;
+			}
+		}
+		$this->global_min_length = $a_value;
+	}
+	
+	function getGlobalMinLength()
+	{
+		return $this->global_min_length;
+	}
+	
+	function setAllowedWildcards($a_value)
+	{
+		$this->wildcards_allowed = (bool)$a_value;
+	}
+	
+	function getAllowedWildcards()
+	{
+		return $this->wildcards_allowed;
 	}
 
 	function setMessage($a_msg)
@@ -173,7 +205,7 @@ class ilQueryParser
 			
 			if(strlen(trim($word)) < $this->getMinWordLength())
 			{
-				$this->setMessage($this->lng->txt('search_minimum_three'));
+				$this->setMessage(sprintf($this->lng->txt('search_minimum_info'), $this->getMinWordLength()));
 				continue;
 			}
 			$this->words[] = ilUtil::prepareDBString($word);
@@ -183,6 +215,20 @@ class ilQueryParser
 		if (!in_array($fullstr, $this->words))
 		{
 			$this->words[] = ilUtil::prepareDBString($fullstr);
+		}
+		
+		if(!$this->getAllowedWildcards())
+		{
+			// #14768
+			foreach($this->words as $idx => $word)
+			{				
+				if(!stristr($word, '\\'))
+				{
+					$word = str_replace('%', '\%', $word);
+					$word = str_replace('_', '\_', $word);					
+				}		
+				$this->words[$idx] = $word;
+			}
 		}
 		
 		// Parse strings like && 'A "B C D" E' as 'A' && 'B C D' && 'E'
@@ -217,6 +263,19 @@ class ilQueryParser
 			$this->quoted_words[] = ilUtil::prepareDBString($word);
 		}
 		
+		if(!$this->getAllowedWildcards())
+		{
+			// #14768
+			foreach($this->quoted_words as $idx => $word)
+			{				
+				if(!stristr($word, '\\'))
+				{
+					$word = str_replace('%', '\%', $word);
+					$word = str_replace('_', '\_', $word);					
+				}		
+				$this->quoted_words[$idx] = $word;
+			}
+		}
 	}
 
 	function validate()
@@ -230,6 +289,12 @@ class ilQueryParser
 		if($this->getMinWordLength() and !count($this->getWords()))
 		{
 			$this->setMessage($this->lng->txt('msg_no_search_string'));
+			return false;
+		}
+		// No search string given
+		if($this->getGlobalMinLength() and strlen(str_replace('"', '', $this->getQueryString())) < $this->getGlobalMinLength())
+		{
+			$this->setMessage(sprintf($this->lng->txt('search_minimum_info'), $this->getGlobalMinLength()));
 			return false;
 		}
 

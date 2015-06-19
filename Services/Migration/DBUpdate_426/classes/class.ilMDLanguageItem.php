@@ -26,7 +26,7 @@
 * Meta Data class Language codes and translations
 *
 * @package ilias-core
-* @version $Id: class.ilMDLanguageItem.php 7474 2005-05-10 12:28:06Z smeyer $
+* @version $Id$
 */
 
 class ilMDLanguageItem

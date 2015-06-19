@@ -3,11 +3,12 @@
 /* Copyright (c) 1998-2010 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 include_once './Services/Tracking/classes/class.ilLPStatus.php';
+include_once './Services/MetaData/classes/class.ilMDEducational.php'; // #15556
 
 /**
  * @author Stefan Meyer <meyer@leifos.com>
  *
- * @version $Id: class.ilLPStatusTypicalLearningTime.php 44362 2013-08-22 08:36:03Z jluetzen $
+ * @version $Id$
  *
  * @ingroup	ServicesTracking
  *
@@ -26,8 +27,6 @@ class ilLPStatusTypicalLearningTime extends ilLPStatus
 	function _getInProgress($a_obj_id)
 	{
 		global $ilDB;
-
-		include_once './Services/MetaData/classes/class.ilMDEducational.php';
 
 		$status_info = ilLPStatusWrapper::_getStatusInfo($a_obj_id);
 		$tlt = $status_info['tlt'];
@@ -49,8 +48,6 @@ class ilLPStatusTypicalLearningTime extends ilLPStatus
 	{
 		global $ilDB;
 
-		include_once './Services/MetaData/classes/class.ilMDEducational.php';
-
 		$status_info = ilLPStatusWrapper::_getStatusInfo($a_obj_id);
 		$tlt = $status_info['tlt'];
 
@@ -70,7 +67,6 @@ class ilLPStatusTypicalLearningTime extends ilLPStatus
 
 	function _getStatusInfo($a_obj_id)
 	{
-		include_once './Services/MetaData/classes/class.ilMDEducational.php';
 		$status_info['tlt'] = ilMDEducational::_getTypicalLearningTimeSeconds($a_obj_id);
 
 		return $status_info;

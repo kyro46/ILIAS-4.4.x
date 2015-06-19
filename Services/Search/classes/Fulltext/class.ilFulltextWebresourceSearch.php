@@ -27,7 +27,7 @@
 * class for searching forum entries 
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFulltextWebresourceSearch.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 * 
 * @package ilias-search
 *

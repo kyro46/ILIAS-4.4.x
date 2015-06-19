@@ -27,7 +27,7 @@
 * Extends MDRequirement
 *
 * @package ilias-core
-* @version $Id: class.ilMDOrComposite.php 19837 2009-04-30 09:41:15Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 include_once 'Services/MetaData/classes/class.ilMDRequirement.php';

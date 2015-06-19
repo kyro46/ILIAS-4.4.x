@@ -88,6 +88,14 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 	}
 	
 	/**
+	 * @return boolean
+	 */
+	public function isQuestionAmountConfigurationModePerTest()
+	{
+		return $this->getQuestionAmountConfigurationMode() == self::QUESTION_AMOUNT_CONFIG_MODE_PER_TEST;
+	}
+	
+	/**
 	 * @param integer $questionAmountPerTest
 	 */
 	public function setQuestionAmountPerTest($questionAmountPerTest)
@@ -185,16 +193,9 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 	 *
 	 * @param $testId
 	 */
-	public function saveToDbByTestId($testId)
+	public function cloneToDbForTestId($testId)
 	{
-		if( $this->dbRecordExists($testId) )
-		{
-			$this->updateDbRecord($testId);
-		}
-		else
-		{
-			$this->insertDbRecord($testId);
-		}
+		$this->insertDbRecord($testId);
 	}
 
 	/**
@@ -292,7 +293,7 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 	{
 		if( $this->isQuestionAmountConfigurationModePerPool() )
 		{
-			$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList();
+			$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList($this->testOBJ);
 
 			$sourcePoolDefinitionList->loadDefinitions();
 
@@ -316,14 +317,14 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 
 	public function hasSourcePoolDefinitions()
 	{
-		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList();
+		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList($this->testOBJ);
 
 		return $sourcePoolDefinitionList->savedDefinitionsExist();
 	}
 
 	public function isQuestionSetBuildable()
 	{
-		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList();
+		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList($this->testOBJ);
 		$sourcePoolDefinitionList->loadDefinitions();
 
 		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetStagingPoolQuestionList.php';
@@ -342,7 +343,7 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 			return true;
 		}
 
-		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList();
+		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList($this->testOBJ);
 
 		if( $sourcePoolDefinitionList->savedDefinitionsExist() )
 		{
@@ -354,7 +355,7 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 	
 	public function removeQuestionSetRelatedData()
 	{
-		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList();
+		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList($this->testOBJ);
 		$sourcePoolDefinitionList->deleteDefinitions();
 
 		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetStagingPoolBuilder.php';
@@ -374,31 +375,127 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 	 */
 	public function cloneQuestionSetRelatedData($cloneTestOBJ)
 	{
+		// clone general config
+		
 		$this->loadFromDb();
-		$this->saveToDbByTestId($cloneTestOBJ->getTestId());
+		$this->cloneToDbForTestId($cloneTestOBJ->getTestId());
 
-		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList();
+		// clone source pool definitions (selection rules)
+
+		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList($this->testOBJ);
 		$sourcePoolDefinitionList->loadDefinitions();
-		$sourcePoolDefinitionList->saveDefinitionsByTestId($cloneTestOBJ->getTestId());
+		$sourcePoolDefinitionList->cloneDefinitionsForTestId($cloneTestOBJ->getTestId());
 
-		// TODO: implement cloning of staging pool and taxonomies (wasn't implemented all the time ^^)
+		// build new question stage for cloned test
+
+		$sourcePoolDefinitionList = $this->buildSourcePoolDefinitionList($cloneTestOBJ);
+		$stagingPool = $this->buildStagingPoolBuilder($cloneTestOBJ);
+
+		$sourcePoolDefinitionList->loadDefinitions();
+		$stagingPool->rebuild($sourcePoolDefinitionList);
+		$sourcePoolDefinitionList->saveDefinitions();
+		
+		$this->updateLastQuestionSyncTimestampForTestId($cloneTestOBJ->getTestId(), time());
 	}
 
-
-	private function buildSourcePoolDefinitionList()
+	private function buildSourcePoolDefinitionList(ilObjTest $testOBJ)
 	{
 		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetSourcePoolDefinitionFactory.php';
 		$sourcePoolDefinitionFactory = new ilTestRandomQuestionSetSourcePoolDefinitionFactory(
-			$this->db, $this->testOBJ
+			$this->db, $testOBJ
 		);
 
 		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetSourcePoolDefinitionList.php';
 		$sourcePoolDefinitionList = new ilTestRandomQuestionSetSourcePoolDefinitionList(
-			$this->db, $this->testOBJ, $sourcePoolDefinitionFactory
+			$this->db, $testOBJ, $sourcePoolDefinitionFactory
 		);
 
 		return $sourcePoolDefinitionList;
 	}
 	
+	private function buildStagingPoolBuilder(ilObjTest $testOBJ)
+	{
+		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetStagingPoolBuilder.php';
+		$stagingPool = new ilTestRandomQuestionSetStagingPoolBuilder($this->db, $testOBJ);
+		
+		return $stagingPool;
+	}
+	
 	// -----------------------------------------------------------------------------------------------------------------
+	
+	public function updateLastQuestionSyncTimestampForTestId($testId, $timestamp)
+	{
+		$this->db->update('tst_rnd_quest_set_cfg',
+			array(
+				'quest_sync_timestamp' => array('integer', (int)$timestamp)
+			),
+			array(
+				'test_fi' => array('integer', $testId)
+			)
+		);
+	}
+
+	// -----------------------------------------------------------------------------------------------------------------
+	
+	public function getSelectableQuestionPools()
+	{
+		return $this->testOBJ->getAvailableQuestionpools(
+			true, $this->arePoolsWithHomogeneousScoredQuestionsRequired(), false, true, true
+		);
+	}
+	
+	public function doesSelectableQuestionPoolsExist()
+	{
+		return (bool)count($this->getSelectableQuestionPools());
+	}
+
+	// -----------------------------------------------------------------------------------------------------------------
+
+	public function areDepenciesBroken()
+	{
+		return (bool)$this->testOBJ->isTestFinalBroken();
+	}
+
+	public function getDepenciesBrokenMessage(ilLanguage $lng)
+	{
+		return $lng->txt('tst_old_style_rnd_quest_set_broken');
+	}
+
+	public function isValidRequestOnBrokenQuestionSetDepencies($nextClass, $cmd)
+	{
+		//vd($nextClass, $cmd);
+
+		switch( $nextClass )
+		{
+			case 'ilmdeditorgui':
+			case 'ilpermissiongui':
+
+				return true;
+
+			case 'ilobjtestgui':
+			case '':
+
+				$cmds = array(
+					'infoScreen', 'participants', 'npSetFilter', 'npResetFilter',
+					//'deleteAllUserResults', 'confirmDeleteAllUserResults',
+					//'deleteSingleUserResults', 'confirmDeleteSelectedUserData', 'cancelDeleteSelectedUserData'
+				);
+
+				if( in_array($cmd, $cmds) )
+				{
+					return true;
+				}
+
+				break;
+		}
+
+		return false;
+	}
+
+	public function getHiddenTabsOnBrokenDepencies()
+	{
+		return array(
+			'assQuestions', 'settings', 'manscoring', 'scoringadjust', 'statistics', 'history', 'export'
+		);
+	}
 }

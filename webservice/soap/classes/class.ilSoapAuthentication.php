@@ -26,7 +26,7 @@
 * soap server
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilSoapAuthentication.php 39517 2013-01-29 12:55:16Z mjansen $
+* @version $Id$
 *
 * @package ilias
 */

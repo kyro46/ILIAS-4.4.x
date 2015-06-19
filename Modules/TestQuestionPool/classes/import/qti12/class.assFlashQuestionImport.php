@@ -7,7 +7,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * Class for flash question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assFlashQuestionImport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assFlashQuestionImport extends assQuestionImport

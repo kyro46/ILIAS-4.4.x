@@ -6,7 +6,7 @@
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
 * @author Peter Gabriel <pgabriel@databay.de>
-* @version $Id: login.php 33447 2012-03-01 14:00:01Z jluetzen $
+* @version $Id$
 *
 * @package ilias-layout
 */

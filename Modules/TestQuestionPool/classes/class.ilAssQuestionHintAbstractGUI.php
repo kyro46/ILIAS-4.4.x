@@ -8,7 +8,7 @@ require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionHintList.php';
  *
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Grégory Saive <gsaive@databay.de>
- * @version		$Id: class.ilAssQuestionHintAbstractGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

@@ -6,7 +6,7 @@ include_once("./Services/UIComponent/Explorer/classes/class.ilExplorer.php");
 /**
  * Class ilStyleScopyExplorer
  *
- * @version $Id: class.ilStyleScopeExplorer.php 35423 2012-07-07 17:42:36Z akill $
+ * @version $Id$
  * @ingroup ServicesStyle
  */
 class ilStyleScopeExplorer extends ilExplorer

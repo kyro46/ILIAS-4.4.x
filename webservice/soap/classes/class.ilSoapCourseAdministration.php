@@ -26,7 +26,7 @@
    * Soap course administration methods
    *
    * @author Stefan Meyer <smeyer.ilias@gmx.de>
-   * @version $Id: class.ilSoapCourseAdministration.php 48243 2014-02-27 14:43:26Z smeyer $
+   * @version $Id$
    *
    * @package ilias
    */

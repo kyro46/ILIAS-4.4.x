@@ -7,7 +7,7 @@ include_once("./Services/Export/classes/class.ilXmlImporter.php");
  * Importer class for files
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * @version $Id: class.ilTestImporter.php 46451 2013-11-27 16:34:46Z mbecker $
+ * @version $Id$
  * @ingroup ModulesLearningModule
  */
 class ilTestImporter extends ilXmlImporter

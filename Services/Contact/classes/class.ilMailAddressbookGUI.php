@@ -11,7 +11,7 @@ require_once "Services/Contact/classes/class.ilAddressbookTableGUI.php";
 
 /**
 * @author Jens Conze
-* @version $Id: class.ilMailAddressbookGUI.php 43824 2013-08-01 07:40:44Z mjansen $
+* @version $Id$
 *
 * @ingroup ServicesMail
 * @ilCtrl_Calls ilMailAddressbookGUI: ilMailSearchCoursesGUI, ilMailSearchGroupsGUI, ilMailingListsGUI

@@ -6,7 +6,7 @@
  * ICal parser exception
  *
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * @version $Id: class.ilICalParserException.php 35426 2012-07-09 07:20:07Z smeyer $
+ * @version $Id$
  *
  */
 class ilICalParserException extends ilException

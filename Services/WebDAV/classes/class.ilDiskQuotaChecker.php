@@ -26,7 +26,7 @@
  * 
 *
 * @author Werner Randelshofer, Hochschule Luzern, werner.randelshofer@hslu.ch
-* @version $Id: class.ilDiskQuotaChecker.php 42392 2013-05-28 09:53:03Z jluetzen $
+* @version $Id$
 *
 * @ingroup webdav
 */

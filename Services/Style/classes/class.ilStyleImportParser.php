@@ -9,7 +9,7 @@ require_once("./Services/Xml/classes/class.ilSaxParser.php");
 * Style Import Parser
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilStyleImportParser.php 33497 2012-03-02 23:24:57Z akill $
+* @version $Id$
 *
 * @extends ilSaxParser
 */

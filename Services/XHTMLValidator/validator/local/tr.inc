@@ -1,7 +1,7 @@
 <?php
 
 // Translation: Alperen Yusuf Aybar (http://alperen.aybar.biz) (alperen@aybar.biz)
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.11
 
 $error[0] = 'Geçersiz URL: <em>%s</em>!';

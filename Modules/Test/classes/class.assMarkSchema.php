@@ -9,7 +9,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author		Maximilian Becker <mbecker@databay.de>
  *          
- * @version	$Id: class.assMarkSchema.php 44218 2013-08-16 08:36:24Z mbecker $
+ * @version	$Id$
  *          
  * @ingroup ModulesTest
  */

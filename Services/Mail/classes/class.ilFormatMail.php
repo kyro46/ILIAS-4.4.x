@@ -7,7 +7,7 @@
 * 
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFormatMail.php 40972 2013-03-28 10:26:52Z mjansen $
+* @version $Id$
 * 
 */
 include_once "Services/Mail/classes/class.ilMail.php";

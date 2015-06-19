@@ -8,7 +8,7 @@ include_once ('./Services/Verification/classes/class.ilVerificationObject.php');
 *
 * @author Jörg Lützenkirchen <luetzenkirchen@leifos.com>
 *
-* @version $Id: class.ilObjTestVerification.php 46079 2013-11-07 10:13:57Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesTest
 */

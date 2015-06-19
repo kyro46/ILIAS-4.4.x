@@ -7,7 +7,7 @@ include_once 'Services/Exceptions/classes/class.ilException.php';
  * Base Exception for all Exceptions relating to Modules/Test.
  *
  * @author	Björn Heyser <bheyser@databay.de>
- * @version	$Id: class.ilTestException.php 44843 2013-09-18 15:12:29Z bheyser $
+ * @version	$Id$
  *
  * @ingroup ModulesTest
  */

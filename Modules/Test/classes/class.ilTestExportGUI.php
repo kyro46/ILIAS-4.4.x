@@ -25,7 +25,14 @@ class ilTestExportGUI extends ilExportGUI
 
 		$this->addFormat('xml', $a_parent_gui->lng->txt('ass_create_export_file'), $this, 'createTestExport');
 		$this->addFormat('csv', $a_parent_gui->lng->txt('ass_create_export_test_results'), $this, 'createTestResultsExport');
-		$this->addFormat('arc', $a_parent_gui->lng->txt('ass_create_export_test_archive'), $this, 'createTestArchiveExport');
+		if($a_parent_gui->object->getEnableArchiving() == true)
+		{
+			$this->addFormat( 'arc',
+							  $a_parent_gui->lng->txt( 'ass_create_export_test_archive' ),
+							  $this,
+							  'createTestArchiveExport'
+			);
+		}
 		$pl_names = $ilPluginAdmin->getActivePluginsForSlot(IL_COMP_MODULE, 'Test', 'texp');
 		foreach($pl_names as $pl)
 		{
@@ -215,19 +222,22 @@ class ilTestExportGUI extends ilExportGUI
 
 		require_once 'class.ilTestArchiver.php';
 		$archiver = new ilTestArchiver($this->getParentGUI()->object->getId());
-		$archive_dir = $archiver->getZipExportDirectory();
 
-		$export_dir = $this->obj->getExportDirectory();
+		$filename = basename($_POST["file"][0]);
+		$exportFile = $this->obj->getExportDirectory().'/'.$filename;
+		$archiveFile = $archiver->getZipExportDirectory().'/'.$filename;
 
-		if (file_exists($export_dir . '/' . $_POST['file'][0]))
+		if( file_exists($exportFile) )
 		{
-			ilUtil::deliverFile($export_dir . '/' . $_POST['file'][0], $_POST['file'][0]);
+			ilUtil::deliverFile($exportFile, $filename);
 		}
 
-		if (file_exists($archive_dir . '/' . $_POST['file'][0]))
+		if( file_exists($archiveFile) )
 		{
-			ilUtil::deliverFile($archive_dir . '/' . $_POST['file'][0], $_POST['file'][0]);
+			ilUtil::deliverFile($archiveFile, $filename);
 		}
+
+		$ilCtrl->redirect($this, 'listExportFiles');
 	}
 
 	/**
@@ -241,14 +251,31 @@ class ilTestExportGUI extends ilExportGUI
 		 */
 		global $lng, $ilCtrl;
 
+		require_once 'class.ilTestArchiver.php';
+		$archiver = new ilTestArchiver($this->getParentGUI()->object->getId());
+		$archiveDir = $archiver->getZipExportDirectory();
+		
 		$export_dir = $this->obj->getExportDirectory();
 		foreach($_POST['file'] as $file)
 		{
+			$file = basename($file);
+			$dir = substr($file, 0, strlen($file) - 4);
+
+			if( !strlen($file) || !strlen($dir) )
+			{
+				continue;
+			}
+			
 			$exp_file = $export_dir.'/'.$file;
-			$exp_dir = $export_dir.'/'.substr($file, 0, strlen($file) - 4);
+			$arc_file = $archiveDir.'/'.$file;
+			$exp_dir = $export_dir.'/'.$dir;
 			if(@is_file($exp_file))
 			{
 				unlink($exp_file);
+			}
+			if(@is_file($arc_file))
+			{
+				unlink($arc_file);
 			}
 			if(@is_dir($exp_dir))
 			{

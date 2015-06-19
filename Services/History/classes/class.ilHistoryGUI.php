@@ -7,7 +7,7 @@ require_once("./Services/History/classes/class.ilHistory.php");
 * This class provides user interface methods for history entries
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilHistoryGUI.php 40384 2013-03-06 13:08:21Z sborn $
+* @version $Id$
 */
 class ilHistoryGUI
 {

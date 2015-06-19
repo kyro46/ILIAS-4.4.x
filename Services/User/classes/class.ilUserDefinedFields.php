@@ -13,7 +13,7 @@ define('UDF_DUPLICATE_VALUES',2);
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilUserDefinedFields.php 33845 2012-03-22 17:46:08Z akill $
+* @version $Id$
 * @ingroup ServicesUser
 */
 class ilUserDefinedFields

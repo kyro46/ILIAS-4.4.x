@@ -726,10 +726,14 @@ class ilSurveyPageGUI
 	 */
     protected function deleteQuestion($a_id)
 	{
+		global $ilCtrl;
+		
 		if(!is_array($a_id))
 		{
 			$a_id = array($a_id);
 		}
+		
+		$ilCtrl->setParameter($this->editor_gui, "pgov", $this->current_page);
 		$this->editor_gui->removeQuestionsForm(array(), $a_id, array());
 		return true;
 	}
@@ -1106,7 +1110,7 @@ class ilSurveyPageGUI
 			$this->editor_gui->createQuestionObject($form);
 		}
 
-		$form->addCommandButton("addQuestionToolbar", $lng->txt("submit"));
+		$form->addCommandButton("addQuestionToolbar", $lng->txt("create"));
 		$form->addCommandButton("renderPage", $lng->txt("cancel"));
 
 		return $tpl->setContent($form->getHTML());
@@ -1242,7 +1246,8 @@ class ilSurveyPageGUI
 				$ilToolbar->addSeparator();
 
 				$last_on_page = 0;
-				if($a_pages)
+				if($a_pages && 
+					is_array($a_pages[$this->current_page-1]))				
 				{
 					$last_on_page = $a_pages[$this->current_page-1];
 					$last_on_page = array_pop($last_on_page);
@@ -1420,7 +1425,7 @@ class ilSurveyPageGUI
 				$tags = ilObjAdvancedEditing::_getUsedHTMLTags("survey");
 
 				include_once "./Services/RTE/classes/class.ilTinyMCE.php";
-				$tiny = new ilTinyMCE("3.3.9.2");				
+				$tiny = new ilTinyMCE();				
 				$ttpl->setVariable("WYSIWYG_BLOCKFORMATS", $tiny->_buildAdvancedBlockformatsFromHTMLTags($tags));
 				$ttpl->setVariable("WYSIWYG_VALID_ELEMENTS", $tiny->_getValidElementsFromHTMLTags($tags));
 
@@ -1483,7 +1488,7 @@ class ilSurveyPageGUI
 			include_once("./Services/YUI/classes/class.ilYuiUtil.php");
 			ilYuiUtil::initDragDrop();
 			$tpl->addJavascript("./Modules/Survey/js/SurveyPageView.js");
-			$tpl->addJavascript("./Services/RTE/tiny_mce_3_3_9_2/tiny_mce_src.js");
+			$tpl->addJavascript("./Services/RTE/tiny_mce_3_5_11/tiny_mce_src.js");
 		}
 	}
 
@@ -1752,30 +1757,6 @@ class ilSurveyPageGUI
 
 		$a_tpl->setCurrentBlock("element");
 		$a_tpl->parseCurrentBlock();
-	}
-
-	/**
-	 * Deletes all user data of the survey after confirmation
-	 */
-	public function confirmDeleteAllUserData()
-	{
-		global $lng, $ilCtrl;
-		
-		$this->object->deleteAllUserData();
-		ilUtil::sendSuccess($lng->txt("svy_all_user_data_deleted"), true);
-		
-		$this->renderPage();
-	}
-	
-	/**
-	 * Deletes heading after confirmation
-	 */
-	public function confirmRemoveHeading()
-	{
-		global $ilCtrl;
-
-		$this->object->saveHeading("", $_POST["removeheading"]);
-		$this->renderPage();
 	}
 
 	/**

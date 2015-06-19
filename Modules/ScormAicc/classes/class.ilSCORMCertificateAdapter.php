@@ -27,7 +27,7 @@ include_once "./Services/Certificate/classes/class.ilCertificateAdapter.php";
 * SCORM certificate adapter
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilSCORMCertificateAdapter.php 44216 2013-08-16 07:17:55Z jluetzen $
+* @version	$Id$
 * @ingroup ModulesScormAicc
 */
 class ilSCORMCertificateAdapter extends ilCertificateAdapter

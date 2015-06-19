@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * assMultipleChoiceImport is a class for multiple choice question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assMultipleChoiceImport.php 47237 2014-01-14 13:52:33Z bheyser $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assMultipleChoiceImport extends assQuestionImport

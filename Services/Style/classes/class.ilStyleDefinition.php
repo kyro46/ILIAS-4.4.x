@@ -7,7 +7,7 @@
  * parses the template.xml that defines all styles of the current template
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilStyleDefinition.php 43378 2013-07-10 17:45:18Z akill $
+ * @version $Id$
  *
  */
 require_once("./Services/Xml/classes/class.ilSaxParser.php");

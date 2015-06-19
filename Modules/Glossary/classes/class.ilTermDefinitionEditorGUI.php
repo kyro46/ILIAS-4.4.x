@@ -10,7 +10,7 @@ require_once ("./Modules/Glossary/classes/class.ilGlossaryDefPageGUI.php");
 * GUI class for glossary term definition editor
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilTermDefinitionEditorGUI.php 44021 2013-08-08 13:07:09Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilTermDefinitionEditorGUI: ilGlossaryDefPageGUI, ilMDEditorGUI
 *

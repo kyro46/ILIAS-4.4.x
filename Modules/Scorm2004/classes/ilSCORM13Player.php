@@ -302,11 +302,12 @@ class ilSCORM13Player
 			'cmi_learner_id' => $cmi_learner_id,
 			'course_id' => (string) $this->packageId,
 			'learner_name' => $ilUser->getFirstname()." ".$ilUser->getLastname(),
-			'mode' => 'normal',//TODO CHECK CP_PACKAGE
-			'credit' => 'credit',
+			'mode' => $this->slm->getDefaultLessonMode(),
+			'credit' => $this->slm->getCreditMode(),
 			'auto_review' => $this->slm->getAutoReviewChar(),
 			'hide_navig' => $this->slm->getHideNavig(),
 			'hide_menu' => $this->slm->getNoMenu(),
+			'ie_force_render' => $this->slm->getIe_force_render(),
 			'fourth_edition' => $this->slm->getFourth_edition(),
 			'sequencing_enabled' => $this->slm->getSequencing(),
 			'interactions_storable' => $this->slm->getInteractions(),
@@ -352,7 +353,8 @@ class ilSCORM13Player
 
 		//session
 		if ($this->slm->getSession()) {
-			$session_timeout = (int)($ilias->ini->readVariable("session","expire"))/2;
+//			$session_timeout = (int)($ilias->ini->readVariable("session","expire"))/2;
+			$session_timeout = (int)ilSession::getIdleValue()/2;
 		} else {
 			$session_timeout = 0;
 		}
@@ -403,6 +405,7 @@ class ilSCORM13Player
 		$langstrings['btnshowtree']=$lng->txt('scplayer_showtree');
 		$langstrings['linkexpandTree']=$lng->txt('scplayer_expandtree');
 		$langstrings['linkcollapseTree']=$lng->txt('scplayer_collapsetree');
+		$langstrings['contCreditOff']=$lng->txt('cont_credit_off');
 		$config['langstrings'] = $langstrings;
 		
 		//template variables	
@@ -425,6 +428,7 @@ class ilSCORM13Player
 		$this->tpl->setVariable('TREE_JS', "./Services/UIComponent/NestedList/js/ilNestedList.js");
 		$this->tpl->setVariable($langstrings);
 		$this->tpl->setVariable('DOC_TITLE', 'ILIAS SCORM 2004 Player');
+		if ($this->slm->getIe_compatibility()) $this->tpl->setVariable('IE_COMPATIBILITY', '<meta http-equiv="X-UA-Compatible" content="IE=7" />');
 		$this->tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
 		$this->tpl->setVariable('INIT_CP_DATA', json_encode(json_decode($this->getCPDataInit())));
 		$this->tpl->setVariable('INIT_CMI_DATA', json_encode($this->getCMIData($this->userId, $this->packageId)));
@@ -665,6 +669,17 @@ class ilSCORM13Player
 		//get json string
 		$g_data = new stdClass();
 
+		$global_to_system = 1;
+
+		$res = $ilDB->queryF('SELECT global_to_system FROM cp_package WHERE obj_id = %s',
+			array('integer'),
+			array($this->packageId)
+		);
+		while($data = $ilDB->fetchAssoc($res)) 
+		{
+			$global_to_system = $data['global_to_system'];
+		}
+
 		$query = 'SELECT objective_id, scope_id, satisfied, measure, user_id, 
 						 score_min, score_max, score_raw, completion_status, 
 						 progress_measure '
@@ -683,60 +698,60 @@ class ilSCORM13Player
 		);		
 		while($row = $ilDB->fetchAssoc($res))
 		{
-			$learner = $row['user_id'];
-			$objective_id = $row['objective_id'];
-			if($row['scope_id'] == 0)
-			{
-				$scope = "null"; 
+			if (($global_to_system == 1 && $row['scope_id'] == 0) || ($global_to_system == 0 && $row['scope_id'] == $this->packageId)) {
+				$learner = $row['user_id'];
+				$objective_id = $row['objective_id'];
+				if($row['scope_id'] == 0)
+				{
+					$scope = "null"; 
+				}
+				else
+				{
+					$scope = $row['scope_id'];
+				}
+				
+				if($row['satisfied'] != NULL)
+				{
+					$toset = $row['satisfied'];
+					$g_data->{"satisfied"}->{$objective_id}->{$learner}->{$scope} = $toset;
+				}
+				
+				if($row['measure'] != NULL)
+				{
+					$toset = $row['measure'];
+					$g_data->{"measure"}->{$objective_id}->{$learner}->{$scope} = $toset;
+				}
+				
+				if($row['score_raw'] != NULL)
+				{
+					$toset = $row['score_raw'];
+					$g_data->{"score_raw"}->{$objective_id}->{$learner}->{$scope} = $toset;
+				}
+				
+				if($row['score_min'] != NULL)
+				{
+					$toset = $row['score_min'];
+					$g_data->{"score_min"}->{$objective_id}->{$learner}->{$scope} = $toset;
+				}
+				
+				if($row['score_max'] != NULL)
+				{
+					$toset = $row['score_max'];
+					$g_data->{"score_max"}->{$objective_id}->{$learner}->{$scope} = $toset;
+				}
+				
+				if($row['progress_measure'] != NULL)
+				{
+					$toset = $row['progress_measure'];
+					$g_data->{"progress_measure"}->{$objective_id}->{$learner}->{$scope} = $toset;
+				}
+				
+				if($row['completion_status'] != NULL)
+				{
+					$toset = $row['completion_status'];
+					$g_data->{"completion_status"}->{$objective_id}->{$learner}->{$scope} = $toset;
+				}
 			}
-			else
-			{
-				$scope = $row['scope_id'];
-			}
-			
-			if($row['satisfied'] != NULL)
-			{
-				$toset = $row['satisfied'];
-				$g_data->{"satisfied"}->{$objective_id}->{$learner}->{$scope} = $toset;
-			}
-			
-			if($row['measure'] != NULL)
-			{
-				$toset = $row['measure'];
-				$g_data->{"measure"}->{$objective_id}->{$learner}->{$scope} = $toset;
-			}
-			
-			if($row['score_raw'] != NULL)
-			{
-				$toset = $row['score_raw'];
-				$g_data->{"score_raw"}->{$objective_id}->{$learner}->{$scope} = $toset;
-			}
-			
-			if($row['score_min'] != NULL)
-			{
-				$toset = $row['score_min'];
-				$g_data->{"score_min"}->{$objective_id}->{$learner}->{$scope} = $toset;
-			}
-			
-			if($row['score_max'] != NULL)
-			{
-				$toset = $row['score_max'];
-				$g_data->{"score_max"}->{$objective_id}->{$learner}->{$scope} = $toset;
-			}
-			
-			if($row['progress_measure'] != NULL)
-			{
-				$toset = $row['progress_measure'];
-				$g_data->{"progress_measure"}->{$objective_id}->{$learner}->{$scope} = $toset;
-			}
-			
-			if($row['completion_status'] != NULL)
-			{
-				$toset = $row['completion_status'];
-				$g_data->{"completion_status"}->{$objective_id}->{$learner}->{$scope} = $toset;
-			}
-			
-			
 		}
 		return $g_data;
 	}

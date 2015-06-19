@@ -14,7 +14,7 @@ include_once("./Services/Clipboard/classes/class.ilEditClipboardGUI.php");
 *
 * @author Alex Killing <alex.killing@gmx.de>
 *
-* $Id: class.ilObjMediaPoolGUI.php 41170 2013-04-07 19:05:39Z akill $
+* $Id$
 *
 * @ilCtrl_Calls ilObjMediaPoolGUI: ilObjMediaObjectGUI, ilObjFolderGUI, ilEditClipboardGUI, ilPermissionGUI
 * @ilCtrl_Calls ilObjMediaPoolGUI: ilInfoScreenGUI, ilMediaPoolPageGUI, ilExportGUI, ilFileSystemGUI
@@ -759,9 +759,11 @@ class ilObjMediaPoolGUI extends ilObject2GUI
 							$page->create();
 							
 							// copy content
-							$page->setXMLContent($original->copyXMLContent());
-							$page->buildDom();
-							$page->update();
+							$original->copy($page->getId(), $page->getParentType(), $page->getParentId(), true);
+
+							//$page->setXMLContent($original->copyXMLContent());
+							//$page->buildDom();
+							//$page->update();
 						}
 					}
 				}

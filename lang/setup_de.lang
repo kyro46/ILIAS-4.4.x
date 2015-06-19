@@ -5,7 +5,7 @@
 * @module             setup language file german
 * @modulegroup        language
 * @author             Matthias Kunkel <mkunkel@me.com>
-* @version            $Id: setup_de.lang 45929 2013-10-31 15:37:35Z smeyer $
+* @version            $Id$
 */
 // The language file starts beyond the HTML-comment below. DO NOT modify this line!
 // To edit your language file with a spreadsheet (i.e. Excel or StarCalc) remove all lines
@@ -584,3 +584,4 @@ tree_implementation_ns#:#Nested-Set Model
 tree_implementation_mp#:#Materialized-Path Model
 tree_implementation_switch_btn#:#Switch Tree Implementation
 tree_implementation_switched#:#The tree implementation type has been switched.
+feedback_recipient_info#:#Diese Adresse wird in der Fusszeile für den Link "Administration kontaktieren" genutzt.

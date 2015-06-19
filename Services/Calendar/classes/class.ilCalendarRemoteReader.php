@@ -9,7 +9,7 @@ include_once './Services/WebServices/Curl/classes/class.ilCurlConnectionExceptio
 * Reader for remote ical calendars
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilCalendarRemoteReader.php 37991 2012-11-02 13:26:25Z smeyer $
+* @version $Id$
 */
 class ilCalendarRemoteReader
 {

@@ -9,7 +9,7 @@ include_once "./Services/Container/classes/class.ilContainerGUI.php";
  *
  * @author Sascha Hofmann <saschahofmann@gmx.de> 
  *
- * @version $Id: class.ilObjiLincCourseGUI.php 37913 2012-10-27 12:07:54Z akill $
+ * @version $Id$
  * 
  * @extends ilObjectGUI
  * 

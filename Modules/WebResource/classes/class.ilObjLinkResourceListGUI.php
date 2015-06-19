@@ -10,7 +10,7 @@ include_once('./Modules/WebResource/classes/class.ilObjLinkResourceAccess.php');
 * Class ilObjLinkResourceListGUI
 *
 * @author 		Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjLinkResourceListGUI.php 40199 2013-02-28 10:59:54Z jluetzen $
+* $Id$
 *
 * @ingroup ModulesWebResource
 */

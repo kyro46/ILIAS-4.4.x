@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * assImagemapQuestionImport is a class for imagemap question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assImagemapQuestionImport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assImagemapQuestionImport extends assQuestionImport

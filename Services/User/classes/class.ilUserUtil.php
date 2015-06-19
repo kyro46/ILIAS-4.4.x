@@ -5,7 +5,7 @@
 * Class ilUserUtil
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilUserUtil.php 46316 2013-11-20 10:35:48Z jluetzen $
+* @version $Id$
 *
 * @ingroup ServicesUser
 */

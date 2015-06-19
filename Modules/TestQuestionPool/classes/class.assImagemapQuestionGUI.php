@@ -16,11 +16,11 @@ include_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version	$Id: class.assImagemapQuestionGUI.php 48607 2014-03-13 14:14:31Z bheyser $
+ * @version	$Id$
  * 
  * @ingroup ModulesTestQuestionPool
  */
-class assImagemapQuestionGUI extends assQuestionGUI implements ilGuiQuestionScoringAdjustable, ilGuiAnswerScoringAdjustable
+class assImagemapQuestionGUI extends assQuestionGUI //implements ilGuiQuestionScoringAdjustable, ilGuiAnswerScoringAdjustable
 {
 	private $linecolor;
 	

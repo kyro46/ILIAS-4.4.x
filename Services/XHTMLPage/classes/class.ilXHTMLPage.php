@@ -9,7 +9,7 @@
 * (e.g. for ategories).
 * 
 * @author Alex Killing <alex.killing@gmx.de> 
-* @version $Id: class.ilXHTMLPage.php 20152 2009-06-08 18:41:37Z akill $
+* @version $Id$
 *
 * @ingroup	ServicesXHTMLPage
 */

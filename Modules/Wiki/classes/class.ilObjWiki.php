@@ -356,7 +356,7 @@ class ilObjWiki extends ilObject
 			"short" => array("text", $this->getShortTitle()),
 			"rating_overall" => array("integer", $this->getRatingOverall()),
 			"rating" => array("integer", $this->getRating()),
-			"rating_side" => array("integer", $this->getRatingAsBlock()),
+			"rating_side" => array("integer", (bool)$this->getRatingAsBlock()), // #13455
 			"rating_new" => array("integer", $this->getRatingForNewPages()),
 			"rating_ext" => array("integer", $this->getRatingCategories()),
 			"public_notes" => array("integer", $this->getPublicNotes()),
@@ -694,7 +694,7 @@ class ilObjWiki extends ilObject
 			{
 				foreach($entry["child"] as $child)
 				{
-					$found_pages[] = $child;
+					$found_pages[] = array("page_id" => $child);
 				}
 			}
 		}
@@ -988,10 +988,11 @@ class ilObjWiki extends ilObject
 			$new_page->setBlocked($page->getBlocked());
 			$new_page->setRating($page->getRating());
 			$new_page->create();
-			
-			$new_page->setXMLContent($page->copyXMLContent(true));
-			$new_page->buildDom();
-			$new_page->update();
+
+			$page->copy($new_page->getId(), "", 0, true);
+			//$new_page->setXMLContent($page->copyXMLContent(true));
+			//$new_page->buildDom(true);
+			//$new_page->update();
 			$map[$p["id"]] = $new_page->getId();
 		}
 		

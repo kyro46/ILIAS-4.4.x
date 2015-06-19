@@ -9,7 +9,7 @@ require_once './Services/Table/classes/class.ilTable2GUI.php';
  * @author  Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author  Maximilian Becker <mbecker@databay.de>
  * 
- * @version $Id: class.ilResultsByQuestionTableGUI.php 49003 2014-03-26 11:05:39Z mjansen $
+ * @version $Id$
  * 
  * @ingroup ModulesTest
  */

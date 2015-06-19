@@ -27,7 +27,7 @@ include_once("./Services/Form/classes/class.ilCheckboxOption.php");
 * This class represents a property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilCheckboxGroupInputGUI.php 42180 2013-05-14 11:00:52Z bheyser $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilCheckboxGroupInputGUI extends ilSubEnabledFormPropertyGUI implements ilTableFilterItem, ilToolbarItem

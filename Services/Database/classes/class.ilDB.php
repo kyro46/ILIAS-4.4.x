@@ -22,7 +22,7 @@ define("DB_FETCHMODE_OBJECT", MDB2_FETCHMODE_OBJECT);
 *
 * @author Peter Gabriel <peter@gabriel-online.net>
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilDB.php 48957 2014-03-25 13:28:47Z smeyer $
+* @version $Id$
 * @ingroup ServicesDatabase
 */
 abstract class ilDB extends PEAR

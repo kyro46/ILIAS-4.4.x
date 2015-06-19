@@ -7,7 +7,7 @@ include_once "./Modules/TestQuestionPool/classes/export/qti12/class.assQuestionE
 * Class for file upload question exports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assFileUploadExport.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assFileUploadExport extends assQuestionExport

@@ -23,6 +23,8 @@ class ilCronManagerTableGUI extends ilTable2GUI
 		
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 		
+		$this->setId("crnmng"); // #14526
+		
 		$this->addColumn("", "", 1);
 		$this->addColumn($this->lng->txt("cron_job_id"), "title");
 		$this->addColumn($this->lng->txt("cron_component"), "component");
@@ -215,6 +217,8 @@ class ilCronManagerTableGUI extends ilTable2GUI
 			$res["last_run"] = null;
 		}			
 		
+		$res['is_manually_executable'] = $job->isManuallyExecutable();
+		
 		return $res;
 	}
 
@@ -309,7 +313,10 @@ class ilCronManagerTableGUI extends ilTable2GUI
 			// deactivate
 			else 
 			{
-				$actions[] = "run";
+				if($a_set['is_manually_executable'])
+				{
+					$actions[] = 'run';
+				}
 				$actions[] = "deactivate";
 			}
 			// edit (schedule)

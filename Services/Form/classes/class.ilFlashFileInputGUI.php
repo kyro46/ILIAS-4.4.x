@@ -5,7 +5,7 @@
 * This class represents an image file property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilFlashFileInputGUI.php 20529 2009-07-11 17:17:02Z hschottm $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilFlashFileInputGUI extends ilFileInputGUI

@@ -7,7 +7,7 @@ include_once("./Services/Export/classes/class.ilXmlImporter.php");
  * Importer class for question pools
  *
  * @author Helmut Schottmüller <ilias@aurealis.de>
- * @version $Id: class.ilTestQuestionPoolImporter.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version $Id$
  * @ingroup ModulesLearningModule
  */
 

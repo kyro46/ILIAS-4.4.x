@@ -7,7 +7,7 @@
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
 * @package ilias-core
-* @version $Id: class.ilMDEditorGUI.php 36575 2012-08-28 12:17:50Z jluetzen $
+* @version $Id$
 */
 include_once 'Services/MetaData/classes/class.ilMD.php';
 include_once 'Services/MetaData/classes/class.ilMDUtilSelect.php';

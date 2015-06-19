@@ -16,7 +16,7 @@ require_once 'Services/PersonalDesktop/interfaces/interface.ilDesktopItemHandlin
  * Class ilObjForumGUI
  *
  * @author Stefan Meyer <meyer@leifos.com>
- * $Id: class.ilObjForumGUI.php 49426 2014-04-16 09:41:36Z nkrzywon $
+ * $Id$
  *
  * @ilCtrl_Calls ilObjForumGUI: ilPermissionGUI, ilForumExportGUI, ilInfoScreenGUI
  * @ilCtrl_Calls ilObjForumGUI: ilColumnGUI, ilPublicUserProfileGUI, ilForumModeratorsGUI
@@ -413,46 +413,92 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 		
 		$this->objProperties->update();
 	}
-	
-	public function editThreadObject($a_thread_id)
+
+	/**
+	 * @param  int $a_thread_id
+	 * @return ilPropertyFormGUI
+	 */
+	private function getThreadEditingForm($a_thread_id)
 	{
-		/**
-		 * @var $ilTabs ilTabsGUI
-		 */
-		global $ilTabs;
-		
-		$ilTabs->setTabActive('forums_threads');
-		
-		$this->ctrl->setParameter($this, 'thr_pk', $a_thread_id);
-		$this->tpl->addBlockFile('ADM_CONTENT', 'adm_content', 'tpl.main_view.html', 'Modules/Forum');
 		$form = new ilPropertyFormGUI();
+		$this->ctrl->setParameter($this, 'thr_pk', $a_thread_id);
 		$form->setFormAction($this->ctrl->getFormAction($this, 'updateThread'));
 
 		$ti_prop = new ilTextInputGUI($this->lng->txt('title'), 'title');
-		$ti_prop->setValue(ilForumTopic::_lookupTitle($a_thread_id));
+		$ti_prop->setRequired(true);
+		$ti_prop->setMaxLength(255);
+		$ti_prop->setSize(50);
 		$form->addItem($ti_prop);
 
 		$form->addCommandButton('updateThread', $this->lng->txt('save'));
 		$form->addCommandButton('showThreads', $this->lng->txt('cancel'));
-
-		$this->tpl->setVariable('FORM1', $form->getHTML());
+		
+		return $form;
 	}
 
-	public function updateThreadObject()
+	/**
+	 * @param                   $a_thread_id
+	 * @param ilPropertyFormGUI $form
+	 */
+	public function editThreadObject($a_thread_id, ilPropertyFormGUI $form = null)
 	{
 		/**
 		 * @var $ilTabs ilTabsGUI
 		 */
 		global $ilTabs;
 
-		$ilTabs->setTabActive('forums_threads');
-		
-		if(isset($_POST['title']) && strlen($_POST['title']))
+		if(!$this->is_moderator)
 		{
-			$this->objCurrentTopic->setSubject($_POST['title']);
-			$this->objCurrentTopic->updateThreadTitle();
+			$this->ilias->raiseError($this->lng->txt('permission_denied'), $this->ilias->error_obj->MESSAGE);
 		}
-		
+
+		$ilTabs->setTabActive('forums_threads');
+
+		if(!($form instanceof ilPropertyFormGUI))
+		{
+			$form = $this->getThreadEditingForm($a_thread_id);
+			$form->setValuesByArray(array(
+				'title' => ilForumTopic::_lookupTitle($a_thread_id)
+			));
+		}
+
+		$this->tpl->setContent($form->getHTML());
+	}
+
+	/**
+	 * 
+	 */
+	public function updateThreadObject()
+	{
+		if(!$this->is_moderator)
+		{
+			$this->ilias->raiseError($this->lng->txt('permission_denied'), $this->ilias->error_obj->MESSAGE);
+		}
+
+		if(!$this->objCurrentTopic->getId())
+		{
+			$this->showThreadsObject();
+			return;
+		}
+
+		$forum_id = ilObjForum::lookupForumIdByObjId($this->object->getId());
+		if($this->objCurrentTopic->getForumId() != $forum_id)
+		{
+			$this->ilias->raiseError($this->lng->txt('permission_denied'), $this->ilias->error_obj->MESSAGE);
+		}
+
+		$form = $this->getThreadEditingForm($this->objCurrentTopic->getId());
+		if(!$form->checkInput())
+		{
+			$form->setValuesByPost();
+			$this->editThreadObject($this->objCurrentTopic->getId(), $form);
+			return;
+		}
+
+		$this->objCurrentTopic->setSubject($form->getInput('title'));
+		$this->objCurrentTopic->updateThreadTitle();
+
+		ilUtil::sendSuccess($this->lng->txt('saved_successfully'));
 		$this->showThreadsObject();
 	}
 
@@ -488,7 +534,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 	{
 		global $ilTabs;
 
-		if($this->objProperties->getThreadSorting() == 1)
+		if($this->objProperties->getThreadSorting() == 1 && $this->is_moderator)
 		{
 			$ilTabs->addSubTabTarget('show', $this->ctrl->getLinkTarget($this, 'showThreads'), 'showThreads', get_class($this), '', $subtab=='showThreads'? true : false );
 			$ilTabs->addSubTabTarget('sorting_header', $this->ctrl->getLinkTarget($this, 'sortThreads'), 'sortThreads', get_class($this), '', $subtab=='sortThreads'? true : false );
@@ -760,20 +806,24 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		$ilTabs->setTabActive('settings');
 		$ilTabs->addSubTabTarget('basic_settings', $this->ctrl->getLinkTarget($this, 'edit'), 'edit', get_class($this), '', $_GET['cmd']=='edit'? true : false );
-		// member tab
-		// check if there a parent-node is a grp or crs
-		$grp_ref_id = $tree->checkForParentType($this->object->getRefId(), 'grp');
-		$crs_ref_id = $tree->checkForParentType($this->object->getRefId(), 'crs');
 
-		if((int)$grp_ref_id > 0 || (int)$crs_ref_id > 0 )
+		// notification tab
+		if($this->ilias->getSetting('forum_notification') > 0)
 		{
-			#show member-tab for notification if forum-notification is enabled in administration
-			if($ilAccess->checkAccess('edit_permission', '', $this->ref_id) && $this->ilias->getSetting('forum_notification') == 1 )
+			// check if there a parent-node is a grp or crs
+			$grp_ref_id = $tree->checkForParentType($this->object->getRefId(), 'grp');
+			$crs_ref_id = $tree->checkForParentType($this->object->getRefId(), 'crs');
+	
+			if((int)$grp_ref_id > 0 || (int)$crs_ref_id > 0 )
 			{
-				$mem_active = array('showMembers', 'forums_notification_settings');
-				(in_array($_GET['cmd'],$mem_active)) ? $force_mem_active = true : $force_mem_active = false;
-
-				$ilTabs->addSubTabTarget('notifications', $this->ctrl->getLinkTarget($this, 'showMembers'), $_GET['cmd'], get_class($this), '', $force_mem_active);
+				#show member-tab for notification if forum-notification is enabled in administration
+				if($ilAccess->checkAccess('write', '', $this->ref_id))
+				{
+					$mem_active = array('showMembers', 'forums_notification_settings');
+					(in_array($_GET['cmd'],$mem_active)) ? $force_mem_active = true : $force_mem_active = false;
+	
+					$ilTabs->addSubTabTarget('notifications', $this->ctrl->getLinkTarget($this, 'showMembers'), $_GET['cmd'], get_class($this), '', $force_mem_active);
+				}
 			}
 		}
 		return true;
@@ -1417,7 +1467,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 		}
 				
 		// buttons
-		$this->replyEditForm->addCommandButton('savePost', $this->lng->txt('submit'));				
+		$this->replyEditForm->addCommandButton('savePost', $this->lng->txt('create'));
 		if($_GET['action'] == 'showreply' || $_GET['action'] == 'ready_showreply')
 		{
 			include_once 'Services/RTE/classes/class.ilRTE.php';
@@ -2271,7 +2321,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 								switch($this->objProperties->getSubjectSetting())
 								{
 									case 'add_re_to_subject':
-										$subject = $this->lng->txt('post_reply').' '. $this->objCurrentPost->getSubject();
+										$subject = $this->getModifiedReOnSubject(true);
 										break;
 
 									case 'preset_subject':
@@ -2566,7 +2616,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 						$is_moderator = ilForum::_isModerator($_GET['ref_id'], $node->getUserId());
 						if($is_moderator)
 						{
-							$rowCol = 'ilHighlighted';
+							$rowCol = 'ilModeratorPosting';
 						}
 						else $rowCol = ilUtil::switchColor($z, 'tblrow1', 'tblrow2');
 					}
@@ -2718,8 +2768,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 					}
 		
 					$tpl->setVariable('POST_DATE', $frm->convertDate($node->getCreateDate()));
-					$tpl->setVariable('SPACER', "<hr noshade width=100% size=1 align='center' />");
-						
+
 					if (!$node->isCensored() ||
 						($this->objCurrentPost->getId() == $node->getId() && $_GET['action'] == 'censor'))
 					{
@@ -2741,7 +2790,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 							}
 						}
 						
-						/** @todo mjansen: possible bugfix for mantis #8223 */
+						// possible bugfix for mantis #8223
 						if($node->getMessage() == strip_tags($node->getMessage()))
 						{
 							// We can be sure, that there are not html tags
@@ -2797,6 +2846,61 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 		return true;
 	}
 
+	private function getModifiedReOnSubject($on_reply = false)
+	{
+		$subject = $this->objCurrentPost->getSubject();
+		$re_txt = $this->lng->txt('post_reply');
+
+		$re_txt_with_num = str_replace(':', '(',$re_txt);
+		$search_length = strlen($re_txt_with_num);
+		$comp = substr_compare($re_txt_with_num, substr($subject, 0 , $search_length), 0, $search_length);
+		
+		if($comp == 0)
+		{
+			$modified_subject = $subject;
+			if($on_reply == true)
+			{
+				// i.e. $subject = "Re(12):"
+				$str_pos_start = strpos($subject, '(');
+				$str_pos_end   = strpos($subject, ')');
+
+				$length        = ((int)$str_pos_end - (int)$str_pos_start);
+				$str_pos_start++;
+				$txt_number = substr($subject, $str_pos_start, $length - 1);
+
+				if(is_numeric($txt_number))
+				{
+					$re_count         = (int)$txt_number + 1;
+					$modified_subject = substr($subject, 0, $str_pos_start) . $re_count . substr($subject, $str_pos_end);
+				}
+			}
+		}
+		else
+		{
+			$re_count = substr_count($subject, $re_txt);
+			if($re_count >= 1 && $on_reply == true)
+			{
+				$subject = str_replace($re_txt, '', $subject);
+				
+				// i.e. $subject = "Re: Re: Re: ... " -> "Re(4):"
+				$re_count++;
+				$modified_subject = sprintf($this->lng->txt('post_reply_count'), $re_count).' '.trim($subject);
+			}
+			else if($re_count >= 1 && $on_reply == false)
+			{
+				// possibility to modify the subject only for output 
+				// i.e. $subject = "Re: Re: Re: ... " -> "Re(3):"
+				$modified_subject = sprintf($this->lng->txt('post_reply_count'), $re_count).' '.trim($subject);
+			}
+			else if($re_count == 0)
+			{
+				// the first reply to a thread
+				$modified_subject = $this->lng->txt('post_reply').' '. $this->objCurrentPost->getSubject();
+			}
+		}
+		return $modified_subject;
+	}
+	
 	public function showUserObject()
 	{
 		/**
@@ -2975,7 +3079,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 					{
 						foreach($_POST['thread_ids'] as $thread_id)
 						{
-							return $this->editThreadObject($thread_id);
+							return $this->editThreadObject($thread_id, null);
 						}
 					}
 				}
@@ -3270,7 +3374,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$captcha->setRequired(true);		
 			$this->create_topic_form_gui->addItem($captcha);
 		}
-		$this->create_topic_form_gui->addCommandButton('addThread', $this->lng->txt('submit'));
+		$this->create_topic_form_gui->addCommandButton('addThread', $this->lng->txt('create'));
 		$this->create_topic_form_gui->addCommandButton('showThreads', $this->lng->txt('cancel'));
 	}
 	
@@ -3357,8 +3461,17 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 			else
 			{
 				$user_alias = $ilUser->getLogin();	
-			}			
-			
+			}
+
+			$status = 1;
+			if(
+				$this->objProperties->isPostActivationEnabled() &&
+				!$this->is_moderator || $this->objCurrentPost->isAnyParentDeactivated()
+			)
+			{
+				$status = 0;
+			}
+
 			// build new thread
 			$newPost = $frm->generateThread(
 				$topicData['top_pk'],
@@ -3367,7 +3480,9 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 				ilRTE::_replaceMediaObjectImageSrc($this->create_topic_form_gui->getInput('message'), 0),
 				$this->create_topic_form_gui->getItemByPostVar('notify') ? (int)$this->create_topic_form_gui->getInput('notify') : 0,
 				$this->create_topic_form_gui->getItemByPostVar('notify_posts') ? (int)$this->create_topic_form_gui->getInput('notify_posts') : 0,
-				$user_alias
+				$user_alias,
+				'',
+				$status
 			);
 			
 			$file = $_FILES['userfile'];
@@ -3715,7 +3830,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 			{
 				$frm_noti->update();
 			}
-			else if($frm_noti->existsNotification() == false && !in_array($user_id, $moderator_ids))
+			else if($frm_noti->existsNotification() == false)
 			{
 				$frm_noti->insertAdminForce();
 			}
@@ -4164,19 +4279,10 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		if($lg instanceof ilObjForumListGUI)
 		{
-			include_once 'Modules/Forum/classes/class.ilForumNotification.php';
-			$frm_noti = new ilForumNotification((int) $_GET['ref_id']);
-			$frm_noti->setUserId($ilUser->getId());
-			$user_toggle = (int)$frm_noti->isUserToggleNotification();
-			$admin_forced_noti = (int)$frm_noti->isAdminForceNotification();
-			
-			$is_user_allowed_to_deactivate_notification = ($admin_forced_noti == 1 && $user_toggle == 0);
-			
-			// Notification button
-			$frm_notificiation_enabled = false;
-			
 			if($ilUser->getId() != ANONYMOUS_USER_ID && $this->ilias->getSetting('forum_notification') != 0 )
 			{
+			$is_user_allowed_to_deactivate_notification = $this->isUserAllowedToDeactivateNotification();
+			
 				$frm = $this->object->Forum;
 				$frm->setForumId($this->object->getId());
 				$frm->setForumRefId($this->object->getRefId());
@@ -4188,28 +4294,37 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 					$this->ctrl->setParameter($this, 'thr_pk', $this->objCurrentTopic->getId());
 				}
 
-				if($frm_notificiation_enabled && $this->isParentObjectCrsOrGrp() == false)
+				if($this->isParentObjectCrsOrGrp())
 				{
-					//expected default behaviour for forum notification 
+					// special behaviour for CRS/GRP-Forum notification!!
+					if(
+						$frm_notificiation_enabled &&
+						$is_user_allowed_to_deactivate_notification
+					)
+					{
 					$lg->addCustomCommand($this->ctrl->getLinkTarget($this, 'disableForumNotification'), "forums_disable_forum_notification");
 				}
 				else
 				{
-					if($frm_notificiation_enabled && ($is_user_allowed_to_deactivate_notification && $this->isParentObjectCrsOrGrp() == true))
+						$lg->addCustomCommand($this->ctrl->getLinkTarget($this, 'enableForumNotification'), "forums_enable_forum_notification");
+					}
+				}
+				else
 					{
-						// special behaviour for CRS/GRP-Forum notification!!
+					if($frm_notificiation_enabled)
+					{
 						$lg->addCustomCommand($this->ctrl->getLinkTarget($this, 'disableForumNotification'), "forums_disable_forum_notification");
 					}
-					else if($frm_notificiation_enabled == false)
+					else
 					{
-						//expected default behaviour for forum notification 
 						$lg->addCustomCommand($this->ctrl->getLinkTarget($this, 'enableForumNotification'), "forums_enable_forum_notification");	
 					}
 				}
 
-				$topic_notification_enabled = $this->objCurrentTopic->isNotificationEnabled($ilUser->getId());
+				$topic_notification_enabled = false;
 				if($this->objCurrentTopic->getId())
 				{
+					$topic_notification_enabled = $this->objCurrentTopic->isNotificationEnabled($ilUser->getId());
 					if($topic_notification_enabled)
 					{
 						$lg->addCustomCommand($this->ctrl->getLinkTarget($this, 'toggleThreadNotification'), "forums_disable_notification");
@@ -4221,7 +4336,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 				}
 				$this->ctrl->setParameter($this, 'thr_pk', '');
 	
-				if($frm_notificiation_enabled || $is_user_allowed_to_deactivate_notification)
+				if($frm_notificiation_enabled || $topic_notification_enabled)
 				{
 					$lg->addHeaderIcon(
 						"not_icon",
@@ -4241,6 +4356,37 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 		}
 
 		return $lg;
+	}
+	
+	public function isUserAllowedToDeactivateNotification()
+	{
+		if($this->objProperties->getNotificationType() == 'default')
+		{
+			return true;
+		}
+		
+		if($this->objProperties->isUserToggleNoti() ==  0)
+		{
+			return true;
+		}
+		
+		if($this->isParentObjectCrsOrGrp());
+		{	
+			global $ilUser;
+
+			include_once 'Modules/Forum/classes/class.ilForumNotification.php';
+
+			$frm_noti = new ilForumNotification((int) $_GET['ref_id']);
+			$frm_noti->setUserId($ilUser->getId());
+			
+			$user_toggle = (int)$frm_noti->isUserToggleNotification();
+			if($user_toggle == 0) 
+			{	
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	private function isParentObjectCrsOrGrp()

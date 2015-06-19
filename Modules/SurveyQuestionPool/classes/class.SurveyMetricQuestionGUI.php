@@ -30,7 +30,7 @@ include_once "./Modules/SurveyQuestionPool/classes/class.SurveyQuestionGUI.php";
 * for metric survey question types.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.SurveyMetricQuestionGUI.php 43730 2013-07-29 13:59:58Z jluetzen $
+* @version	$Id$
 * @extends SurveyQuestionGUI
 * @ingroup ModulesSurveyQuestionPool
 */

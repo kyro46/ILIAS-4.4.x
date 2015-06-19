@@ -26,7 +26,7 @@
 * Class for storing all rpc communication settings
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilRPCServerSettings.php 20851 2009-08-03 13:49:49Z smeyer $
+* @version $Id$
 *
 * @package ilias
 */

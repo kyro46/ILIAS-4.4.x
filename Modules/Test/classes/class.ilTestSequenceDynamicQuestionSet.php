@@ -8,7 +8,7 @@
  * and a dynamic question set test
  *
  * @author	Björn Heyser <bheyser@databay.de>
- * @version	$Id: class.ilTestSequenceDynamicQuestionSet.php 47291 2014-01-16 08:57:03Z bheyser $
+ * @version	$Id$
  * @package	Modules/Test
  */
 class ilTestSequenceDynamicQuestionSet
@@ -32,12 +32,32 @@ class ilTestSequenceDynamicQuestionSet
 	 * @var array
 	 */
 	private $questionTracking = array();
+
+	/**
+	 * @var integer
+	 */
+	private $newlyTrackedQuestion;
+
+	/**
+	 * @var string
+	 */
+	private $newlyTrackedQuestionsStatus;
 	
 	/**
 	 * @var array
 	 */
 	private $postponedQuestions = array();
-	
+
+	/**
+	 * @var integer
+	 */
+	private $newlyPostponedQuestion;
+
+	/**
+	 * @var integer
+	 */
+	private $newlyPostponedQuestionsCount;
+
 	/**
 	 * @var array
 	 */
@@ -47,6 +67,16 @@ class ilTestSequenceDynamicQuestionSet
 	 * @var array
 	 */
 	private $wrongAnsweredQuestions = array();
+
+	/**
+	 * @var integer
+	 */
+	private $newlyAnsweredQuestion;
+
+	/**
+	 * @var boolean
+	 */
+	private $newlyAnsweredQuestionsAnswerStatus;
 	
 	/**
 	 * Constructor
@@ -58,76 +88,216 @@ class ilTestSequenceDynamicQuestionSet
 		$this->db = $db;
 		$this->questionSet = $questionSet;
 		$this->activeId = $activeId;
+
+		$this->newlyTrackedQuestion = null;
+		$this->newlyTrackedQuestionsStatus = null;
+		
+		$this->newlyPostponedQuestion = null;
+		$this->newlyPostponedQuestionsCount = null;
+		
+		$this->newlyAnsweredQuestion = null;
+		$this->newlyAnsweredQuestionsAnswerStatus = null;
 	}
 	
-	function getActiveId()
+	public function getActiveId()
 	{
 		return $this->activeId;
 	}
 	
 	public function loadFromDb()
 	{
-		$query = "SELECT * FROM tst_sequence WHERE active_fi = %s AND pass = %s";
+		$this->loadQuestionTracking();
+		$this->loadAnswerStatus();
+		$this->loadPostponedQuestions();
+	}
+	
+	private function loadQuestionTracking()
+	{
+		$query = "
+			SELECT		question_fi, status
+			FROM		tst_seq_qst_tracking
+			WHERE		active_fi = %s
+			AND			pass = %s
+			ORDER BY	orderindex ASC
+		";
 		
 		$res = $this->db->queryF($query, array('integer','integer'), array($this->activeId, 0));
+
+		$this->questionTracking = array();
 		
 		while( $row = $this->db->fetchAssoc($res) )
 		{
-			$this->questionTracking = unserialize($row["sequence"]);
+			$this->questionTracking[] = array(
+				'qid' => $row['question_fi'],
+				'status' => $row['status']
+			);
+		}
+	}
+	
+	private function loadAnswerStatus()
+	{
+		$query = "
+			SELECT	question_fi, correctness
+			FROM	tst_seq_qst_answstatus
+			WHERE	active_fi = %s
+			AND		pass = %s
+		";
 
-			$this->postponedQuestions = unserialize($row["postponed"]);
-			
-			$hidden = unserialize($row["hidden"]);
-			$this->correctAnsweredQuestions = $hidden['correct'];
-			$this->wrongAnsweredQuestions = $hidden['wrong'];
-			
-			break;
+		$res = $this->db->queryF($query, array('integer','integer'), array($this->activeId, 0));
+
+		$this->correctAnsweredQuestions = array();
+		$this->wrongAnsweredQuestions = array();
+
+		while( $row = $this->db->fetchAssoc($res) )
+		{
+			if( $row['correctness'] )
+			{
+				$this->correctAnsweredQuestions[ $row['question_fi'] ] = $row['question_fi'];
+			}
+			else
+			{
+				$this->wrongAnsweredQuestions[ $row['question_fi'] ] = $row['question_fi'];
+			}
+		}
+	}
+	
+	private function loadPostponedQuestions()
+	{
+		$query = "
+			SELECT	question_fi, cnt
+			FROM	tst_seq_qst_postponed
+			WHERE	active_fi = %s
+			AND		pass = %s
+		";
+
+		$res = $this->db->queryF($query, array('integer','integer'), array($this->activeId, 0));
+		
+		$this->postponedQuestions = array();
+		
+		while( $row = $this->db->fetchAssoc($res) )
+		{
+			$this->postponedQuestions[ $row['question_fi'] ] = $row['cnt'];
 		}
 	}
 	
 	public function saveToDb()
 	{
-		$tracking = serialize($this->questionTracking);
-		
-		$postponed = serialize($this->postponedQuestions);
+		$this->db->manipulateF(
+			"DELETE FROM tst_sequence WHERE active_fi = %s AND pass = %s",
+			array('integer','integer'), array($this->getActiveId(), 0)
+		);
 
-		$hidden = serialize(array(
-			'correct' => $this->correctAnsweredQuestions,
-			'wrong' => $this->wrongAnsweredQuestions
+		$this->db->insert('tst_sequence', array(
+			'active_fi' => array('integer', $this->getActiveId()),
+			'pass' => array('integer', 0),
+			'sequence' => array('clob', null),
+			'postponed' => array('text', null),
+			'hidden' => array('text', null),
+			'tstamp' => array('integer', time())
 		));
-
-		$query = "SELECT COUNT(*) cnt FROM tst_sequence WHERE active_fi = %s AND pass = %s";
-		$res = $this->db->queryF($query, array('integer','integer'), array($this->activeId, 0));
-		$row = $this->db->fetchAssoc($res);
 		
-		if( $row['cnt'] > 0 )
+		$this->saveNewlyTrackedQuestion();
+		$this->saveNewlyAnsweredQuestionsAnswerStatus();
+		$this->saveNewlyPostponedQuestion();
+		$this->removeQuestionsNotPostponedAnymore();
+	}
+	
+	private function saveNewlyTrackedQuestion()
+	{
+		if( (int)$this->newlyTrackedQuestion )
 		{
-			$this->db->update('tst_sequence', array(
-					'sequence' => array('clob', $tracking),
-					'postponed' => array('text', $postponed),
-					'hidden' => array('text', $hidden),
-					'tstamp' => array('integer', time())
-				), array(
-					'active_fi' => array('integer', $this->activeId),
+			$newOrderIndex = $this->getNewOrderIndexForQuestionTracking();
+			
+			$this->db->replace('tst_seq_qst_tracking',
+				array(
+					'active_fi' => array('integer', (int)$this->getActiveId()),
 					'pass' => array('integer', 0),
-			));
-		}
-		else
-		{			
-			$this->db->insert('tst_sequence', array(
-				'active_fi' => array('integer', $this->activeId),
-				'pass' => array('integer', 0),
-				'sequence' => array('clob', $tracking),
-				'postponed' => array('text', $postponed),
-				'hidden' => array('text', $hidden),
-				'tstamp' => array('integer', time())
-			));
+					'question_fi' => array('integer', (int)$this->newlyTrackedQuestion)
+				),
+				array(
+					'status' => array('text', $this->newlyTrackedQuestionsStatus),
+					'orderindex' => array('integer', $newOrderIndex)
+				)
+			);
 		}
 	}
 	
-	public function loadQuestions(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig, $taxonomyFilterSelection)
+	private function getNewOrderIndexForQuestionTracking()
 	{
-		$this->questionSet->load($dynamicQuestionSetConfig, $taxonomyFilterSelection);
+		$query = "
+				SELECT (MAX(orderindex) + 1) new_order_index
+				FROM tst_seq_qst_tracking
+				WHERE active_fi = %s
+				AND pass = %s
+			";
+
+		$res = $this->db->queryF($query, array('integer','integer'), array($this->getActiveId(), 0));
+		
+		$row = $this->db->fetchAssoc($res);
+
+		if( $row['new_order_index'] )
+		{
+			return $row['new_order_index'];
+		}
+		
+		return 1;
+	}
+
+	private function saveNewlyAnsweredQuestionsAnswerStatus()
+	{
+		if( (int)$this->newlyAnsweredQuestion )
+		{
+			$this->db->replace('tst_seq_qst_answstatus',
+				array(
+					'active_fi' => array('integer', (int)$this->getActiveId()),
+					'pass' => array('integer', 0),
+					'question_fi' => array('integer', (int)$this->newlyAnsweredQuestion)
+				),
+				array(
+					'correctness' => array('integer', (int)$this->newlyAnsweredQuestionsAnswerStatus)
+				)
+			);
+		}
+	}
+
+	private function saveNewlyPostponedQuestion()
+	{
+		if( (int)$this->newlyPostponedQuestion )
+		{
+			$this->db->replace('tst_seq_qst_postponed',
+				array(
+					'active_fi' => array('integer', (int)$this->getActiveId()),
+					'pass' => array('integer', 0),
+					'question_fi' => array('integer', (int)$this->newlyPostponedQuestion)
+				),
+				array(
+					'cnt' => array('integer', (int)$this->newlyPostponedQuestionsCount)
+				)
+			);
+		}
+	}
+	
+	private function removeQuestionsNotPostponedAnymore()
+	{
+		$INquestions = $this->db->in('question_fi', array_keys($this->postponedQuestions), true, 'integer');
+
+		// BEGIN fix symptom of mantis #0014191
+		if( $INquestions == ' 1=2 ' ) $INquestions = ' 1=1 ';
+		// END fix symptom of mantis #0014191
+		
+		$query = "
+			DELETE FROM tst_seq_qst_postponed
+			WHERE active_fi = %s
+			AND pass = %s
+			AND $INquestions
+		";
+		
+		$this->db->manipulateF($query, array('integer','integer'), array($this->getActiveId(), 0));
+	}
+	
+	public function loadQuestions(ilObjTestDynamicQuestionSetConfig $dynamicQuestionSetConfig, ilTestDynamicQuestionSetFilterSelection $filterSelection)
+	{
+		$this->questionSet->load($dynamicQuestionSetConfig, $filterSelection);
 
 //		echo "<table><tr>";
 //		echo "<td width='200'><pre>".print_r($this->questionSet->getActualQuestionSequence(), 1)."</pre></td>";
@@ -177,24 +347,22 @@ class ilTestSequenceDynamicQuestionSet
 	
 	public function getUpcomingQuestionId()
 	{
-		$questionId = $this->fetchUpcomingQuestionId(true);
-		
-		if( $questionId )
-		{
+		if( $questionId = $this->fetchUpcomingQuestionId(true, true) )
 			return $questionId;
-		}
 		
-		$questionId = $this->fetchUpcomingQuestionId(false);
-		
-		if( $questionId )
-		{
+		if( $questionId = $this->fetchUpcomingQuestionId(true, false) )
 			return $questionId;
-		}
-		
+
+		if( $questionId = $this->fetchUpcomingQuestionId(false, true) )
+			return $questionId;
+
+		if( $questionId = $this->fetchUpcomingQuestionId(false, false) )
+			return $questionId;
+
 		return null;
 	}
 	
-	private function fetchUpcomingQuestionId($forceNonAnswered = false)
+	private function fetchUpcomingQuestionId($excludePostponedQuestions, $forceNonAnsweredQuestion)
 	{
 		foreach($this->questionSet->getActualQuestionSequence() as $level => $questions)
 		{
@@ -206,6 +374,11 @@ class ilTestSequenceDynamicQuestionSet
 				{
 					continue;
 				}
+
+				if( $forceNonAnsweredQuestion && isset($this->wrongAnsweredQuestions[$qId]) )
+				{
+					continue;
+				}
 				
 				if( isset($this->postponedQuestions[$qId]) )
 				{
@@ -213,29 +386,12 @@ class ilTestSequenceDynamicQuestionSet
 					continue;
 				}
 				
-				if( $forceNonAnswered && isset($this->wrongAnsweredQuestions[$qId]) )
-				{
-					continue;
-				}
-				
 				return $qId;
 			}
 			
-			if( count($postponedQuestions) )
+			if( !$excludePostponedQuestions && count($postponedQuestions) )
 			{
-				$minPostponeCount = null;
-				$minPostponeItem = null;
-
-				foreach(array_reverse($postponedQuestions, true) as $qId => $postponeCount)
-				{
-					if($minPostponeCount === null || $postponeCount <= $minPostponeCount)
-					{
-						$minPostponeCount = $postponeCount;
-						$minPostponeItem = $qId;
-					}
-				}
-
-				return $minPostponeItem;
+				return $this->fetchMostLeastPostponedQuestion($postponedQuestions);
 			}
 		}
 		
@@ -293,6 +449,11 @@ class ilTestSequenceDynamicQuestionSet
 		return $questionList;
 	}
 	
+	public function resetTrackedQuestionList()
+	{
+		$this->questionTracking = array();
+	}
+	
 	public function openQuestionExists()
 	{
 		return count($this->getOpenQuestions()) > 0;
@@ -301,7 +462,7 @@ class ilTestSequenceDynamicQuestionSet
 	public function getOpenQuestions()
 	{
 		$completeQuestionIds = array_keys( $this->questionSet->getAllQuestionsData() );
-		
+
 		$openQuestions = array_diff($completeQuestionIds, $this->correctAnsweredQuestions);
 		
 		return $openQuestions;
@@ -309,7 +470,14 @@ class ilTestSequenceDynamicQuestionSet
 	
 	public function getTrackedQuestionCount()
 	{
-		return count($this->questionTracking);
+		$uniqueQuestions = array();
+		
+		foreach($this->questionTracking as $trackedQuestion)
+		{
+			$uniqueQuestions[$trackedQuestion['qid']] = $trackedQuestion['qid'];
+		}
+		
+		return count($uniqueQuestions);
 	}
 	
 	public function getCurrentPositionIndex($questionId)
@@ -356,6 +524,15 @@ class ilTestSequenceDynamicQuestionSet
 		}
 		
 		$this->postponedQuestions[$questionId]++;
+		
+		$this->newlyPostponedQuestion = $questionId;
+		$this->newlyPostponedQuestionsCount = $this->postponedQuestions[$questionId];
+	}
+	
+	public function unsetQuestionPostponed($questionId)
+	{
+		if( isset($this->postponedQuestions[$questionId]) )
+			unset($this->postponedQuestions[$questionId]);
 	}
 
 	public function setQuestionAnsweredCorrect($questionId)
@@ -364,11 +541,11 @@ class ilTestSequenceDynamicQuestionSet
 		
 		$this->correctAnsweredQuestions[$questionId] = $questionId;
 		
-		if( isset($this->postponedQuestions[$questionId]) )
-			unset($this->postponedQuestions[$questionId]);
-		
 		if( isset($this->wrongAnsweredQuestions[$questionId]) )
 			unset($this->wrongAnsweredQuestions[$questionId]);
+		
+		$this->newlyAnsweredQuestion = $questionId;
+		$this->newlyAnsweredQuestionsAnswerStatus = true;
 	}
 
 	public function setQuestionAnsweredWrong($questionId)
@@ -377,11 +554,11 @@ class ilTestSequenceDynamicQuestionSet
 		
 		$this->wrongAnsweredQuestions[$questionId] = $questionId;
 		
-		if( isset($this->postponedQuestions[$questionId]) )
-			unset($this->postponedQuestions[$questionId]);
-		
 		if( isset($this->correctAnsweredQuestions[$questionId]) )
 			unset($this->correctAnsweredQuestions[$questionId]);
+
+		$this->newlyAnsweredQuestion = $questionId;
+		$this->newlyAnsweredQuestionsAnswerStatus = false;
 	}
 	
 	private function trackQuestion($questionId, $answerStatus)
@@ -389,14 +566,12 @@ class ilTestSequenceDynamicQuestionSet
 		$this->questionTracking[] = array(
 			'qid' => $questionId, 'status' => $answerStatus
 		);
+		
+		$this->newlyTrackedQuestion = $questionId;
+		$this->newlyTrackedQuestionsStatus = $answerStatus;
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------
-	
-	public function handleQuestionVisibility(ilObjTest $testOBJ, $crsShowResultParam)
-	{
-		// nothing to do, but this method is called from info screen for all kinds of TestSequences
-	}
 	
 	public function hasStarted()
 	{
@@ -404,10 +579,15 @@ class ilTestSequenceDynamicQuestionSet
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
-	
-	public function getFilteredQuestionList()
+
+	public function getCompleteQuestionsData()
 	{
-		return $this->questionSet->getFilteredQuestionsData();
+		return $this->questionSet->getCompleteQuestionList()->getQuestionDataArray();
+	}
+	
+	public function getFilteredQuestionsData()
+	{
+		return $this->questionSet->getFilteredQuestionList()->getQuestionDataArray();
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -425,6 +605,26 @@ class ilTestSequenceDynamicQuestionSet
 		
 		return $questionSequence;
 	}
-	
+
+	/**
+	 * @param $postponedQuestions
+	 * @return int|null|string
+	 */
+	private function fetchMostLeastPostponedQuestion($postponedQuestions)
+	{
+		$minPostponeCount = null;
+		$minPostponeItem = null;
+
+		foreach(array_reverse($postponedQuestions, true) as $qId => $postponeCount)
+		{
+			if($minPostponeCount === null || $postponeCount <= $minPostponeCount)
+			{
+				$minPostponeCount = $postponeCount;
+				$minPostponeItem = $qId;
+			}
+		}
+		return $minPostponeItem;
+	}
+
 }
 

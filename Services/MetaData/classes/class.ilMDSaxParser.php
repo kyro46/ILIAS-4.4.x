@@ -27,7 +27,7 @@
 * This class should be inherited by all classes that want to parse meta data. E.g ContObjParser, CourseXMLParser ...
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilMDSaxParser.php 33497 2012-03-02 23:24:57Z akill $
+* @version $Id$
 *
 * Inserts Meta data from XML into ILIAS db
 *

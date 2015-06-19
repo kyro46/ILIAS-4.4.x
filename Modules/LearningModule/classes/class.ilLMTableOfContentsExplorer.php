@@ -28,7 +28,7 @@ require_once("./Modules/LearningModule/classes/class.ilStructureObject.php");
 * Table of Contents Explorer
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMTableOfContentsExplorer.php 45272 2013-10-07 15:25:03Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

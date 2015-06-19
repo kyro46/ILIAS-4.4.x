@@ -5,7 +5,7 @@
 * Class ilObjSearchSettingsGUI
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilSearchSettings.php 44917 2013-09-23 08:38:41Z smeyer $
+* @version $Id$
 * 
 * @extends ilObjectGUI
 * @package ilias-core

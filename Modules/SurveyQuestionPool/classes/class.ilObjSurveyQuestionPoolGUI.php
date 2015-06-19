@@ -27,7 +27,7 @@ include_once "./Services/Object/classes/class.ilObjectGUI.php";
 * Class ilObjSurveyQuestionPoolGUI
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version  $Id: class.ilObjSurveyQuestionPoolGUI.php 46626 2013-12-06 14:25:10Z jluetzen $
+* @version  $Id$
 * @ilCtrl_Calls ilObjSurveyQuestionPoolGUI: SurveyMultipleChoiceQuestionGUI, SurveyMetricQuestionGUI
 * @ilCtrl_Calls ilObjSurveyQuestionPoolGUI: SurveySingleChoiceQuestionGUI, SurveyTextQuestionGUI
 * @ilCtrl_Calls ilObjSurveyQuestionPoolGUI: SurveyMatrixQuestionGUI
@@ -66,8 +66,8 @@ class ilObjSurveyQuestionPoolGUI extends ilObjectGUI
 	{
 		global $ilAccess, $ilNavigationHistory, $ilErr;
 						
-		if (!$ilAccess->checkAccess("read", "",  $_REQUEST["ref_id"]) && 
-			!$ilAccess->checkAccess("visible", "",  $_REQUEST["ref_id"]))
+		if (!$ilAccess->checkAccess("read", "", $this->ref_id) && 
+			!$ilAccess->checkAccess("visible", "", $this->ref_id))
 		{
 			global $ilias;
 			$ilias->raiseError($this->lng->txt("permission_denied"), $ilias->error_obj->MESSAGE);
@@ -75,10 +75,10 @@ class ilObjSurveyQuestionPoolGUI extends ilObjectGUI
 		
 		// add entry to navigation history
 		if (!$this->getCreationMode() &&
-			$ilAccess->checkAccess("read", "", $_GET["ref_id"]))
+			$ilAccess->checkAccess("read", "", $this->ref_id))
 		{
-			$ilNavigationHistory->addItem($_GET["ref_id"],
-				"ilias.php?baseClass=ilObjSurveyQuestionPoolGUI&cmd=questions&ref_id=".$_GET["ref_id"], "spl");
+			$ilNavigationHistory->addItem($this->ref_id,
+				"ilias.php?baseClass=ilObjSurveyQuestionPoolGUI&cmd=questions&ref_id=".$this->ref_id, "spl");
 		}
 
 		$this->tpl->addCss(ilUtil::getStyleSheetLocation("output", "survey.css", "Modules/Survey"), "screen");
@@ -546,8 +546,10 @@ class ilObjSurveyQuestionPoolGUI extends ilObjectGUI
 
 		$export_dir = $this->object->getExportDirectory();
 		include_once "./Services/Utilities/classes/class.ilUtil.php";
-		ilUtil::deliverFile($export_dir."/".$_POST["file"][0],
-			$_POST["file"][0]);
+		
+		$file = basename($_POST["file"][0]);
+		
+		ilUtil::deliverFile($export_dir."/".$file, $file);
 	}
 
 	/**
@@ -593,6 +595,8 @@ class ilObjSurveyQuestionPoolGUI extends ilObjectGUI
 		$export_dir = $this->object->getExportDirectory();
 		foreach($_POST['file'] as $file)
 		{
+			$file = basename($file);
+			
 			$exp_file = $export_dir."/".$file;
 			$exp_dir = $export_dir."/".substr($file, 0, strlen($file) - 4);
 			if (@is_file($exp_file))
@@ -864,6 +868,25 @@ class ilObjSurveyQuestionPoolGUI extends ilObjectGUI
 			$tabs_gui->addTarget("perm_settings",
 				$this->ctrl->getLinkTargetByClass(array(get_class($this),'ilpermissiongui'), "perm"), array("perm","info","owner"), 'ilpermissiongui');
 		}
+	}
+	
+	/**
+	* Save obligatory states
+	*/
+	public function saveObligatoryObject()
+	{				
+		$obligatory = array();
+		foreach ($_POST as $key => $value)
+		{
+			if (preg_match("/obligatory_(\d+)/", $key, $matches))
+			{
+				$obligatory[]= $matches[1];
+			}
+		}
+		$this->object->setObligatoryStates($obligatory);
+		
+		ilUtil::sendSuccess($this->lng->txt('msg_obj_modified'), true);
+		$this->ctrl->redirect($this, "questions");
 	}
 
 	/**

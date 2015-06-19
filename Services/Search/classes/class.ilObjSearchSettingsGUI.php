@@ -7,7 +7,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * Class ilObjSearchSettingsGUI
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjSearchSettingsGUI.php 44917 2013-09-23 08:38:41Z smeyer $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjSearchSettingsGUI: ilPermissionGUI
 * 

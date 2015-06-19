@@ -12,7 +12,7 @@
  * based on the content of this additional keys.
  * 
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilCache.php 23270 2010-03-18 15:24:19Z akill $
+ * @version $Id$
  * @ingroup ingroup ServicesCache
  */
 class ilCache

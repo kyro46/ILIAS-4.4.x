@@ -27,7 +27,7 @@
 * GUI class for 'simple' search
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilAdvancedSearchGUI.php 38237 2012-11-19 07:57:58Z akill $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilAdvancedSearchGUI: ilObjectGUI, ilContainerGUI
 * @ilCtrl_Calls ilAdvancedSearchGUI: ilObjCategoryGUI, ilObjCourseGUI, ilObjFolderGUI, ilObjGroupGUI

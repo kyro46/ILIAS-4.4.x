@@ -5,7 +5,7 @@
 * Test results import parser
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilTestResultsImportParser.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 * @ingroup ModulesTest
 */
 include_once("./Services/Xml/classes/class.ilSaxParser.php");

@@ -8,7 +8,7 @@ include_once("./Services/Math/classes/class.EvalMath.php");
 * This class represents a formula text property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilFormulaInputGUI.php 24188 2010-06-10 21:35:58Z hschottm $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilFormulaInputGUI extends ilTextInputGUI

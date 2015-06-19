@@ -26,7 +26,7 @@ include_once('./Services/Table/classes/class.ilTable2GUI.php');
 /**
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilSurveyQuestionblockbrowserTableGUI.php 43693 2013-07-26 14:22:15Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesSurvey
 */

@@ -6,7 +6,7 @@
 * base authentication class
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilBaseAuthentication.php 34373 2012-04-26 08:12:44Z jluetzen $
+* @version $Id$
 * @see /webservice/soap/class.ilSoapAuthentication.php or /cron/classes/class.ilCronAuthentication.php
 *
 * Base class for external authentication. Used for soap and cron

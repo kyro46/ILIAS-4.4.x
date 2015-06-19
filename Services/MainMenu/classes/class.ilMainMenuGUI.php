@@ -8,7 +8,7 @@ include_once 'Services/Mail/classes/class.ilMailGlobalServices.php';
 * Handles display of the main menu
 *
 * @author Alex Killing
-* @version $Id: class.ilMainMenuGUI.php 49007 2014-03-26 12:08:59Z jluetzen $
+* @version $Id$
 */
 class ilMainMenuGUI
 {
@@ -999,7 +999,7 @@ class ilMainMenuGUI
 	function renderHelpButtons()
 	{
 		global $ilHelp, $lng, $ilCtrl, $tpl, $ilSetting, $ilUser;
-		
+
 		// screen id
 		if (defined("OH_REF_ID") && OH_REF_ID > 0)
 		{

@@ -10,7 +10,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * @author Stefan Meyer <smeyer@databay.de>
 * @author Alex Killing <alex.killing@gmx.de>
 * @author Michael Jansen <mjansen@databay.de>
-* $Id: class.ilObjExerciseGUI.php 48470 2014-03-11 08:54:34Z akill $
+* $Id$
 * 
 * @ilCtrl_Calls ilObjExerciseGUI: ilPermissionGUI, ilLearningProgressGUI, ilInfoScreenGUI
 * @ilCtrl_Calls ilObjExerciseGUI: ilObjectCopyGUI, ilFileSystemGUI, ilExportGUI, ilShopPurchaseGUI
@@ -520,7 +520,14 @@ class ilObjExerciseGUI extends ilObjectGUI
 		global $ilUser, $lng, $ilCtrl;
 		
 		$this->checkPermission("read");
-
+		
+		// #15322
+		if (mktime() > $this->ass->getDeadline() && ($this->ass->getDeadline() != 0))
+		{
+			ilUtil::sendInfo($this->lng->txt("exercise_time_over"));
+			return;
+		}
+	
 		$success = false;
 		foreach ($_FILES["deliver"]["name"] as $k => $v)
 		{
@@ -557,6 +564,13 @@ class ilObjExerciseGUI extends ilObjectGUI
 		global $ilCtrl;
 	
 		$this->checkPermission("read");
+		
+		// #15322
+		if (mktime() > $this->ass->getDeadline() && ($this->ass->getDeadline() != 0))
+		{
+			ilUtil::sendInfo($this->lng->txt("exercise_time_over"));
+			return;
+		}
 
 		if (preg_match("/zip/",$_FILES["deliver"]["type"]) == 1)
 		{
@@ -578,9 +592,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 	{
 		global $rbacsystem, $ilUser;
 		
-		$file = ($_POST["file"])
-			? $_POST["file"]
-			: $_GET["file"];
+		$file = $_REQUEST["file"];
 
 		// check read permission
 		$this->checkPermission("read");
@@ -609,7 +621,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 		$file_exist = false;	
 		foreach($files as $fb_file)
 		{
-			if($fb_file == urldecode($file))
+			if($fb_file == $file)
 			{
 				$file_exist = true;
 				break;
@@ -631,8 +643,8 @@ class ilObjExerciseGUI extends ilObjectGUI
 		// deliver file
 		if (!$not_started_yet)
 		{
-			$p = $storage->getFeedbackFilePath($feedback_id, urldecode($file));
-			ilUtil::deliverFile($p, urldecode($file));
+			$p = $storage->getFeedbackFilePath($feedback_id, $file);
+			ilUtil::deliverFile($p, $file);
 		}
 	
 		return true;
@@ -645,9 +657,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 	{
 		global $rbacsystem;
 		
-		$file = ($_POST["file"])
-			? $_POST["file"]
-			: $_GET["file"];
+		$file = $_REQUEST["file"];
 
 		// check read permission
 		$this->checkPermission("read");
@@ -664,7 +674,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 		$file_exist = false;
 		foreach($files as $lfile)
 		{
-			if($lfile["name"] == urldecode($file))
+			if($lfile["name"] == $file)
 			{
 				$file_exist = true;
 				break;
@@ -689,8 +699,8 @@ class ilObjExerciseGUI extends ilObjectGUI
 		{
 			include_once("./Modules/Exercise/classes/class.ilFSStorageExercise.php");
 			$storage = new ilFSStorageExercise($this->object->getId(), (int) $_GET["ass_id"]);
-			$p = $storage->getAssignmentFilePath(urldecode($file));
-			ilUtil::deliverFile($p, urldecode($file));
+			$p = $storage->getAssignmentFilePath($file);
+			ilUtil::deliverFile($p, $file);
 		}
 	
 		return true;
@@ -1536,7 +1546,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 		
 		if(!isset($_POST['comments_value']))
 		{
-			continue;
+			return;
 		}
   
 		$this->object->members_obj->setNoticeForMember($_GET["member_id"],
@@ -2109,7 +2119,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 		}
 		if(sizeof($types) > 1)
 		{
-			$ty = new ilSelectInputGUI($this->lng->txt("type"), "type");
+			$ty = new ilSelectInputGUI($this->lng->txt("exc_assignment_type"), "type");
 			$ty->setOptions($types);
 			$ty->setRequired(true);
 		}
@@ -2198,9 +2208,17 @@ class ilObjExerciseGUI extends ilObjectGUI
 		$this->form->addItem($fb);
 		
 		$fb_file = new ilFileInputGUi($lng->txt("file"), "fb_file");
-		// $fb_file->setRequired(true);
-		$fb_file->setALlowDeletion(true);
+		$fb_file->setRequired(true);  // will be disabled on update if file exists (see below)
+		// $fb_file->setAllowDeletion(true); makes no sense if required (overwrite or keep)
 		$fb->addSubItem($fb_file);
+		
+		// #15467
+		if($a_mode != "create" && 
+			$this->ass && 
+			$this->ass->getFeedbackFile())
+		{
+			$fb_file->setRequired(false); 
+		}
 		
 		$fb_cron = new ilCheckboxInputGUI($lng->txt("exc_global_feedback_file_cron"), "fb_cron");
 		$fb_cron->setInfo($lng->txt("exc_global_feedback_file_cron_info"));
@@ -2281,6 +2299,26 @@ class ilObjExerciseGUI extends ilObjectGUI
 					$valid = false;
 				}				 
 			}
+			else
+			{
+				if($_POST["type"] != ilExAssignment::TYPE_UPLOAD_TEAM &&
+					$_POST["peer"] && 
+					$_POST["peer_dl_tgl"])
+				{
+					$peer_dl =	$this->form->getItemByPostVar("peer_dl")->getDate();					
+					$peer_dl = $peer_dl->get(IL_CAL_UNIX);										
+					$end_date = $this->form->getItemByPostVar("deadline")->getDate();
+					$end_date = $end_date->get(IL_CAL_UNIX);
+					
+					// #13877
+					if ($peer_dl < $end_date)
+					{
+						$this->form->getItemByPostVar("peer_dl")
+							->setAlert($lng->txt("exc_peer_deadline_mismatch"));
+						$valid = false;
+					}
+				}			
+			}
 			
 			if(!$valid)
 			{
@@ -2336,12 +2374,15 @@ class ilObjExerciseGUI extends ilObjectGUI
 				}		
 			}
 
+			// #13380
+			$ass->setFeedbackCron($_POST["fb_cron"]);
+			
 			$ass->save();
 			
 			// save files
 			$ass->uploadAssignmentFiles($_FILES["files"]);
 						
-			if($_FILES["fb_file"])
+			if($_FILES["fb_file"]["tmp_name"])
 			{
 				$ass->handleFeedbackFileUpload($_FILES["fb_file"]);
 				$ass->update();
@@ -2500,7 +2541,27 @@ class ilObjExerciseGUI extends ilObjectGUI
 					$valid = false;
 				}	
 			}
-			
+			else
+			{
+				if($_POST["type"] != ilExAssignment::TYPE_UPLOAD_TEAM &&
+					$_POST["peer"] && 
+					$_POST["peer_dl_tgl"])
+				{
+					$peer_dl =	$this->form->getItemByPostVar("peer_dl")->getDate();					
+					$peer_dl = $peer_dl->get(IL_CAL_UNIX);										
+					$end_date = $this->form->getItemByPostVar("deadline")->getDate();
+					$end_date = $end_date->get(IL_CAL_UNIX);
+					
+					// #13877
+					if ($peer_dl < $end_date)
+					{
+						$this->form->getItemByPostVar("peer_dl")
+							->setAlert($lng->txt("exc_peer_deadline_mismatch"));
+						$valid = false;
+					}
+				}			
+			}
+									
 			if(!$valid)
 			{
 				ilUtil::sendFailure($lng->txt("form_input_not_valid"));
@@ -2508,7 +2569,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 				$tpl->setContent($this->form->getHtml());
 				return;
 			}
-			
+						
 			$ass = new ilExAssignment($_GET["ass_id"]);
 			$ass->setTitle($_POST["title"]);
 			$ass->setInstruction($_POST["instruction"]);
@@ -2545,8 +2606,8 @@ class ilObjExerciseGUI extends ilObjectGUI
 				
 				if($_POST["peer_dl_tgl"])
 				{
-					$peer_dl =	$this->form->getItemByPostVar("peer_dl")->getDate();
-					$ass->setPeerReviewDeadline($peer_dl->get(IL_CAL_UNIX));
+					$peer_dl =	$this->form->getItemByPostVar("peer_dl")->getDate();					
+					$ass->setPeerReviewDeadline($peer_dl->get(IL_CAL_UNIX));					
 				}
 				else
 				{
@@ -2554,16 +2615,19 @@ class ilObjExerciseGUI extends ilObjectGUI
 				}
 			}
 			
-			if($this->form->getItemByPostVar("fb_file")->getDeletionFlag())
+			if(!$_POST["fb"] ||
+				$this->form->getItemByPostVar("fb_file")->getDeletionFlag())
 			{
 				$ass->deleteFeedbackFile();
 				$ass->setFeedbackFile(null);
-				$ass->update;
 			}
-			else if($_FILES["fb_file"])
-			{
+			else if($_FILES["fb_file"]["tmp_name"]) // #15189
+			{				
 				$ass->handleFeedbackFileUpload($_FILES["fb_file"]);
 			}
+			
+			// #13380
+			$ass->setFeedbackCron($_POST["fb_cron"]);
 			
 			$ass->update();
 			ilUtil::sendSuccess($lng->txt("msg_obj_modified"), true);
@@ -2780,13 +2844,28 @@ class ilObjExerciseGUI extends ilObjectGUI
 		
 		$this->checkPermission("read");
 		
+		if(!$this->object->getShowSubmissions())
+		{
+			$this->ctrl->redirect($this, "view");
+		}
+		
 		$ilTabs->activateTab("content");
 		$this->addContentSubTabs("content");
 		
-		include_once("./Modules/Exercise/classes/class.ilPublicSubmissionsTableGUI.php");
-		$tab = new ilPublicSubmissionsTableGUI($this, "listPublicSubmissions",
-			$this->object, (int) $_GET["ass_id"]);
-		$tpl->setContent($tab->getHTML());
+		if($this->ass->getType() != ilExAssignment::TYPE_TEXT)
+		{		
+			include_once("./Modules/Exercise/classes/class.ilPublicSubmissionsTableGUI.php");
+			$tab = new ilPublicSubmissionsTableGUI($this, "listPublicSubmissions",
+				$this->object, (int) $_GET["ass_id"]);
+			$tpl->setContent($tab->getHTML());
+		}
+		else
+		{				
+			// #13271
+			include_once "Modules/Exercise/classes/class.ilExAssignmentListTextTableGUI.php";
+			$tbl = new ilExAssignmentListTextTableGUI($this, "listPublicSubmissions", $this->ass, false, true);		
+			$tpl->setContent($tbl->getHTML());		
+		}
 	}
 	
 	/**
@@ -3410,7 +3489,10 @@ class ilObjExerciseGUI extends ilObjectGUI
 		// $this->tabs_gui->setTabActive("content");
 		// $this->addContentSubTabs("content");
 		
-		if (mktime() > $this->ass->getDeadline() && ($this->ass->getDeadline() != 0))
+		// #13414
+		$read_only = (mktime() > $this->ass->getDeadline() && ($this->ass->getDeadline() != 0));
+				
+		if ($read_only)
 		{
 			ilUtil::sendInfo($this->lng->txt("exercise_time_over"));
 		}
@@ -3435,7 +3517,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 		
 		include_once "Modules/Exercise/classes/class.ilExAssignmentTeamTableGUI.php";
 		$tbl = new ilExAssignmentTeamTableGUI($this, "submissionScreenTeam",
-			ilExAssignmentTeamTableGUI::MODE_EDIT, $team_id, $this->ass);
+			ilExAssignmentTeamTableGUI::MODE_EDIT, $team_id, $this->ass, null, $read_only);
 		
 		$this->tpl->setContent($tbl->getHTML());				
 	}
@@ -3464,14 +3546,16 @@ class ilObjExerciseGUI extends ilObjectGUI
 			if(!in_array($user_id, $all_members))
 			{
 				$this->ass->addTeamMember($team_id, $user_id, $this->ref_id);
+				
+				// #14277
+				if (!$this->object->members_obj->isAssigned($user_id))
+				{
+					$this->object->members_obj->assignMember($user_id);
+				}
 
 				// see ilObjExercise::deliverFile()
 				if($has_files)
-				{
-					if (!$this->object->members_obj->isAssigned($user_id))
-					{
-						$this->object->members_obj->assignMember($user_id);
-					}
+				{					
 					ilExAssignment::updateStatusReturnedForUser($this->ass->getId(), $user_id, 1);
 					ilExerciseMembers::_writeReturned($this->object->getId(), $user_id, 1);
 				}
@@ -3707,7 +3791,7 @@ class ilObjExerciseGUI extends ilObjectGUI
 				'copy',
 				'paste',
 				'pastetext',
-				'formatselect'
+				// 'formatselect' #13234
 			));
 			
 			$form->setFormAction($ilCtrl->getFormAction($this, "updateAssignmentText"));
@@ -3820,6 +3904,9 @@ class ilObjExerciseGUI extends ilObjectGUI
 		if($form->checkInput())
 		{			
 			$text = trim($form->getInput("atxt"));	
+						
+			$existing = (bool)ilExAssignment::getDeliveredFiles($this->ass->getExerciseId(), 
+				$this->ass->getId(), $ilUser->getId());			
 									
 			$returned_id = $this->object->updateTextSubmission(
 				$this->ass->getExerciseId(), 
@@ -3828,9 +3915,17 @@ class ilObjExerciseGUI extends ilObjectGUI
 				// mob src to mob id
 				ilRTE::_replaceMediaObjectImageSrc($text, 0));	
 			
-			// mob usage
+			// no empty text
 			if($returned_id)
 			{
+				if(!$existing)
+				{
+					// #14332 - new text
+					$this->sendNotifications($this->ass->getId());
+					$this->object->handleSubmission($this->ass->getId());						
+				}
+				
+				// mob usage
 				include_once "Services/MediaObjects/classes/class.ilObjMediaObject.php";
 				$mobs = ilRTE::_getMediaObjects($text, 0);
 				foreach($mobs as $mob)

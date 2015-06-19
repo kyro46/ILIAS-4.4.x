@@ -6,7 +6,7 @@
 * Class ilObjStyleSheetGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjStyleSheetGUI.php 47571 2014-01-28 10:23:28Z jluetzen $
+* $Id$
 *
 * @ilCtrl_Calls ilObjStyleSheetGUI:
 *

@@ -7,7 +7,7 @@ include_once './Services/Export/classes/class.ilXmlExporter.php';
  * Class for category export
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilContainerReferenceExporter.php 35412 2012-07-06 10:28:29Z smeyer $
+ * $Id$
  */
 abstract class ilContainerReferenceExporter extends ilXmlExporter
 {

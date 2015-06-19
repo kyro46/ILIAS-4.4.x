@@ -5,7 +5,7 @@
 * ILIAS Data Validator & Recovery Tool
 *
 * @author	Sascha Hofmann <shofmann@databay.de> 
-* @version	$Id: class.ilValidator.php 35082 2012-06-15 10:07:51Z smeyer $
+* @version	$Id$
 *
 */
 class ilValidator extends PEAR
@@ -2128,6 +2128,7 @@ restore starts here
 					case 'role' :
 					case 'mob' :
 					case 'sty' :
+					case 'tax' : // #13798
 						// We are not interested in dumping these object types.
 						continue 2;
 						//break; NOT REACHED

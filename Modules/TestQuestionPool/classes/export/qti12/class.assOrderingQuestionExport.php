@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/export/qti12/class.assQuestionE
 * assOrderingQuestionExport is a class for ordering question exports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assOrderingQuestionExport.php 46451 2013-11-27 16:34:46Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assOrderingQuestionExport extends assQuestionExport

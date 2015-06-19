@@ -7,7 +7,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * Class ilObjCourseGroupingGUI
 *
 * @author your name <your email> 
-* @version $Id: class.ilObjCourseGroupingGUI.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 * 
 */
 class ilObjCourseGroupingGUI

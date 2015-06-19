@@ -8,7 +8,7 @@
 * GUI class for Glossary Editor
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilGlossaryEditorGUI.php 42218 2013-05-15 12:50:34Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilGlossaryEditorGUI: ilObjGlossaryGUI
 *

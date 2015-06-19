@@ -6,7 +6,7 @@
 * Base class for creating and handling mail boxes
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilMailbox.php 39562 2013-01-30 15:41:33Z mjansen $
+* @version $Id$
 *
 */
 require_once("Services/Mail/classes/class.ilMail.php");
@@ -469,9 +469,10 @@ class ilMailbox
 		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
 		
 		return array(
-					"title"    => stripslashes($row->title),
-					"type"     => $row->m_type
-					);
+			"obj_id"   => $row->obj_id,
+			"title"    => stripslashes($row->title),
+			"type"     => $row->m_type
+		);
 	}
 	/**
 	* get id of parent folder

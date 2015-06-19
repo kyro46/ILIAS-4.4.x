@@ -35,7 +35,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMTree.php");
 * SCORM Package Parser
 *
 * @author
-* @version $Id: class.ilSCORMPackageParser.php 12711 2006-12-01 15:24:41Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

@@ -27,7 +27,7 @@
 * Handles Layout Section of Page, Structure and Media Objects (see ILIAS DTD)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMLayout.php 12658 2006-11-29 08:51:48Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

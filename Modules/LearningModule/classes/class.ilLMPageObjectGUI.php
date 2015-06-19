@@ -12,7 +12,7 @@ require_once ("./Modules/LearningModule/classes/class.ilInternalLinkGUI.php");
 * User Interface for Learning Module Page Objects Editing
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMPageObjectGUI.php 45642 2013-10-18 13:41:09Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilLMPageObjectGUI: ilLMPageGUI, ilAssGenFeedbackPageGUI
 *

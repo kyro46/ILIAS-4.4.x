@@ -26,7 +26,7 @@
 * This class handles all operations of archive files for the course object
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilFileDataCourse.php 33510 2012-03-04 11:59:59Z akill $
+* @version $Id$
 * 
 */
 require_once("./Services/FileSystem/classes/class.ilFileData.php");

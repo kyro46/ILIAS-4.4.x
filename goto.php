@@ -10,7 +10,7 @@
 *
 * @author Alex Killing <alex.killing@gmx.de>
 * @package ilias-core
-* @version $Id: goto.php 44943 2013-09-23 13:20:53Z jluetzen $
+* @version $Id$
 */
 
 //var_dump ($_SESSION);

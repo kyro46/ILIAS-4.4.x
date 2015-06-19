@@ -11,7 +11,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author	Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author	Maximilian Becker <mbecker@databay.de>
  *
- * @version	$Id: class.assAnswerSimple.php 44249 2013-08-18 13:33:14Z mbecker $
+ * @version	$Id$
  *
  * @ingroup ModulesTestQuestionPool
  */

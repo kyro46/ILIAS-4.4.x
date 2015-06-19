@@ -8,7 +8,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjMailAccess.php 35958 2012-08-03 09:53:59Z mjansen $
+* @version $Id$
 *
 */
 class ilObjMailAccess extends ilObjectAccess

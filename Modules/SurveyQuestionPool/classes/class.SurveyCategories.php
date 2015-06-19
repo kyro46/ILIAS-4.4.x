@@ -26,7 +26,7 @@ include_once "Modules/SurveyQuestionPool/classes/class.ilSurveyCategory.php";
 * Class SurveyCategories
 * 
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.SurveyCategories.php 43730 2013-07-29 13:59:58Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesSurveyQuestionPool
 */

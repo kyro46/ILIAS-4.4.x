@@ -301,7 +301,7 @@ class ilCalendarCategoryGUI
 		$this->ctrl->setParameterByClass('ilcalendarsubscriptiongui','cal_id',(int) $_GET['category_id']);
 		$info->addProperty(
 			$this->lng->txt('cal_ical_infoscreen'),
-			'<img src="'.ilUtil::getImagePath('ical.png','Services/Calendar').'" />',
+			'<img src="'.ilUtil::getImagePath('ical.png').'" />',
 			$this->ctrl->getLinkTargetByClass(array('ilcalendarpresentationgui','ilcalendarsubscriptiongui'))
 		);
 
@@ -941,9 +941,20 @@ class ilCalendarCategoryGUI
 	 */
 	protected function initFormCategory($a_mode)
 	{
-		global $rbacsystem,$ilUser;
-		
-		include_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
+		global $rbacsystem,$ilUser, $ilHelp;
+
+		$ilHelp->setScreenIdComponent("cal");
+		$ilHelp->setScreenId("cal");
+		if ($a_mode == "edit")
+		{
+			$ilHelp->setSubScreenId("edit");
+		}
+		else
+		{
+			$ilHelp->setSubScreenId("create");
+		}
+
+			include_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 		include_once('./Services/Calendar/classes/class.ilCalendarCategory.php');
 		
 		include_once('./Services/Calendar/classes/class.ilCalendarCategories.php');

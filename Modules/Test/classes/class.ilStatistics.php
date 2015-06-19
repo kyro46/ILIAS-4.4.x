@@ -6,7 +6,7 @@
 * It works on an array of numeric values.
 *
 * @author Helmut Schottmüller <hschottm@tzi.de>
-* @version $Id: class.ilStatistics.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 */
 
 	/**

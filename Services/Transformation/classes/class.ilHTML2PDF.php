@@ -26,7 +26,7 @@
 	* Adapter class for communication between ilias and ilRPCServer
 	*
 	* @author Helmut Schottmüller <ilias@aurealis.de>
-	* @version $Id: class.ilHTML2PDF.php 18058 2008-11-24 19:26:51Z hschottm $
+	* @version $Id$
 	*
 	* @package ilias
 	*/

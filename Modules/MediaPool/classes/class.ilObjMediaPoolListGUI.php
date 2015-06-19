@@ -8,7 +8,7 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
 * Class ilObjMediaPoolListGUI
 *
 * @author 		Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjMediaPoolListGUI.php 35094 2012-06-16 09:56:38Z akill $
+* $Id$
 *
 * @ingroup ModulesMediaPool
 */

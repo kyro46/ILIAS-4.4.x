@@ -8,7 +8,7 @@ include_once './Services/ContainerReference/classes/class.ilContainerReferenceEx
  * Class for category export
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilCategoryReferenceExporter.php 35412 2012-07-06 10:28:29Z smeyer $
+ * $Id$
  */
 class ilCategoryReferenceExporter extends ilContainerReferenceExporter
 {

@@ -7,7 +7,7 @@ require_once("./Modules/LearningModule/classes/class.ilObjContentObject.php");
 * Class ilObjDlBook
 *
 * @author Databay AG <ay@databay.de>
-* @version $Id: class.ilObjDlBook.php 33496 2012-03-02 23:15:02Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

@@ -9,7 +9,7 @@ include_once("Services/Notes/classes/class.ilNote.php");
 * Private Notes on PD
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPDNotesGUI.php 38236 2012-11-18 15:36:53Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilPDNotesGUI: ilNoteGUI
 *

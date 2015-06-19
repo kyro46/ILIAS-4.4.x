@@ -25,7 +25,7 @@
 * QTI objectives class
 *
 * @author Helmut Schottmüller <hschottm@gmx.de>
-* @version $Id: class.ilQTIObjectives.php 12481 2006-11-09 00:04:34Z hschottm $
+* @version $Id$
 *
 * @package assessment
 */

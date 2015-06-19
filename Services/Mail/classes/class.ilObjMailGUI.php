@@ -8,7 +8,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * for admin panel
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* $Id: class.ilObjMailGUI.php 43417 2013-07-15 08:58:48Z jluetzen $
+* $Id$
 * 
 * @ilCtrl_Calls ilObjMailGUI: ilPermissionGUI
 * 
@@ -109,7 +109,8 @@ class ilObjMailGUI extends ilObjectGUI
 		
 		// max attachment size
 		$ti = new ilTextInputGUI($this->lng->txt('mail_maxsize_attach'), 'mail_maxsize_attach');
-		$ti->setInfo($this->lng->txt('kb'));
+		$ti->setSuffix($this->lng->txt('kb'));
+		$ti->setInfo($this->lng->txt('mail_max_size_attachments_total'));
 		$ti->setMaxLength(10);
 		$ti->setSize(10);
 		$this->form->addItem($ti);

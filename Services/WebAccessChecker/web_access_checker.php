@@ -12,7 +12,7 @@
 * - or prints an error message (if too less rights)
 *
 * @author Fred Neumann <fred.neumann@fim.uni-erlangen.de>
-* @version $Id: web_access_checker.php 24584 2010-07-13 09:19:57Z fneumann $
+* @version $Id$
 */
 
 // Change to ILIAS main directory

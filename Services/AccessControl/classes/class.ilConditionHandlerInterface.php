@@ -6,7 +6,7 @@
 * class ilConditionHandlerInterface
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilConditionHandlerInterface.php 48325 2014-03-05 11:09:01Z jluetzen $
+* @version $Id$
 * This class is aggregated in folders, groups which have a parent course object
 * Since it is something like an interface, all varirables, methods have there own name space (names start with cci) to avoid collisions
 * 
@@ -275,13 +275,10 @@ class ilConditionHandlerInterface
 							$this->getTargetId(),
 							$this->getTargetType()
 						);
-						if(sizeof($optional_conditions) > 1)
+						// Set all optional conditions to obligatory
+						foreach((array) $optional_conditions as $item)
 						{
-							// Set all optional conditions to obligatory
-							foreach($optional_conditions as $item)
-							{
-								ilConditionHandler::updateObligatory($item["condition_id"], true);
-							}
+							ilConditionHandler::updateObligatory($item["condition_id"], true);
 						}
 					}
 					break;

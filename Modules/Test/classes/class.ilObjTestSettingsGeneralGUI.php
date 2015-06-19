@@ -6,11 +6,11 @@
  * shown on "general" subtab
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilObjTestSettingsGeneralGUI.php 49184 2014-04-03 14:29:13Z mjansen $
+ * @version		$Id$
  *
  * @package		Modules/Test
  * 
- * @ilCtrl_Calls ilObjTestSettingsGeneralGUI: ilPropertyFormGUI, ilConfirmationGUI
+ * @ilCtrl_Calls ilObjTestSettingsGeneralGUI: ilPropertyFormGUI, ilTestSettingsChangeConfirmationGUI
  */
 class ilObjTestSettingsGeneralGUI
 {
@@ -165,6 +165,26 @@ class ilObjTestSettingsGeneralGUI
 	{
 		return $this->saveFormCmd(true);
 	}
+
+	private function fixPostValuesForInconsistentFormObjectTree(ilPropertyFormGUI $form)
+	{
+		$fields = array('act_starting_time', 'act_ending_time', 'starting_time', 'ending_time');
+		
+		foreach($fields as $field)
+		{
+			if( !($form->getItemByPostVar($field) instanceof ilFormPropertyGUI) )
+			{
+				continue;
+			}
+			
+			if( !$form->getItemByPostVar($field)->getDisabled() )
+			{
+				continue;
+			}
+			
+			unset($_POST[$field]);
+		}
+	}
 	
 	private function saveFormCmd($isConfirmedSave = false)
 	{
@@ -173,6 +193,7 @@ class ilObjTestSettingsGeneralGUI
 		// form validation and initialisation
 		
 		$errors = !$form->checkInput(); // ALWAYS CALL BEFORE setValuesByPost()
+		$this->fixPostValuesForInconsistentFormObjectTree($form);
 		$form->setValuesByPost(); // NEVER CALL THIS BEFORE checkInput()
 									// Sarcasm? No. Because checkInput checks the form graph against the POST without
 									// actually setting the values into the form. Sounds ridiculous? Indeed, and it is.
@@ -322,7 +343,16 @@ class ilObjTestSettingsGeneralGUI
 		}
 		
 		// Archiving
-		$this->testOBJ->setEnableArchiving($form->getItemByPostVar('enable_archiving')->getChecked());
+		if($form->getItemByPostVar('anonymity')->getValue() == '1' 
+			&& $form->getItemByPostVar('enable_archiving')->getChecked() == true)
+		{
+			$this->testOBJ->setEnableArchiving(false);
+			ilUtil::sendInfo($this->lng->txt('no_archive_on_anonymous'), true);
+		}
+		else 
+		{
+			$this->testOBJ->setEnableArchiving($form->getItemByPostVar('enable_archiving')->getChecked());
+		}
 		
 		// Examview
 		$this->testOBJ->setEnableExamview($form->getItemByPostVar('enable_examview')->getChecked());
@@ -397,8 +427,18 @@ class ilObjTestSettingsGeneralGUI
 			{
 				$this->testOBJ->setShowKioskModeTitle( in_array('kiosk_title', $kioskOptions) );
 				$this->testOBJ->setShowKioskModeParticipant( in_array('kiosk_participant', $kioskOptions) );
-				$this->testOBJ->setExamidInKiosk( in_array('examid_in_kiosk', $_POST["kiosk_options"]) );
 			}
+			else
+			{
+				$this->testOBJ->setShowKioskModeTitle( false );
+				$this->testOBJ->setShowKioskModeParticipant( false );
+			}
+		}
+		
+		if( $form->getItemByPostVar('examid_in_test_pass') instanceof ilFormPropertyGUI)
+		{
+			$value = $form->getItemByPostVar('examid_in_test_pass')->getChecked();
+			$this->testOBJ->setShowExamIdInTestPassEnabled( $value );
 		}
 	
 		// redirect after test
@@ -547,158 +587,23 @@ class ilObjTestSettingsGeneralGUI
 		$ecs = new ilECSTestSettings($this->testOBJ);			
 		$ecs->handleSettingsUpdate();	
 	}
-	
+
 	private function showConfirmation(ilPropertyFormGUI $form, $oldQuestionSetType, $newQuestionSetType, $hasQuestionsWithoutQuestionpool)
 	{
-		require_once 'Services/Utilities/classes/class.ilConfirmationGUI.php';
-		$confirmation = new ilConfirmationGUI();
-		
-		$headerText = sprintf(
-			$this->lng->txt('tst_change_quest_set_type_from_old_to_new_with_conflict'),
-			$this->getQuestionSetTypeTranslation($oldQuestionSetType),
-			$this->getQuestionSetTypeTranslation($newQuestionSetType)
-		);
-		
-		if($hasQuestionsWithoutQuestionpool)
-		{
-			$headerText .= '<br /><br />'.$this->lng->txt("tst_nonpool_questions_get_lost_warning");
-		}
-		
-		$confirmation->setHeaderText($headerText);
-		
+		require_once 'Modules/Test/classes/confirmations/class.ilTestSettingsChangeConfirmationGUI.php';
+		$confirmation = new ilTestSettingsChangeConfirmationGUI($this->lng, $this->testOBJ);
+
 		$confirmation->setFormAction( $this->ctrl->getFormAction($this) );
 		$confirmation->setCancel($this->lng->txt('cancel'), self::CMD_SHOW_FORM);
 		$confirmation->setConfirm($this->lng->txt('confirm'), self::CMD_CONFIRMED_SAVE_FORM);
 
-		foreach ($form->getInputItemsRecursive() as $key => $item)
-		{
-			//vd("$key // {$item->getType()} // ".json_encode($_POST[$item->getPostVar()]));
+		$confirmation->setOldQuestionSetType($oldQuestionSetType);
+		$confirmation->setNewQuestionSetType($newQuestionSetType);
+		$confirmation->setQuestionLossInfoEnabled($hasQuestionsWithoutQuestionpool);
+		$confirmation->build();
 
-			switch( $item->getType() )
-			{
-				case 'section_header':
-					
-					continue;
-					
-				case 'datetime':
-					
-					list($date, $time) = explode(' ', $item->getDate()->get(IL_CAL_DATETIME));
+		$confirmation->populateParametersFromPropertyForm($form, $this->activeUser->getTimeZone());
 
-					if( $item->getMode() == ilDateTimeInputGUI::MODE_SELECT )
-					{
-						list($y, $m, $d) = explode('-', $date);
-
-						$confirmation->addHiddenItem("{$item->getPostVar()}[date][y]", $y);
-						$confirmation->addHiddenItem("{$item->getPostVar()}[date][m]", $m);
-						$confirmation->addHiddenItem("{$item->getPostVar()}[date][d]", $d);
-
-						if( $item->getShowTime() )
-						{
-							list($h, $m, $s) = explode('-', $time);
-
-							$confirmation->addHiddenItem("{$item->getPostVar()}[time][h]", $h);
-							$confirmation->addHiddenItem("{$item->getPostVar()}[time][m]", $m);
-							$confirmation->addHiddenItem("{$item->getPostVar()}[time][s]", $s);
-						}
-					}
-					else
-					{
-						$confirmation->addHiddenItem("{$item->getPostVar()}[date]", $date);
-						$confirmation->addHiddenItem("{$item->getPostVar()}[time]", $time);
-					}
-
-					break;
-
-				case 'duration':
-
-					$confirmation->addHiddenItem("{$item->getPostVar()}[MM]", (int)$item->getMonths());
-					$confirmation->addHiddenItem("{$item->getPostVar()}[dd]", (int)$item->getDays());
-					$confirmation->addHiddenItem("{$item->getPostVar()}[hh]", (int)$item->getHours());
-					$confirmation->addHiddenItem("{$item->getPostVar()}[mm]", (int)$item->getMinutes());
-					$confirmation->addHiddenItem("{$item->getPostVar()}[ss]", (int)$item->getSeconds());
-
-					break;
-
-				case 'dateduration':
-
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[start][date][y]",
-						(int) $item->getStart()->get(IL_CAL_FKT_DATE,'Y',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[start][date][m]",
-						(int) $item->getStart()->get(IL_CAL_FKT_DATE,'m',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[start][date][d]",
-						(int) $item->getStart()->get(IL_CAL_FKT_DATE,'d',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[start][time][h]",
-						(int) $item->getStart()->get(IL_CAL_FKT_DATE,'H',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[start][time][m]",
-						(int) $item->getStart()->get(IL_CAL_FKT_DATE,'i',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[start][time][s]",
-						(int) $item->getStart()->get(IL_CAL_FKT_DATE,'s',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[end][date][y]",
-						(int) $item->getEnd()->get(IL_CAL_FKT_DATE,'Y',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[end][date][m]",
-						(int) $item->getEnd()->get(IL_CAL_FKT_DATE,'m',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[end][date][d]",
-						(int) $item->getEnd()->get(IL_CAL_FKT_DATE,'d',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[end][time][h]",
-						(int) $item->getEnd()->get(IL_CAL_FKT_DATE,'H',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[end][time][m]",
-						(int) $item->getEnd()->get(IL_CAL_FKT_DATE,'i',$this->activeUser->getTimeZone())
-					);
-					$confirmation->addHiddenItem(
-						"{$item->getPostVar()}[end][time][s]",
-						(int) $item->getEnd()->get(IL_CAL_FKT_DATE,'s',$this->activeUser->getTimeZone())
-					);
-
-					break;
-
-				case 'checkboxgroup':
-					
-					if( is_array($item->getValue()) )
-					{
-						foreach( $item->getValue() as $option )
-						{
-							$confirmation->addHiddenItem("{$item->getPostVar()}[]", $option);
-						}
-					}
-					
-					break;
-					
-				case 'checkbox':
-					
-					if( $item->getChecked() )
-					{
-						$confirmation->addHiddenItem($item->getPostVar(), 1);
-					}
-					
-					break;
-				
-				default:
-					
-					$confirmation->addHiddenItem($item->getPostVar(), $item->getValue());
-			}
-		}
-		
 		$this->tpl->setContent( $this->ctrl->getHTML($confirmation) );
 	}
 	
@@ -1235,19 +1140,23 @@ class ilObjTestSettingsGeneralGUI
 		$kiosktitle = new ilCheckboxGroupInputGUI($this->lng->txt("kiosk_options"), "kiosk_options");
 		$kiosktitle->addOption(new ilCheckboxOption($this->lng->txt("kiosk_show_title"), 'kiosk_title', ''));
 		$kiosktitle->addOption(new ilCheckboxOption($this->lng->txt("kiosk_show_participant"), 'kiosk_participant', ''));
-		$kiosktitle->addOption(new ilCheckboxOption($this->lng->txt('examid_in_kiosk'), 'examid_in_kiosk'));
 		$values = array();
 		if ($this->testOBJ->getShowKioskModeTitle()) array_push($values, 'kiosk_title');
 		if ($this->testOBJ->getShowKioskModeParticipant()) array_push($values, 'kiosk_participant');
-		if ($this->testOBJ->getExamidInKiosk()) array_push($values, 'examid_in_kiosk');
 		$kiosktitle->setValue($values);
 		$kiosktitle->setInfo($this->lng->txt("kiosk_options_desc"));
 		$kiosk->addSubItem($kiosktitle);
 
 		$form->addItem($kiosk);
 
+		$examIdInPass = new ilCheckboxInputGUI($this->lng->txt('examid_in_test_pass'), 'examid_in_test_pass');
+		$examIdInPass->setInfo($this->lng->txt('examid_in_test_pass_desc'));
+		$examIdInPass->setChecked($this->testOBJ->isShowExamIdInTestPassEnabled());
+		$form->addItem($examIdInPass);
+
 		$redirection_mode = $this->testOBJ->getRedirectionMode();
 		$rm_enabled = new ilCheckboxInputGUI($this->lng->txt('redirect_after_finishing_tst'), 'redirection_enabled' );
+		$rm_enabled->setInfo($this->lng->txt('redirect_after_finishing_tst_desc'));
 		$rm_enabled->setChecked($redirection_mode == '0' ? false : true);
 			$radio_rm = new ilRadioGroupInputGUI($this->lng->txt('redirect_after_finishing_tst'), 'redirection_mode');
 			$always = new ilRadioOption($this->lng->txt('tst_results_access_always'), REDIRECT_ALWAYS);
@@ -1349,23 +1258,6 @@ class ilObjTestSettingsGeneralGUI
 
 		ilUtil::sendSuccess($this->lng->txt("test_template_reset"), true);
 		$this->ctrl->redirect($this, self::CMD_SHOW_FORM);
-	}
-	
-	private function getQuestionSetTypeTranslation($questionSetType)
-	{
-		switch( $questionSetType )
-		{
-			case ilObjTest::QUESTION_SET_TYPE_FIXED:
-				return $this->lng->txt('tst_question_set_type_fixed');
-				
-			case ilObjTest::QUESTION_SET_TYPE_RANDOM:
-				return $this->lng->txt('tst_question_set_type_random');
-				
-			case ilObjTest::QUESTION_SET_TYPE_DYNAMIC:
-				return $this->lng->txt('tst_question_set_type_dynamic');
-		}
-		
-		throw new ilTestException('invalid question set type value given: '.$questionSetType);
 	}
 	
 	protected function getTemplateSettingValue($settingName)

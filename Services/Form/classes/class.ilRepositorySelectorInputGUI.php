@@ -39,6 +39,7 @@ class ilRepositorySelectorInputGUI extends ilFormPropertyGUI implements ilTableF
 {
 	protected $options;
 	protected $value;
+	protected $container_types = array("root", "cat", "grp", "fold", "crs");
 	
 	/**
 	* Constructor
@@ -51,7 +52,7 @@ class ilRepositorySelectorInputGUI extends ilFormPropertyGUI implements ilTableF
 		global $lng;
 		
 		parent::__construct($a_title, $a_postvar);
-		$this->setClickableTypes(array("root", "cat", "grp", "fold", "crs"));
+		$this->setClickableTypes($this->container_types);
 		$this->setHeaderMessage($lng->txt('search_area_info'));
 		$this->setType("rep_select");
 		$this->setSelectText($lng->txt("select"));
@@ -175,21 +176,28 @@ class ilRepositorySelectorInputGUI extends ilFormPropertyGUI implements ilTableF
 	{
 		global $tpl, $lng, $ilCtrl, $tree, $ilUser;
 		
-		include_once 'Services/Search/classes/class.ilSearchRootSelector.php';
+		include_once 'Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php';
 		$ilCtrl->setParameter($this, "postvar", $this->getPostVar());
 
 		ilUtil::sendInfo($this->getHeaderMessage());
-		
-		$exp = new ilSearchRootSelector($ilCtrl->getLinkTarget($this,'showRepositorySelection'));
-		$exp->setExpand($_GET["search_root_expand"] ? $_GET["search_root_expand"] : $tree->readRootId());
-		$exp->setExpandTarget($ilCtrl->getLinkTarget($this,'showRepositorySelection'));
-		$exp->setTargetClass(get_class($this));
-		$exp->setCmd('selectRepositoryItem');
+
+		$exp = new ilRepositorySelectorExplorerGUI($this, "showRepositorySelection",
+			$this, "selectRepositoryItem", "root_id");
+		$exp->setTypeWhiteList($this->getVisibleTypes());
 		$exp->setClickableTypes($this->getClickableTypes());
 
+		if($this->getValue())
+		{
+			$exp->setPathOpen($this->getValue());
+			$exp->setHighlightedNode($this->getHighlightedNode());
+		}
+
+		if ($exp->handleCommand())
+		{
+			return;
+		}
 		// build html-output
-		$exp->setOutput(0);
-		$tpl->setContent($exp->getOutput());
+		$tpl->setContent($exp->getHTML());
 	}
 	
 	/**
@@ -300,6 +308,33 @@ class ilRepositorySelectorInputGUI extends ilFormPropertyGUI implements ilTableF
 	{
 		$html = $this->render("table_filter");
 		return $html;
+	}
+
+	/**
+	 * Returns the highlighted object
+	 *
+	 * @return int ref_id (node)
+	 */
+	protected function getHighlightedNode()
+	{
+		global $tree;
+
+		if(!in_array(ilObject::_lookupType($this->getValue(),true), $this->getVisibleTypes()))
+		{
+			return $tree->getParentId($this->getValue());
+		}
+
+		return $this->getValue();
+	}
+
+	/**
+	 * returns all visible types like container and clickable types
+	 *
+	 * @return array
+	 */
+	protected function getVisibleTypes()
+	{
+		return array_merge((array)$this->container_types, (array)$this->getClickableTypes());
 	}
 
 }

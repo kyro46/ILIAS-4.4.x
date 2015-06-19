@@ -12,7 +12,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author	Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author	Maximilian Becker <mbecker@databay.de>
  *
- * @version	$Id: class.assAnswerTrueFalse.php 45317 2013-10-09 12:29:20Z mbecker $
+ * @version	$Id$
  *
  * @ingroup ModulesTestQuestionPool
  *

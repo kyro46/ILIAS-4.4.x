@@ -7,7 +7,7 @@ include_once("./Services/Export/classes/class.ilXmlExporter.php");
  * Used for container export with tests
  *
  * @author Helmut Schottmüller <ilias@aurealis.de>
- * @version $Id: class.ilTestQuestionPoolExporter.php 44245 2013-08-17 11:15:45Z mbecker $
+ * @version $Id$
  * @ingroup ModulesTest
  */
 class ilTestQuestionPoolExporter extends ilXmlExporter

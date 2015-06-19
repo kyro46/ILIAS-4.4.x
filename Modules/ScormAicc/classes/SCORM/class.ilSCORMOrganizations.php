@@ -27,7 +27,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMObject.php");
 * SCORM Organizations
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMOrganizations.php 21314 2009-08-27 11:57:58Z mjansen $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

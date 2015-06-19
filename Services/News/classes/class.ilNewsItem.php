@@ -15,7 +15,7 @@ include_once("./Services/News/classes/class.ilNewsItemGen.php");
 * learning module is announced.
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilNewsItem.php 48051 2014-02-20 09:44:05Z smeyer $
+* @version $Id$
 *
 * @ingroup ServicesNews
 */

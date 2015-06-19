@@ -28,7 +28,7 @@
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
 *
-* @version $Id: class.ilObjiLincUserGUI.php 34359 2012-04-25 08:58:45Z jluetzen $
+* @version $Id$
 *
 */
 

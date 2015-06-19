@@ -8,7 +8,7 @@
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObject.php 49370 2014-04-11 09:11:14Z jluetzen $
+* @version $Id$
 */
 class ilObject
 {
@@ -1886,6 +1886,19 @@ class ilObject
 				$newCondition->setReferenceHandlingType($con['ref_handling']);
 				$newCondition->setObligatory($con['obligatory']);
 				$newCondition->storeCondition();
+			}
+		}
+
+		include_once './Services/DidacticTemplate/classes/class.ilDidacticTemplateObjSettings.php';
+		$tpl_id = ilDidacticTemplateObjSettings::lookupTemplateId($this->getRefId());
+		if($tpl_id)
+		{
+			include_once './Services/Object/classes/class.ilObjectFactory.php';
+			$factory = new ilObjectFactory();
+			$obj = $factory->getInstanceByRefId($a_target_id, FALSE);
+			if($obj instanceof ilObject)
+			{
+				$obj->applyDidacticTemplate($tpl_id);
 			}
 		}
 		return true;

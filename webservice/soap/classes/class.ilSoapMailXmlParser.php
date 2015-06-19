@@ -9,7 +9,7 @@ include_once './Services/User/classes/class.ilObjUser.php';
 * XML  parser for soap mails
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilSoapMailXmlParser.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @ingroup 
 */

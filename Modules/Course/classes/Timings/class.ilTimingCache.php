@@ -26,7 +26,7 @@
 * class ilTimingCache
 *
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilTimingCache.php 44362 2013-08-22 08:36:03Z jluetzen $
+* @version $Id$
 * 
 */
 include_once 'Services/Object/classes/class.ilObjectActivation.php';

@@ -5,7 +5,7 @@
  * GUI class for personal profile
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilPersonalProfileGUI.php 47077 2014-01-08 14:46:43Z smeyer $
+ * @version $Id$
  *
  * @ilCtrl_Calls ilPersonalProfileGUI: ilPublicUserProfileGUI
  */

@@ -27,7 +27,7 @@ require_once "./Services/Container/classes/class.ilContainerGUI.php";
 * Class ilObjRecoveryFolderGUI
 *
 * @author Sascha Hofmann <shofmann@databay.de> 
-* @version $Id: class.ilObjRecoveryFolderGUI.php 24337 2010-06-23 14:01:49Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjRecoveryFolderGUI: ilPermissionGUI
 *

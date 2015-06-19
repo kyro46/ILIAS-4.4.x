@@ -26,7 +26,7 @@
 * checks if PEAR is installed and includes the auth module 
 *
 * @author Sascha Hofmann <shofmann@databay.de>
-* @version $Id: inc.check_pear.php 17261 2008-08-27 09:51:17Z akill $
+* @version $Id$
 *
 * @package ilias-core
 */

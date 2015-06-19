@@ -12,7 +12,7 @@ require_once ("./Services/Table/classes/class.ilTableGUI.php");
  * Their methods are called in this User Interface class.
  * @author       Alex Killing <alex.killing@gmx.de>
  * @author       Manfred Thaler <manfred.thaler@endo7.com>
- * @version      $Id: class.ilBookmarkAdministrationGUI.php 41169 2013-04-07 18:26:05Z akill $
+ * @version      $Id$
  * @ingroup      ServicesBookmarks
  * @ilCtrl_Calls ilBookmarkAdministrationGUI:
  */

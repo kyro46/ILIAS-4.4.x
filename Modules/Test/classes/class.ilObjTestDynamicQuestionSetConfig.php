@@ -19,6 +19,11 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	 * @var integer
 	 */
 	private $sourceQuestionPoolId = null;
+
+	/**
+	 * @var boolean
+	 */
+	private $answerStatusFilterEnabled = null;
 	
 	/**
 	 * the fact wether a taxonomie filter
@@ -34,6 +39,11 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	 * @var integer
 	 */
 	private $orderingTaxonomyId = null;
+
+	/**
+	 * @var boolean
+	 */
+	private $previousQuestionsListEnabled = null;
 	
 	/**
 	 * getter for source question pool id
@@ -76,6 +86,22 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function isAnswerStatusFilterEnabled()
+	{
+		return $this->answerStatusFilterEnabled;
+	}
+
+	/**
+	 * @param boolean $answerStatusFilterEnabled
+	 */
+	public function setAnswerStatusFilterEnabled($answerStatusFilterEnabled)
+	{
+		$this->answerStatusFilterEnabled = $answerStatusFilterEnabled;
+	}
+
+	/**
 	 * isser for taxonomie filter enabled
 	 * 
 	 * @return boolean
@@ -114,6 +140,22 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	{
 		$this->orderingTaxonomyId = $orderingTaxonomyId;
 	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isPreviousQuestionsListEnabled()
+	{
+		return $this->previousQuestionsListEnabled;
+	}
+
+	/**
+	 * @param boolean $previousQuestionsListEnabled
+	 */
+	public function setPreviousQuestionsListEnabled($previousQuestionsListEnabled)
+	{
+		$this->previousQuestionsListEnabled = $previousQuestionsListEnabled;
+	}
 	
 	/**
 	 * initialises the current object instance with values
@@ -127,10 +169,12 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 		{
 			switch($field)
 			{
-				case 'source_qpl_fi':			$this->setSourceQuestionPoolId($value);		break;
-				case 'source_qpl_title':		$this->setSourceQuestionPoolTitle($value);	break;
-				case 'tax_filter_enabled':		$this->setTaxonomyFilterEnabled($value);	break;
-				case 'order_tax':				$this->setOrderingTaxonomyId($value);		break;
+				case 'source_qpl_fi':				$this->setSourceQuestionPoolId($value);			break;
+				case 'source_qpl_title':			$this->setSourceQuestionPoolTitle($value);		break;
+				case 'answer_filter_enabled':		$this->setAnswerStatusFilterEnabled($value);	break;
+				case 'tax_filter_enabled':			$this->setTaxonomyFilterEnabled($value);		break;
+				case 'order_tax':					$this->setOrderingTaxonomyId($value);			break;
+				case 'prev_quest_list_enabled':		$this->setPreviousQuestionsListEnabled($value);	break;
 			}
 		}
 	}
@@ -159,17 +203,17 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	
 	/**
 	 * saves the question set config for current test to the database
-	 * 
-	 * @return boolean
 	 */
 	public function saveToDb()
 	{
 		if( $this->dbRecordExists($this->testOBJ->getTestId()) )
 		{
-			return $this->updateDbRecord($this->testOBJ->getTestId());
+			$this->updateDbRecord($this->testOBJ->getTestId());
 		}
-		
-		return $this->insertDbRecord($this->testOBJ->getTestId());
+		else
+		{
+			$this->insertDbRecord($this->testOBJ->getTestId());
+		}
 	}
 
 	/**
@@ -177,16 +221,9 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	 *
 	 * @param $testId
 	 */
-	public function saveToDbByTestId($testId)
+	public function cloneToDbForTestId($testId)
 	{
-		if( $this->dbRecordExists($testId) )
-		{
-			$this->updateDbRecord($testId);
-		}
-		else
-		{
-			$this->insertDbRecord($testId);
-		}
+		$this->insertDbRecord($testId);
 	}
 
 	/**
@@ -234,8 +271,10 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 			array(
 				'source_qpl_fi' => array('integer', $this->getSourceQuestionPoolId()),
 				'source_qpl_title' => array('text', $this->getSourceQuestionPoolTitle()),
+				'answer_filter_enabled' => array('integer', $this->isAnswerStatusFilterEnabled()),
 				'tax_filter_enabled' => array('integer', $this->isTaxonomyFilterEnabled()),
-				'order_tax' => array('integer', $this->getOrderingTaxonomyId())
+				'order_tax' => array('integer', $this->getOrderingTaxonomyId()),
+				'prev_quest_list_enabled' => array('integer', $this->isPreviousQuestionsListEnabled())
 			),
 			array(
 				'test_fi' => array('integer', $testId)
@@ -255,8 +294,10 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 				'test_fi' => array('integer', $testId),
 				'source_qpl_fi' => array('integer', $this->getSourceQuestionPoolId()),
 				'source_qpl_title' => array('text', $this->getSourceQuestionPoolTitle()),
+				'answer_filter_enabled' => array('integer', $this->isAnswerStatusFilterEnabled()),
 				'tax_filter_enabled' => array('integer', $this->isTaxonomyFilterEnabled()),
-				'order_tax' => array('integer', $this->getOrderingTaxonomyId())
+				'order_tax' => array('integer', $this->getOrderingTaxonomyId()),
+				'prev_quest_list_enabled' => array('integer', $this->isPreviousQuestionsListEnabled())
 		));
 	}
 	
@@ -297,7 +338,7 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	public function cloneQuestionSetRelatedData($cloneTestOBJ)
 	{
 		$this->loadFromDb();
-		$this->saveToDbByTestId($cloneTestOBJ->getTestId());
+		$this->cloneToDbForTestId($cloneTestOBJ->getTestId());
 	}
 
 	/**
@@ -415,6 +456,51 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 		);
 		
 		return $msg;
+	}
+
+	public function isValidRequestOnBrokenQuestionSetDepencies($nextClass, $cmd)
+	{
+		//vd($nextClass, $cmd);
+
+		if( !$this->testOBJ->participantDataExist() )
+		{
+			return true;
+		}
+
+		switch( $nextClass )
+		{
+			case 'ilobjtestdynamicquestionsetconfiggui':
+
+			case 'ilmdeditorgui':
+			case 'ilpermissiongui':
+
+				return true;
+
+			case 'ilobjtestgui':
+			case '':
+
+				$cmds = array(
+					'infoScreen', 'participants', 'npSetFilter', 'npResetFilter',
+					'deleteAllUserResults', 'confirmDeleteAllUserResults',
+					'deleteSingleUserResults', 'confirmDeleteSelectedUserData', 'cancelDeleteSelectedUserData'
+				);
+
+				if( in_array($cmd, $cmds) )
+				{
+					return true;
+				}
+
+				break;
+		}
+
+		return false;
+	}
+
+	public function getHiddenTabsOnBrokenDepencies()
+	{
+		return array(
+			'settings', 'manscoring', 'scoringadjust', 'statistics', 'history', 'export'
+		);
 	}
 	
 	private $sourceQuestionPoolRefIds = null;

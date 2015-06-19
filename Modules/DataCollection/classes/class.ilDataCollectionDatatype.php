@@ -14,16 +14,16 @@ require_once "./Services/Form/classes/class.ilImageFileInputGUI.php";
 
 
 /**
-* Class ilDataCollectionDatatype
-*
-* @author Martin Studer <ms@studer-raimann.ch>
-* @author Marcel Raimann <mr@studer-raimann.ch>
-* @author Fabian Schmid <fs@studer-raimann.ch>
-* @author Oskar Truffer <ot@studer-raimann.ch>
-* @version $Id: 
-*
-* @ingroup ModulesDataCollection
-*/
+ * Class ilDataCollectionDatatype
+ *
+ * @author Martin Studer <ms@studer-raimann.ch>
+ * @author Marcel Raimann <mr@studer-raimann.ch>
+ * @author Fabian Schmid <fs@studer-raimann.ch>
+ * @author Oskar Truffer <ot@studer-raimann.ch>
+ * @version $Id: 
+ *
+ * @ingroup ModulesDataCollection
+ */
 class ilDataCollectionDatatype
 {
 	protected $id; // [int]
@@ -52,7 +52,7 @@ class ilDataCollectionDatatype
     // REFERENCELIST
     const INPUTFORMAT_REFERENCELIST = 10;
 
-    const LINK_MAX_LENGTH = 30;
+    const LINK_MAX_LENGTH = 40;
 
 
 	/**
@@ -688,23 +688,20 @@ class ilDataCollectionDatatype
 				//Property URL
 
 				$arr_properties = $record_field->getField()->getProperties();
-                if($arr_properties[ilDataCollectionField::PROPERTYID_URL])
-				{
-                    $link = $value;
-                    if (preg_match("/^[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i", $value))
-                        $value = "mailto:".$value;
-                    elseif(!(preg_match('~(^(news|(ht|f)tp(s?)\://){1}\S+)~i', $value)))
-                        return $link;
+				if ($arr_properties[ilDataCollectionField::PROPERTYID_URL]) {
+					$link = $value;
 
-                    if(strlen($link) > self::LINK_MAX_LENGTH){
-                        $link = substr($value, 0, (self::LINK_MAX_LENGTH-3)/2);
-                        $link.= "...";
-                        $link .= substr($value, -(self::LINK_MAX_LENGTH-3)/2);
-                    }
-					$html = "<a target='_blank' href='".$value."'>".$link."</a>";
-				}
-				else
-				{
+					$preg_match = preg_match("/^[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i", $value);
+
+					if ($preg_match) {
+						$value = "mailto:" . $value;
+					} elseif (!(preg_match('~(^(news|(ht|f)tp(s?)\://){1}\S+)~i', $value))) {
+						return $link;
+					}
+
+					$link = $this->shortenLink($link);
+					$html = "<a target='_blank' href='" . $value . "'>" . $link . "</a>";
+				} else {
 					$html = $value;
 				}
 				// BEGIN EASTEREGG
@@ -720,6 +717,37 @@ class ilDataCollectionDatatype
 				break;
 		}
         return $html;
+	}
+
+
+	/**
+	 * This method shortens a link. The http(s):// and the www part are taken away. The rest will be shortened to sth similar to:
+	 * "somelink.de/lange...gugus.html".
+	 *
+	 * @param $value The link in it's original form.
+	 *
+	 * @return string The shortened link
+	 */
+	private function shortenLink($value) {
+		if (strlen($value) > self::LINK_MAX_LENGTH) {
+			if (substr($value, 0, 7) == "http://") {
+				$value = substr($value, 7);
+			}
+			if (substr($value, 0, 8) == "https://") {
+				$value = substr($value, 8);
+			}
+			if (substr($value, 0, 4) == "www.") {
+				$value = substr($value, 4);
+			}
+		}
+		$link = $value;
+		if (strlen($value) > self::LINK_MAX_LENGTH) {
+			$link = substr($value, 0, (self::LINK_MAX_LENGTH - 3) / 2);
+			$link .= "...";
+			$link .= substr($value, - (self::LINK_MAX_LENGTH - 3) / 2);
+		}
+
+		return $link;
 	}
 
 

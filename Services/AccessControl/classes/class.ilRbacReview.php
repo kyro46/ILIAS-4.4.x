@@ -13,7 +13,7 @@
 * @author Stefan Meyer <meyer@leifos.com>
 * @author Sascha Hofmann <saschahofmann@gmx.de>
 * 
-* @version $Id: class.ilRbacReview.php 48924 2014-03-25 07:59:49Z nkrzywon $
+* @version $Id$
 * 
 * @ingroup ServicesAccessControl
 */

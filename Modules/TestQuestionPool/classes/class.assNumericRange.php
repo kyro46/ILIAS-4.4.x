@@ -11,7 +11,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  * @author	Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author	Maximilian Becker <mbecker@databay.de>
  *
- * @version	$Id: class.assNumericRange.php 44248 2013-08-18 13:04:37Z mbecker $
+ * @version	$Id$
  *
  * @ingroup ModulesTestQuestionPool
  *

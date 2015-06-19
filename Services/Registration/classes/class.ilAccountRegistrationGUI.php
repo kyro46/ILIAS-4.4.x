@@ -8,7 +8,7 @@
 * Class ilAccountRegistrationGUI
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilAccountRegistrationGUI.php 45493 2013-10-16 08:30:15Z nkrzywon $
+* @version $Id$
 *
 * @ilCtrl_Calls ilAccountRegistrationGUI:
 *
@@ -236,7 +236,14 @@ class ilAccountRegistrationGUI
 				implode(", ", $domains))."<br />".
 				($this->code_enabled ? $lng->txt("reg_email_domains_code") : ""));
 		}
-
+				
+		// #14272
+		if($this->registration_settings->getRegistrationType() == IL_REG_ACTIVATION)
+		{
+			$mail_obj = $this->form->getItemByPostVar('usr_email');
+			$mail_obj->setRequired(true);
+		}
+			
 		if(ilTermsOfServiceHelper::isEnabled())
 		{
 			try
@@ -835,7 +842,7 @@ class ilAccountRegistrationGUI
 		 */
 		global $lng;
 
-		ilStartUpGUI::initStartUpTemplate(array('tpl.usr_registered.html', 'Services/Registration'), true);
+		ilStartUpGUI::initStartUpTemplate(array('tpl.usr_registered.html', 'Services/Registration'), false);
 		$this->tpl->setVariable('TXT_PAGEHEADLINE', $this->lng->txt('registration'));
 
 		$this->tpl->setVariable("TXT_WELCOME", $lng->txt("welcome") . ", " . $this->userObj->getTitle() . "!");

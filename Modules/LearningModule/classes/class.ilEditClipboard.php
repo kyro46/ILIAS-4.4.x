@@ -29,7 +29,7 @@
 * editor and should be further elaborated in the future.
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilEditClipboard.php 20019 2009-05-15 08:59:12Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

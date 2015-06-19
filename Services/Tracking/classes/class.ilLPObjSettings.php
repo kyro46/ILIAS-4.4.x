@@ -6,7 +6,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilLPObjSettings.php 47157 2014-01-09 15:30:56Z jluetzen $
+* @version $Id$
 *
 * @package ilias-tracking
 *

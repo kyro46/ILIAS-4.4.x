@@ -28,7 +28,7 @@ include_once("./Modules/LearningModule/classes/class.ilObjContentObjectAccess.ph
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjDlBookAccess.php 12658 2006-11-29 08:51:48Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

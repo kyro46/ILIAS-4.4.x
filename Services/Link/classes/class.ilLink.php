@@ -9,7 +9,7 @@ define('IL_INTERNAL_LINK_SCRIPT','goto.php');
 * This class uses goto.php to create permanent links
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilLink.php 40458 2013-03-08 11:00:57Z akill $
+* @version $Id$
 *
 */
 class ilLink

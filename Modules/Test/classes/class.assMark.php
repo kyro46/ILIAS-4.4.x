@@ -8,7 +8,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
  *
  * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
  *          
- * @version	$Id: class.assMark.php 44199 2013-08-15 14:56:21Z mbecker $
+ * @version	$Id$
  * @ingroup ModulesTest
  */
 class ASS_Mark {

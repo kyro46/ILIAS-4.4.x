@@ -25,7 +25,7 @@
 * Material Explorer for survey question pools
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilMaterialExplorer.php 33908 2012-03-27 10:50:09Z jluetzen $
+* @version $Id$
 *
 * @ingroup ModulesSurveyQuestionPool
 */

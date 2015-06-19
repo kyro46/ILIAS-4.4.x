@@ -9,7 +9,7 @@ include_once "./Modules/Test/classes/class.ilStatistics.php";
 * calculated using all participant datasets (like the median).
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilTestStatistics.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 *
 * @ingroup ModulesTest
 */

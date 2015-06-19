@@ -6,7 +6,7 @@
  * shown on "general" subtab
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilObjQuestionPoolSettingsGeneralGUI.php 44506 2013-08-28 09:23:11Z bheyser $
+ * @version		$Id$
  *
  * @package		Modules/TestQuestionPool
  * 

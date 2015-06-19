@@ -5,7 +5,7 @@
  * Factory for importer/exporter implementers
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilImportExportFactory.php 39063 2013-01-03 09:22:28Z mjansen $
+ * $Id$
  */
 class ilImportExportFactory
 {

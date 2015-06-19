@@ -9,7 +9,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * ASS_AnswerSimple is a class for matching question answers
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assAnswerMatching.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class ASS_AnswerMatching

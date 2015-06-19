@@ -6,7 +6,7 @@ require_once 'Services/Export/classes/class.ilExportTableGUI.php';
 /**
  *
  * @author Helmut Schottmüller <ilias@aurealis.de>
- * @version $Id: class.ilTestExportTableGUI.php 43271 2013-07-08 07:19:09Z mbecker $
+ * @version $Id$
  *
  * @ingroup ModulesTest
  */

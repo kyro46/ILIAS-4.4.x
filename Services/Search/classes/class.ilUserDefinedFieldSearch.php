@@ -7,7 +7,7 @@ include_once 'Services/Search/classes/class.ilAbstractSearch.php';
 * Class ilUserSearch
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilUserDefinedFieldSearch.php 23143 2010-03-09 12:15:33Z smeyer $
+* @version $Id$
 * 
 * @ingroup ServicesSearch
 */

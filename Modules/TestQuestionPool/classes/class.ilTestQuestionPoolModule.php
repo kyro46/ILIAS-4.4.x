@@ -7,7 +7,7 @@ include_once("./Services/Component/classes/class.ilModule.php");
 * TestQuestionPool Module.
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilTestQuestionPoolModule.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 *
 * @ingroup ModulesTestQuestionPool
 */

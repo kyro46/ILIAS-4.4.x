@@ -8,7 +8,7 @@ include_once("Services/Block/classes/class.ilBlockGUI.php");
 * BlockGUI class for block NewsForContext
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilNewsForContextBlockGUI.php 42454 2013-05-31 16:29:24Z akill $
+* @version $Id$
 *
 * @ilCtrl_IsCalledBy ilNewsForContextBlockGUI: ilColumnGUI
 * @ilCtrl_Calls ilNewsForContextBlockGUI: ilNewsItemGUI

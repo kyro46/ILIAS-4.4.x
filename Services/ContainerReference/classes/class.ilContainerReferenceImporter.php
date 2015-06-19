@@ -8,7 +8,7 @@ include_once("./Services/Export/classes/class.ilXmlImporter.php");
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilContainerReferenceImporter.php 35412 2012-07-06 10:28:29Z smeyer $
+* @version $Id$
 *
 * @ingroup ModulesContainerReference
 */

@@ -11,7 +11,7 @@ require_once("./Services/Style/classes/class.ilObjStyleSheet.php");
 * GUI class for learning module presentation
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMPresentationGUI.php 49013 2014-03-26 13:42:16Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilLMPresentationGUI: ilNoteGUI, ilInfoScreenGUI, ilShopPurchaseGUI
 * @ilCtrl_Calls ilLMPresentationGUI: ilLMPageGUI, ilGlossaryDefPageGUI, ilCommonActionDispatcherGUI
@@ -68,6 +68,10 @@ class ilLMPresentationGUI
 			else if (isset($langs[$ilUser->getCurrentLanguage()]))
 			{
 				$this->lang = $ilUser->getCurrentLanguage();
+			}
+			if ($this->lang == $this->ot->getMasterLanguage())
+			{
+				$this->lang = "-";
 			}
 		}
 
@@ -611,9 +615,11 @@ class ilLMPresentationGUI
 
 			// TODO: Very dirty hack to force the import of JavaScripts in learning content in the FAQ frame (e.g. if jsMath is in the content)
 			// Unfortunately there is no standardized way to do this somewhere else. Calling fillJavaScripts always in ilTemplate causes multiple additions of the the js files.
-			if (strcmp($_GET["frame"], "topright") == 0) $this->tpl->fillJavaScriptFiles();
-			if (strcmp($_GET["frame"], "right") == 0) $this->tpl->fillJavaScriptFiles();
-			if (strcmp($_GET["frame"], "botright") == 0) $this->tpl->fillJavaScriptFiles();
+			// 19.7.2014: outcommented, since fillJavaScriptFiles is called in the next blocks, and the
+			// following lines would add the js files two times
+//			if (strcmp($_GET["frame"], "topright") == 0) $this->tpl->fillJavaScriptFiles();
+//			if (strcmp($_GET["frame"], "right") == 0) $this->tpl->fillJavaScriptFiles();
+//			if (strcmp($_GET["frame"], "botright") == 0) $this->tpl->fillJavaScriptFiles();
 
 			if (!$this->offlineMode())
 			{
@@ -1356,7 +1362,13 @@ class ilLMPresentationGUI
 	*/
 	function ilPage(&$a_page_node, $a_page_id = 0)
 	{
-		global $ilUser;
+		global $ilUser, $ilHelp;
+
+
+		global $ilHelp;
+		$ilHelp->setScreenIdComponent("lm");
+		$ilHelp->setScreenId("content");
+		$ilHelp->setSubScreenId("content");
 
 		$this->fill_on_load_code = true;
 
@@ -1927,7 +1939,6 @@ class ilLMPresentationGUI
 			}
 		}
 		$link_info.= "</IntLinkInfos>";
-
 		return $link_info;
 	}
 
@@ -1985,6 +1996,7 @@ class ilLMPresentationGUI
 
 		$int_links = $term_gui->getInternalLinks();
 		$link_xml = $this->getLinkXML($int_links, $this->getLayoutLinkTargets());
+		$link_xml.= $this->getLinkTargetsXML();
 		$term_gui->setLinkXML($link_xml);
 
 		$term_gui->setOfflineDirectory($this->getOfflineDirectory());
@@ -1993,6 +2005,9 @@ class ilLMPresentationGUI
 			$ilCtrl->setParameter($this, "pg_type", "glo");
 		}
 		$term_gui->output($this->offlineMode(), $this->tpl);
+
+
+
 		if (!$this->offlineMode())
 		{
 			$ilCtrl->setParameter($this, "pg_type", "");
@@ -2036,6 +2051,7 @@ class ilLMPresentationGUI
 		//$int_links = $page_object->getInternalLinks();
 		$med_links = ilMediaItem::_getMapAreasIntLinks($_GET["mob_id"]);
 		$link_xml = $this->getLinkXML($med_links, $this->getLayoutLinkTargets());
+		$link_xml.= $this->getLinkTargetsXML();
 //echo "<br><br>".htmlentities($link_xml);
 		require_once("./Services/MediaObjects/classes/class.ilObjMediaObject.php");
 		$media_obj = new ilObjMediaObject($_GET["mob_id"]);

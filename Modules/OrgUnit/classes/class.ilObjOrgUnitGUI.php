@@ -232,7 +232,13 @@ class ilObjOrgUnitGUI extends ilContainerGUI {
 					case 'cancel':
 						$this->view();
 					break;
+                    case 'cancelDelete':
+                        $this->view();
+                        break;
                     case 'performPaste':
+                        $this->performPaste();
+                        break;
+                    case 'paste':
                         $this->performPaste();
                         break;
 					case 'create':
@@ -442,7 +448,7 @@ class ilObjOrgUnitGUI extends ilContainerGUI {
         $ilCtrl->redirectByClass(array( "ilAdministrationGUI", "ilObjOrgUnitGUI" ), "view");
 	}
 
-	public function showMoveIntoObjectTreeObject() {
+	public function showPasteTreeObject() {
 
 		$this->ctrl->setCmd('performPaste');
 
@@ -467,8 +473,8 @@ class ilObjOrgUnitGUI extends ilContainerGUI {
 			$this->ilias->raiseError($message, $this->ilias->error_obj->WARNING);
 		}
 		if ($_SESSION['clipboard']['cmd'] == 'cut') {
-			if (isset($_GET['target_node']) && (int)$_GET['target_node']) {
-				$_POST['nodes'] = array( $_GET['target_node'] );
+			if (isset($_GET['ref_id']) && (int)$_GET['ref_id']) {
+				$_POST['nodes'] = array( $_GET['ref_id'] );
 				$this->performPasteIntoMultipleObjectsObject();
 			}
 		}

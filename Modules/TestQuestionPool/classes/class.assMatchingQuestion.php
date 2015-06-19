@@ -15,7 +15,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjAnswerScoring
  * @author		Björn Heyser <bheyser@databay.de>
  * @author		Maximilian Becker <mbecker@databay.de>
  * 
- * @version		$Id: class.assMatchingQuestion.php 47444 2014-01-22 16:49:38Z bheyser $
+ * @version		$Id$
  * 
  * @ingroup		ModulesTestQuestionPool
  */
@@ -1071,6 +1071,8 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 				include_once "./Modules/Test/classes/class.ilObjTest.php";
 				$pass = ilObjTest::_getPass($active_id);
 			}
+			
+			$this->getProcessLocker()->requestUserSolutionUpdateLock();
 
 			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s AND question_fi = %s AND pass = %s",
 				array('integer','integer','integer'),
@@ -1091,6 +1093,9 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 					"tstamp" => array("integer", time())
 				));
 			}
+
+			$this->getProcessLocker()->releaseUserSolutionUpdateLock();
+			
 			$saveWorkingDataResult = true;
 		}
 		if ($entered_values)
@@ -1149,7 +1154,7 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 	/**
 	* Sets the shuffle flag
 	*
-	* @param boolean $shuffle A flag indicating whether the answers are shuffled or not
+	* @param integer $shuffle A flag indicating whether the answers are shuffled or not
 	* @see $shuffle
 	*/
 	public function setShuffle($shuffle)

@@ -27,7 +27,7 @@ require_once ("./Services/Tree/classes/class.ilTree.php");
 * SCORM Object Tree
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMTree.php 20408 2009-07-03 10:13:22Z nkrzywon $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

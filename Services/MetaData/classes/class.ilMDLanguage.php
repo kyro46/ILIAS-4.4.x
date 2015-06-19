@@ -26,7 +26,7 @@
 * Meta Data class (element language)
 *
 * @package ilias-core
-* @version $Id: class.ilMDLanguage.php 19256 2009-03-04 09:49:50Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

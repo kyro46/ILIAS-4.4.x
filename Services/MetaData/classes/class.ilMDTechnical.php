@@ -26,7 +26,7 @@
 * Meta Data class (element technical)
 *
 * @package ilias-core
-* @version $Id: class.ilMDTechnical.php 24203 2010-06-11 09:11:39Z smeyer $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

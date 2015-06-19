@@ -7,7 +7,7 @@ include_once 'Services/Table/classes/class.ilTable2GUI.php';
 * Table GUI for Bookmark management
 *
 * @author Jan Posselt <jposselt@databay.de>
-* @version $Id: class.ilBookmarkAdministrationTableGUI.php 40146 2013-02-26 12:13:52Z jluetzen $
+* @version $Id$
 * @ingroup ServicesBookmarks
 *
 */

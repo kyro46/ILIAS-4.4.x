@@ -25,7 +25,7 @@
 * Class ilObjiLincClassroomGUI
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de> 
-* @version $Id: class.ilObjiLincClassroomGUI.php 34359 2012-04-25 08:58:45Z jluetzen $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjiLincClassroomGUI:
 *

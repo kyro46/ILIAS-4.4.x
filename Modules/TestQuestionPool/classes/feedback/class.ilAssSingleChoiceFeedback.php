@@ -7,7 +7,7 @@ require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssConfigurableM
  * feedback class for assSingleChoice questions
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilAssSingleChoiceFeedback.php 47237 2014-01-14 13:52:33Z bheyser $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  */

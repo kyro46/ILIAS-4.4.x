@@ -27,7 +27,7 @@ require_once ("./Modules/ScormAicc/classes/AICC/class.ilAICCBlock.php");
 /**
 * GUI class for AICC Unit element
 *
-* @version $Id: class.ilAICCBlockGUI.php 12711 2006-12-01 15:24:41Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

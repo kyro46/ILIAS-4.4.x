@@ -11,7 +11,7 @@ define("IL_MAIL_BOTH", 2);
 * 
 *  
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilMailOptions.php 34068 2012-04-06 07:08:36Z mjansen $
+* @version $Id$
 * 
 */
 class ilMailOptions

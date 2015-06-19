@@ -32,7 +32,7 @@ define("IL_NO_LICENSE",'no_license');
 * class ilAccessInfo
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilAccessInfo.php 20613 2009-07-16 20:21:57Z fneumann $
+* @version $Id$
 *
 * @ingroup ServicesAccessControl
 */

@@ -7,7 +7,7 @@ require_once 'Services/TermsOfService/classes/class.ilTermsOfServiceHelper.php';
 * StartUp GUI class. Handles Login and Registration.
 *
 * @author	Alex Killing <alex.killing@gmx.de>
-* @version	$Id: class.ilStartUpGUI.php 49399 2014-04-14 11:20:15Z mjansen $
+* @version	$Id$
 * @ilCtrl_Calls ilStartUpGUI: ilAccountRegistrationGUI, ilPasswordAssistanceGUI, ilLoginPageGUI
 *
 * @ingroup ServicesInit
@@ -950,10 +950,7 @@ class ilStartUpGUI
 		 * @var $lng ilLanguage
 		 */
 		global $tpl, $lng;
-		
-		require_once 'Services/jQuery/classes/class.iljQueryUtil.php';
-		iljQueryUtil::initjQuery();
-
+	
 		$lng->loadLanguageModule('auth');		
 		self::initStartUpTemplate('tpl.login_account_migration.html');
 	 
@@ -1946,23 +1943,28 @@ class ilStartUpGUI
 		 * @var $ilAccess  ilAccessHandler
 		 */
 		global $tpl, $lng, $ilCtrl, $ilSetting, $ilAccess;
+		
+		// #13574 - basic.js is included with ilTemplate, so jQuery is needed, too
+		include_once("./Services/jQuery/classes/class.iljQueryUtil.php");
+		iljQueryUtil::initjQuery();
 
 		$tpl->addBlockfile('CONTENT', 'content', 'tpl.startup_screen.html', 'Services/Init');
 		$tpl->setVariable('HEADER_ICON', ilUtil::getImagePath('HeaderIcon.png'));
 
 		if($a_show_back)
 		{
+			// #13400
+			$param = 'client_id=' . $_COOKIE['ilClientId'] . '&lang=' . $lng->getLangKey();
+						
 			$tpl->setCurrentBlock('link_item_bl');
 			$tpl->setVariable('LINK_TXT', $lng->txt('login_to_ilias'));
-			$tpl->setVariable('LINK_URL', $ilCtrl->getLinkTargetByClass('ilStartUpGUI', 'showLogin'));
+			$tpl->setVariable('LINK_URL', 'login.php?cmd=force_login&'.$param);
 			$tpl->parseCurrentBlock();
 
-			if(
-				$ilSetting->get('pub_section') &&
-				$ilAccess->checkAccessOfUser(ANONYMOUS_USER_ID, 'read', '', ROOT_FOLDER_ID)
-			)
+			if($ilSetting->get('pub_section') &&
+				$ilAccess->checkAccessOfUser(ANONYMOUS_USER_ID, 'read', '', ROOT_FOLDER_ID))
 			{
-				$tpl->setVariable('LINK_URL', '?client_id=' . $_COOKIE['ilClientId'] . '&lang=' . $lng->getLangKey());
+				$tpl->setVariable('LINK_URL', 'index.php?'.$param);
 				$tpl->setVariable('LINK_TXT', $lng->txt('home'));
 				$tpl->parseCurrentBlock();
 			}

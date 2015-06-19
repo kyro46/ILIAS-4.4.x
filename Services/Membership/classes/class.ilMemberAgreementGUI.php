@@ -120,7 +120,11 @@ class ilMemberAgreementGUI
 		
 		$form = self::addExportFieldInfo($form, $this->obj_id, $this->type);
 		$form = self::addCustomFields($form, $this->obj_id, $this->type);
-		$form = self::addAgreement($form, $this->obj_id, $this->type);
+		
+		if($this->getPrivacy()->confirmationRequired($this->type))
+		{
+			$form = self::addAgreement($form, $this->obj_id, $this->type);
+		}
 		
 		return $form;
 	}
@@ -272,7 +276,9 @@ class ilMemberAgreementGUI
 	{
 		$form = $this->initFormAgreement();
 		
-		if($form->checkInput())
+		// #14715 - checkInput() does not work for checkboxes
+		if($this->checkAgreement() &&
+			$form->checkInput())
 		{
 			self::saveCourseDefinedFields($form, $this->obj_id);
 

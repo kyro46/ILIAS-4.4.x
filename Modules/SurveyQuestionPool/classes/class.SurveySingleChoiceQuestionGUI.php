@@ -30,7 +30,7 @@ include_once "./Modules/SurveyQuestionPool/classes/class.SurveyQuestionGUI.php";
 * for single choice survey question types.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.SurveySingleChoiceQuestionGUI.php 43773 2013-07-30 15:04:06Z jluetzen $
+* @version	$Id$
 * @extends SurveyQuestionGUI
 * @ingroup ModulesSurveyQuestionPool
 */

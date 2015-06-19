@@ -26,7 +26,7 @@
 * this class authenticates via CAS for a soap request
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSoapAuthenticationCAS.php 19044 2009-02-18 17:28:52Z akill $
+* @version $Id$
 *
 * @package ilias
 */

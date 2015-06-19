@@ -1,6 +1,6 @@
 <!-- ilias_user.dtd for ILIAS mail import -->
 <!-- For comments refer to our mailing list: xml-ilias@uni-koeln.de -->
-<!-- $Id: ilias_mail_0_1.dtd 3908 2004-05-05 14:36:52Z smeyer $Id: ilias_mail_0_1.dtd,v 1.1 2004/03/31 13:42:19 smeyer Exp $ -->
+<!-- $Id$Id: ilias_mail_0_1.dtd,v 1.1 2004/03/31 13:42:19 smeyer Exp $ -->
 
 <!-- Users -->
 <!ELEMENT users (user*)>

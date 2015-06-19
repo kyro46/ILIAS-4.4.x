@@ -5,7 +5,7 @@
  * Handles a list of questions
  *
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilTestRandomQuestionSetStagingPoolQuestionList.php 47697 2014-02-04 13:58:55Z bheyser $
+ * @version		$Id$
  * 
  * @package		Modules/TestQuestionPool
  * 

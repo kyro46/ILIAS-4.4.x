@@ -10,7 +10,7 @@ include_once "./Services/COPage/classes/class.ilPCQuestion.php";
 * Adapter User Interface class for assessment questions
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCQuestionGUI.php 45067 2013-09-27 11:58:18Z akill $
+* @version $Id$
 *
 *
 * @ingroup ServicesCOPage

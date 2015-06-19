@@ -9,13 +9,12 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
 * @author		Björn Heyser <bheyser@databay.de>
-* @version		$Id: class.ilObjTest.php 48906 2014-03-24 12:58:40Z mjansen $
+* @version		$Id$
 *
 * @defgroup ModulesTest Modules/Test
 * @extends ilObject
 */
-class
-ilObjTest extends ilObject
+class ilObjTest extends ilObject
 {
 	#region Properties
 	
@@ -483,11 +482,11 @@ ilObjTest extends ilObject
 	 */
 	private $redirection_url = NULL;
 	
-	/** @var bool $examid_in_kiosk */
-	protected $examid_in_kiosk;
+	/** @var bool $show_exam_id_in_test_pass_enabled */
+	protected $show_exam_id_in_test_pass_enabled;
 
-	/** @var bool $show_exam_id */
-	protected $show_exam_id;
+	/** @var bool $show_exam_id_in_test_results_enabled */
+	protected $show_exam_id_in_test_results_enabled;
 	
 	/** @var bool $sign_submission */
 	protected $sign_submission;
@@ -497,7 +496,11 @@ ilObjTest extends ilObject
 	
 	/** @var string definition of selector for special characters  */
 	protected $char_selector_definition;
-
+	
+	/**
+	 * @var bool
+	 */
+	protected $testFinalBroken;
 	
 	#endregion
 	
@@ -568,7 +571,7 @@ ilObjTest extends ilObject
 		$this->_customStyle = "";
 		$this->allowedUsersTimeGap = "";
 		$this->anonymity = 0;
-		$this->show_cancel = 1;
+		$this->show_cancel = 0;
 		$this->show_marker = 0;
 		$this->fixed_participants = 0;
 		$this->setShowPassDetails(TRUE);
@@ -578,7 +581,7 @@ ilObjTest extends ilObject
 		$this->testSession = FALSE;
 		$this->testSequence = FALSE;
 		$this->mailnotification = 0;
-		$this->poolUsage = 0;
+		$this->poolUsage = 1;
 		
 		$this->ects_grades = array(
 			"A" => 90,
@@ -600,11 +603,13 @@ ilObjTest extends ilObject
         $this->template_id = '';
 		$this->redirection_mode = 0;
 		$this->redirection_url = NULL;
-		$this->examid_in_kiosk = false;
-		$this->show_exam_id = false;
+		$this->show_exam_id_in_test_pass_enabled = false;
+		$this->show_exam_id_in_test_results_enabled = false;
 		$this->sign_submission = false;
 		$this->char_selector_availability = 0;
 		$this->char_selector_definition = null;
+
+		$this->testFinalBroken = false;
 		
 		$this->ilObject($a_id, $a_call_by_reference);
 	}
@@ -1219,91 +1224,92 @@ ilObjTest extends ilObject
 			$next_id = $ilDB->nextId('tst_tests');
 			
 			$ilDB->insert('tst_tests', array(
-				'test_id' => array('integer', $next_id),
-				'obj_fi' => array('integer', $this->getId()),
-				'author' => array('text', $this->getAuthor()),
-				'introduction' => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getIntroduction(), 0)),
-				'finalstatement' => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getFinalStatement(), 0)),
-				'showinfo' => array('integer', $this->getShowInfo()),
-				'forcejs' => array('integer', $this->getForceJS()),
-				'customstyle' => array('text', $this->getCustomStyle()),
-				'showfinalstatement' => array('integer', $this->getShowFinalStatement()),
-				'sequence_settings' => array('integer', $this->getSequenceSettings()),
-				'score_reporting' => array('integer', $this->getScoreReporting()),
-				'instant_verification' => array('text', $this->getInstantFeedbackSolution()),
-				'answer_feedback_points' => array('text', $this->getAnswerFeedbackPoints()),
-				'answer_feedback' => array('text', $this->getAnswerFeedback()),
-				'anonymity' => array('text', $this->getAnonymity()),
-				'show_cancel' => array('text', $this->getShowCancel()),
-				'show_marker' => array('integer', $this->getShowMarker()),
-				'fixed_participants' => array('text', $this->getFixedParticipants()),
-				'nr_of_tries' => array('integer', $this->getNrOfTries()),
-				'kiosk' => array('integer', $this->getKiosk()),
-				'use_previous_answers' => array('text', $this->getUsePreviousAnswers()),
-				'title_output' => array('text', $this->getTitleOutput()),
-				'processing_time' => array('text', $this->getProcessingTime()),
-				'enable_processing_time' => array('text', $this->getEnableProcessingTime()),
-				'reset_processing_time' => array('integer', $this->getResetProcessingTime()),
-				'reporting_date' => array('text', $this->getReportingDate()),
-				'starting_time' => array('text', $this->getStartingTime()),
-				'ending_time' => array('text', $this->getEndingTime()),
-				'complete' => array('text', $this->isComplete($testQuestionSetConfig)),
-				'ects_output' => array('text', $this->getECTSOutput()),
-				'ects_a' => array('float', strlen($this->ects_grades["A"]) ? $this->ects_grades["A"] : NULL),
-				'ects_b' => array('float', strlen($this->ects_grades["B"]) ? $this->ects_grades["B"] : NULL),
-				'ects_c' => array('float', strlen($this->ects_grades["C"]) ? $this->ects_grades["C"] : NULL),
-				'ects_d' => array('float', strlen($this->ects_grades["D"]) ? $this->ects_grades["D"] : NULL),
-				'ects_e' => array('float', strlen($this->ects_grades["E"]) ? $this->ects_grades["E"] : NULL),
-				'ects_fx' => array('float', $this->getECTSFX()),
-				'count_system' => array('text', $this->getCountSystem()),
-				'mc_scoring' => array('text', $this->getMCScoring()),
-				'score_cutting' => array('text', $this->getScoreCutting()),
-				'pass_scoring' => array('text', $this->getPassScoring()),
-				'shuffle_questions' => array('text', $this->getShuffleQuestions()),
-				'results_presentation' => array('integer', $this->getResultsPresentation()),
-				'show_summary' => array('integer', $this->getListOfQuestionsSettings()),
-				'password' => array('text', $this->getPassword()),
-				'allowedusers' => array('integer', $this->getAllowedUsers()),
-				'mailnottype' => array('integer', $this->getMailNotificationType()),
-				'exportsettings' => array('integer', $this->getExportSettings()),
-				'alloweduserstimegap' => array('integer', $this->getAllowedUsersTimeGap()),
-				'certificate_visibility' => array('text', $this->getCertificateVisibility()),
-				'mailnotification' => array('integer', $this->getMailNotification()),
-				'created' => array('integer', time()),
-				'tstamp' => array('integer', time()),
-				'enabled_view_mode' => array('text', $this->getEnabledViewMode()),
-				'template_id' => array('integer', $this->getTemplate()),
-				'pool_usage' => array('integer', $this->getPoolUsage()),
-				'print_bs_with_res' => array('integer', (int) $this->isBestSolutionPrintedWithResult()),
-				'obligations_enabled' => array('integer', (int) $this->areObligationsEnabled()),
-				'offer_question_hints' => array('integer', (int) $this->isOfferingQuestionHintsEnabled()),
-				'highscore_enabled' => array('integer', (int) $this->getHighscoreEnabled()),
-				'highscore_anon' => array('integer', (int) $this->getHighscoreAnon()),
-				'highscore_achieved_ts' => array('integer', (int) $this->getHighscoreAchievedTS()),
-				'highscore_score' => array('integer', (int) $this->getHighscoreScore()),
-				'highscore_percentage' => array('integer', (int) $this->getHighscorePercentage()),
-				'highscore_hints' => array('integer', (int) $this->getHighscoreHints()),
-				'highscore_wtime' => array('integer', (int) $this->getHighscoreWTime()),
-				'highscore_own_table' => array('integer', (int) $this->getHighscoreOwnTable()),
-				'highscore_top_table' => array('integer', (int) $this->getHighscoreTopTable()),
-				'highscore_top_num' => array('integer', (int) $this->getHighscoreTopNum()),
-				'online_status' => array('integer', (int) $this->isOnline()),
-				'specific_feedback' => array('integer', (int)$this->getSpecificAnswerFeedback()),
-				'autosave' => array('integer', (int)$this->getAutosave()),
-				'autosave_ival' => array('integer', (int)$this->getAutosaveIval()),
-				'pass_deletion_allowed' => array('integer', (int)$this->isPassDeletionAllowed()),
-				'enable_examview' => array('integer', (int)$this->getEnableExamview()),
-				'show_examview_html' => array('integer', (int)$this->getShowExamviewHtml()),
-				'show_examview_pdf' => array('integer', (int)$this->getShowExamviewPdf()),
-				'redirection_mode' => array('integer', (int)$this->getRedirectionMode()),
-				'redirection_url' => array('text', (string)$this->getRedirectionUrl()),
-				'enable_archiving' => array('integer', (int)$this->getEnableArchiving()),
-				'examid_in_kiosk' => array('integer', (int)$this->getExamidInKiosk()),
-				'show_exam_id' => array('integer', (int)$this->getShowExamid()),
-				'sign_submission' => array('integer', (int)$this->getSignSubmission()),
-				'question_set_type' => array('text', $this->getQuestionSetType()),
+				'test_id'                    => array('integer', $next_id),
+				'obj_fi'                     => array('integer', $this->getId()),
+				'author'                     => array('text', $this->getAuthor()),
+				'introduction'               => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getIntroduction(), 0)),
+				'finalstatement'             => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getFinalStatement(), 0)),
+				'showinfo'                   => array('integer', $this->getShowInfo()),
+				'forcejs'                    => array('integer', $this->getForceJS()),
+				'customstyle'                => array('text', $this->getCustomStyle()),
+				'showfinalstatement'         => array('integer', $this->getShowFinalStatement()),
+				'sequence_settings'          => array('integer', $this->getSequenceSettings()),
+				'score_reporting'            => array('integer', $this->getScoreReporting()),
+				'instant_verification'       => array('text', $this->getInstantFeedbackSolution()),
+				'answer_feedback_points'     => array('text', $this->getAnswerFeedbackPoints()),
+				'answer_feedback'            => array('text', $this->getAnswerFeedback()),
+				'anonymity'                  => array('text', $this->getAnonymity()),
+				'show_cancel'                => array('text', $this->getShowCancel()),
+				'show_marker'                => array('integer', $this->getShowMarker()),
+				'fixed_participants'         => array('text', $this->getFixedParticipants()),
+				'nr_of_tries'                => array('integer', $this->getNrOfTries()),
+				'kiosk'                      => array('integer', $this->getKiosk()),
+				'use_previous_answers'       => array('text', $this->getUsePreviousAnswers()),
+				'title_output'               => array('text', $this->getTitleOutput()),
+				'processing_time'            => array('text', $this->getProcessingTime()),
+				'enable_processing_time'     => array('text', $this->getEnableProcessingTime()),
+				'reset_processing_time'      => array('integer', $this->getResetProcessingTime()),
+				'reporting_date'             => array('text', $this->getReportingDate()),
+				'starting_time'              => array('text', $this->getStartingTime()),
+				'ending_time'                => array('text', $this->getEndingTime()),
+				'complete'                   => array('text', $this->isComplete($testQuestionSetConfig)),
+				'ects_output'                => array('text', $this->getECTSOutput()),
+				'ects_a'                     => array('float', strlen($this->ects_grades["A"]) ? $this->ects_grades["A"] : NULL),
+				'ects_b'                     => array('float', strlen($this->ects_grades["B"]) ? $this->ects_grades["B"] : NULL),
+				'ects_c'                     => array('float', strlen($this->ects_grades["C"]) ? $this->ects_grades["C"] : NULL),
+				'ects_d'                     => array('float', strlen($this->ects_grades["D"]) ? $this->ects_grades["D"] : NULL),
+				'ects_e'                     => array('float', strlen($this->ects_grades["E"]) ? $this->ects_grades["E"] : NULL),
+				'ects_fx'                    => array('float', $this->getECTSFX()),
+				'count_system'               => array('text', $this->getCountSystem()),
+				'mc_scoring'                 => array('text', $this->getMCScoring()),
+				'score_cutting'              => array('text', $this->getScoreCutting()),
+				'pass_scoring'               => array('text', $this->getPassScoring()),
+				'shuffle_questions'          => array('text', $this->getShuffleQuestions()),
+				'results_presentation'       => array('integer', $this->getResultsPresentation()),
+				'show_summary'               => array('integer', $this->getListOfQuestionsSettings()),
+				'password'                   => array('text', $this->getPassword()),
+				'allowedusers'               => array('integer', $this->getAllowedUsers()),
+				'alloweduserstimegap'        => array('integer', $this->getAllowedUsersTimeGap()),
+				'mailnottype'                => array('integer', $this->getMailNotificationType()),
+				'exportsettings'             => array('integer', $this->getExportSettings()),
+				'certificate_visibility'     => array('text', $this->getCertificateVisibility()),
+				'mailnotification'           => array('integer', $this->getMailNotification()),
+				'created'                    => array('integer', time()),
+				'tstamp'                     => array('integer', time()),
+				'enabled_view_mode'          => array('text', $this->getEnabledViewMode()),
+				'template_id'                => array('integer', $this->getTemplate()),
+				'pool_usage'                 => array('integer', $this->getPoolUsage()),
+				'print_bs_with_res'          => array('integer', (int)$this->isBestSolutionPrintedWithResult()),
+				'obligations_enabled'        => array('integer', (int)$this->areObligationsEnabled()),
+				'offer_question_hints'       => array('integer', (int)$this->isOfferingQuestionHintsEnabled()),
+				'highscore_enabled'          => array('integer', (int)$this->getHighscoreEnabled()),
+				'highscore_anon'             => array('integer', (int)$this->getHighscoreAnon()),
+				'highscore_achieved_ts'      => array('integer', (int)$this->getHighscoreAchievedTS()),
+				'highscore_score'            => array('integer', (int)$this->getHighscoreScore()),
+				'highscore_percentage'       => array('integer', (int)$this->getHighscorePercentage()),
+				'highscore_hints'            => array('integer', (int)$this->getHighscoreHints()),
+				'highscore_wtime'            => array('integer', (int)$this->getHighscoreWTime()),
+				'highscore_own_table'        => array('integer', (int)$this->getHighscoreOwnTable()),
+				'highscore_top_table'        => array('integer', (int)$this->getHighscoreTopTable()),
+				'highscore_top_num'          => array('integer', (int)$this->getHighscoreTopNum()),
+				'online_status'              => array('integer', (int)$this->isOnline()),
+				'specific_feedback'          => array('integer', (int)$this->getSpecificAnswerFeedback()),
+				'autosave'                   => array('integer', (int)$this->getAutosave()),
+				'autosave_ival'              => array('integer', (int)$this->getAutosaveIval()),
+				'pass_deletion_allowed'      => array('integer', (int)$this->isPassDeletionAllowed()),
+				'enable_examview'            => array('integer', (int)$this->getEnableExamview()),
+				'show_examview_html'         => array('integer', (int)$this->getShowExamviewHtml()),
+				'show_examview_pdf'          => array('integer', (int)$this->getShowExamviewPdf()),
+				'redirection_mode'           => array('integer', (int)$this->getRedirectionMode()),
+				'redirection_url'            => array('text', (string)$this->getRedirectionUrl()),
+				'enable_archiving'           => array('integer', (int)$this->getEnableArchiving()),
+				'examid_in_test_pass'        => array('integer', (int)$this->isShowExamIdInTestPassEnabled()),
+				'examid_in_test_res'         => array('integer', (int)$this->isShowExamIdInTestResultsEnabled()),
+				'sign_submission'            => array('integer', (int)$this->getSignSubmission()),
+				'question_set_type'          => array('text', $this->getQuestionSetType()),
 				'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
-				'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition())
+				'char_selector_definition'   => array('text', (string)$this->getCharSelectorDefinition()),
+				'broken'                     => array('integer', (int)$this->isTestFinalBroken())
 			));
 				    
 			$this->test_id = $next_id;
@@ -1331,88 +1337,91 @@ ilObjTest extends ilObject
 			
 			$ilDB->update('tst_tests',
 					array(
-						'author' => array('text', $this->getAuthor()),
-						'introduction' => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getIntroduction(), 0)),
-						'finalstatement' => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getFinalStatement(), 0)),
-						'showinfo' => array('integer', $this->getShowInfo()),
-						'forcejs' => array('integer', $this->getForceJS()),
-						'customstyle' => array('text', $this->getCustomStyle()),
-						'showfinalstatement' => array('integer', $this->getShowFinalStatement()),
-						'sequence_settings' => array('integer', $this->getSequenceSettings()),
-						'score_reporting' => array('integer', $this->getScoreReporting()),
-						'instant_verification' => array('text', $this->getInstantFeedbackSolution()),
-						'answer_feedback_points' => array('text', $this->getAnswerFeedbackPoints()),
-						'answer_feedback' => array('text', $this->getGenericAnswerFeedback()),
-						'anonymity' => array('text', $this->getAnonymity()),
-						'show_cancel' => array('text', $this->getShowCancel()),
-						'show_marker' => array('integer', $this->getShowMarker()),
-						'fixed_participants' => array('text', $this->getFixedParticipants()),
-						'nr_of_tries' => array('integer', $this->getNrOfTries()),
-						'kiosk' => array('integer', $this->getKiosk()),
-						'use_previous_answers' => array('text', $this->getUsePreviousAnswers()),
-						'title_output' => array('text', $this->getTitleOutput()),
-						'processing_time' => array('text', $this->getProcessingTime()),
-						'enable_processing_time' => array('text', $this->getEnableProcessingTime()),
-						'reset_processing_time' => array('integer', $this->getResetProcessingTime()),
-						'reporting_date' => array('text', $this->getReportingDate()),
-						'starting_time' => array('text', $this->getStartingTime()),
-						'ending_time' => array('text', $this->getEndingTime()),
-						'complete' => array('text', $this->isComplete($testQuestionSetConfig)),
-						'ects_output' => array('text', $this->getECTSOutput()),
-						'ects_a' => array('float', strlen($this->ects_grades["A"]) ? $this->ects_grades["A"] : NULL),
-						'ects_b' => array('float', strlen($this->ects_grades["B"]) ? $this->ects_grades["B"] : NULL),
-						'ects_c' => array('float', strlen($this->ects_grades["C"]) ? $this->ects_grades["C"] : NULL),
-						'ects_d' => array('float', strlen($this->ects_grades["D"]) ? $this->ects_grades["D"] : NULL),
-						'ects_e' => array('float', strlen($this->ects_grades["E"]) ? $this->ects_grades["E"] : NULL),
-						'ects_fx' => array('float', $this->getECTSFX()),
-						'count_system' => array('text', $this->getCountSystem()),
-						'mc_scoring' => array('text', $this->getMCScoring()),
-						'score_cutting' => array('text', $this->getScoreCutting()),
-						'pass_scoring' => array('text', $this->getPassScoring()),
-						'shuffle_questions' => array('text', $this->getShuffleQuestions()),
-						'results_presentation' => array('integer', $this->getResultsPresentation()),
-						'show_summary' => array('integer', $this->getListOfQuestionsSettings()),
-						'password' => array('text', $this->getPassword()),
-						'allowedusers' => array('integer', $this->getAllowedUsers()),
-						'mailnottype' => array('integer', $this->getMailNotificationType()),
-						'exportsettings' => array('integer', $this->getExportSettings()),
-						'print_bs_with_res' => array('integer', (int)$this->isBestSolutionPrintedWithResult()),
-						'alloweduserstimegap' => array('integer', $this->getAllowedUsersTimeGap()),
-						'certificate_visibility' => array('text', $this->getCertificateVisibility()),
-						'mailnotification' => array('integer', $this->getMailNotification()),
-						'tstamp' => array('integer', time()),
-						'enabled_view_mode' => array('text', $this->getEnabledViewMode()),
-						'template_id' => array('text', $this->getTemplate()),
-						'pool_usage' => array('integer', $this->getPoolUsage()),
-						'offer_question_hints' => array('integer', (int)$this->isOfferingQuestionHintsEnabled()),
-						'highscore_enabled' => array('integer', (int)$this->getHighscoreEnabled()),
-						'highscore_anon' => array('integer', (int)$this->getHighscoreAnon()),
-						'highscore_achieved_ts' => array('integer', (int)$this->getHighscoreAchievedTS()),
-						'highscore_score' => array('integer', (int)$this->getHighscoreScore()),
-						'highscore_percentage' => array('integer', (int)$this->getHighscorePercentage()),
-						'highscore_hints' => array('integer', (int)$this->getHighscoreHints()),
-						'highscore_wtime' => array('integer', (int)$this->getHighscoreWTime()),
-						'highscore_own_table' => array('integer', (int)$this->getHighscoreOwnTable()),
-						'highscore_top_table' => array('integer', (int)$this->getHighscoreTopTable()),
-						'highscore_top_num' => array('integer', (int)$this->getHighscoreTopNum()),
-						'online_status' => array('integer', (int)$this->isOnline()),
-						'specific_feedback' => array('integer', (int)$this->getSpecificAnswerFeedback()),
-						'obligations_enabled' => array('integer', (int)$this->areObligationsEnabled()),
-						'autosave' => array('integer', $this->getAutosave()),
-						'autosave_ival' => array('integer', $this->getAutosaveIval()),
-						'pass_deletion_allowed' => array('integer', (int)$this->isPassDeletionAllowed()),
-						'enable_examview' => array('integer', (int)$this->getEnableExamview()),
-						'show_examview_html' => array('integer', (int)$this->getShowExamviewHtml()),
-						'show_examview_pdf' => array('integer', (int)$this->getShowExamviewPdf()),
-						'redirection_mode' => array('integer', (int)$this->getRedirectionMode()),
-						'redirection_url' => array('text', (string)$this->getRedirectionUrl()),
-						'enable_archiving' => array('integer', (int)$this->getEnableArchiving()),
-						'examid_in_kiosk' => array('integer', (int)$this->getExamidInKiosk()),
-						'show_exam_id' => array('integer', (int)$this->getShowExamid()),
-						'sign_submission' => array('integer', (int)$this->getSignSubmission()),
-						'question_set_type' => array('text', $this->getQuestionSetType()),
+						'author'                     => array('text', $this->getAuthor()),
+						'introduction'               => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getIntroduction(), 0)),
+						'finalstatement'             => array('text', ilRTE::_replaceMediaObjectImageSrc($this->getFinalStatement(), 0)),
+						'showinfo'                   => array('integer', $this->getShowInfo()),
+						'forcejs'                    => array('integer', $this->getForceJS()),
+						'customstyle'                => array('text', $this->getCustomStyle()),
+						'showfinalstatement'         => array('integer', $this->getShowFinalStatement()),
+						'sequence_settings'          => array('integer', $this->getSequenceSettings()),
+						'score_reporting'            => array('integer', $this->getScoreReporting()),
+						'instant_verification'       => array('text', $this->getInstantFeedbackSolution()),
+						'answer_feedback_points'     => array('text', $this->getAnswerFeedbackPoints()),
+						'answer_feedback'            => array('text', $this->getGenericAnswerFeedback()),
+						'anonymity'                  => array('text', $this->getAnonymity()),
+						'show_cancel'                => array('text', $this->getShowCancel()),
+						'show_marker'                => array('integer', $this->getShowMarker()),
+						'fixed_participants'         => array('text', $this->getFixedParticipants()),
+						'nr_of_tries'                => array('integer', $this->getNrOfTries()),
+						'kiosk'                      => array('integer', $this->getKiosk()),
+						'use_previous_answers'       => array('text', $this->getUsePreviousAnswers()),
+						'title_output'               => array('text', $this->getTitleOutput()),
+						'processing_time'            => array('text', $this->getProcessingTime()),
+						'enable_processing_time'     => array('text', $this->getEnableProcessingTime()),
+						'reset_processing_time'      => array('integer', $this->getResetProcessingTime()),
+						'reporting_date'             => array('text', $this->getReportingDate()),
+						'starting_time'              => array('text', $this->getStartingTime()),
+						'ending_time'                => array('text', $this->getEndingTime()),
+						'complete'                   => array('text', $this->isComplete($testQuestionSetConfig)),
+						'ects_output'                => array('text', $this->getECTSOutput()),
+						'ects_a'                     => array('float', strlen($this->ects_grades["A"]) ? $this->ects_grades["A"] : NULL),
+						'ects_b'                     => array('float', strlen($this->ects_grades["B"]) ? $this->ects_grades["B"] : NULL),
+						'ects_c'                     => array('float', strlen($this->ects_grades["C"]) ? $this->ects_grades["C"] : NULL),
+						'ects_d'                     => array('float', strlen($this->ects_grades["D"]) ? $this->ects_grades["D"] : NULL),
+						'ects_e'                     => array('float', strlen($this->ects_grades["E"]) ? $this->ects_grades["E"] : NULL),
+						'ects_fx'                    => array('float', $this->getECTSFX()),
+						'count_system'               => array('text', $this->getCountSystem()),
+						'mc_scoring'                 => array('text', $this->getMCScoring()),
+						'score_cutting'              => array('text', $this->getScoreCutting()),
+						'pass_scoring'               => array('text', $this->getPassScoring()),
+						'shuffle_questions'          => array('text', $this->getShuffleQuestions()),
+						'results_presentation'       => array('integer', $this->getResultsPresentation()),
+						'show_summary'               => array('integer', $this->getListOfQuestionsSettings()),
+						'password'                   => array('text', $this->getPassword()),
+						'allowedusers'               => array('integer', $this->getAllowedUsers()),
+						'alloweduserstimegap'        => array('integer', $this->getAllowedUsersTimeGap()),
+						'mailnottype'                => array('integer', $this->getMailNotificationType()),
+						'exportsettings'             => array('integer', $this->getExportSettings()),
+						'print_bs_with_res'          => array('integer', (int)$this->isBestSolutionPrintedWithResult()),
+						'alloweduserstimegap'        => array('integer', $this->getAllowedUsersTimeGap()),
+						'certificate_visibility'     => array('text', $this->getCertificateVisibility()),
+						'mailnotification'           => array('integer', $this->getMailNotification()),
+						'tstamp'                     => array('integer', time()),
+						'enabled_view_mode'          => array('text', $this->getEnabledViewMode()),
+						'template_id'                => array('integer', $this->getTemplate()),
+						'pool_usage'                 => array('integer', $this->getPoolUsage()),
+						'print_bs_with_res'          => array('integer', (int)$this->isBestSolutionPrintedWithResult()),
+						'obligations_enabled'        => array('integer', (int)$this->areObligationsEnabled()),
+						'offer_question_hints'       => array('integer', (int)$this->isOfferingQuestionHintsEnabled()),
+						'highscore_enabled'          => array('integer', (int)$this->getHighscoreEnabled()),
+						'highscore_anon'             => array('integer', (int)$this->getHighscoreAnon()),
+						'highscore_achieved_ts'      => array('integer', (int)$this->getHighscoreAchievedTS()),
+						'highscore_score'            => array('integer', (int)$this->getHighscoreScore()),
+						'highscore_percentage'       => array('integer', (int)$this->getHighscorePercentage()),
+						'highscore_hints'            => array('integer', (int)$this->getHighscoreHints()),
+						'highscore_wtime'            => array('integer', (int)$this->getHighscoreWTime()),
+						'highscore_own_table'        => array('integer', (int)$this->getHighscoreOwnTable()),
+						'highscore_top_table'        => array('integer', (int)$this->getHighscoreTopTable()),
+						'highscore_top_num'          => array('integer', (int)$this->getHighscoreTopNum()),
+						'online_status'              => array('integer', (int)$this->isOnline()),
+						'specific_feedback'          => array('integer', (int)$this->getSpecificAnswerFeedback()),
+						'autosave'                   => array('integer', (int)$this->getAutosave()),
+						'autosave_ival'              => array('integer', (int)$this->getAutosaveIval()),
+						'pass_deletion_allowed'      => array('integer', (int)$this->isPassDeletionAllowed()),
+						'enable_examview'            => array('integer', (int)$this->getEnableExamview()),
+						'show_examview_html'         => array('integer', (int)$this->getShowExamviewHtml()),
+						'show_examview_pdf'          => array('integer', (int)$this->getShowExamviewPdf()),
+						'redirection_mode'           => array('integer', (int)$this->getRedirectionMode()),
+						'redirection_url'            => array('text', (string)$this->getRedirectionUrl()),
+						'enable_archiving'           => array('integer', (int)$this->getEnableArchiving()),
+						'examid_in_test_pass'        => array('integer', (int)$this->isShowExamIdInTestPassEnabled()),
+						'examid_in_test_res'         => array('integer', (int)$this->isShowExamIdInTestResultsEnabled()),
+						'sign_submission'            => array('integer', (int)$this->getSignSubmission()),
+						'question_set_type'          => array('text', $this->getQuestionSetType()),
 						'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
-						'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition())
+						'char_selector_definition'   => array('text', (string)$this->getCharSelectorDefinition()),
+						'broken'                     => array('integer', (int)$this->isTestFinalBroken())
 					),
 					array(
 						'test_id' => array('integer', (int)$this->getTestId())
@@ -1890,12 +1899,13 @@ ilObjTest extends ilObject
 			$this->setShowExamviewHtml((bool)$data->show_examview_html);
 			$this->setShowExamviewPdf((bool)$data->show_examview_pdf);
 			$this->setEnableArchiving((bool)$data->enable_archiving);
-			$this->setExamidInKiosk( (bool)$data->examid_in_kiosk);
-			$this->setShowExamid( (bool)$data->show_exam_id);
+			$this->setShowExamIdInTestPassEnabled( (bool)$data->examid_in_test_pass);
+			$this->setShowExamIdInTestResultsEnabled( (bool)$data->examid_in_test_res);
 			$this->setSignSubmission( (bool)$data->sign_submission );
 			$this->setQuestionSetType($data->question_set_type);
 			$this->setCharSelectorAvailability((int)$data->char_selector_availability);
 			$this->setCharSelectorDefinition($data->char_selector_definition);
+			$this->setTestFinalBroken((bool)$data->broken);
 			$this->loadQuestions();
 		}
 
@@ -2387,6 +2397,7 @@ function setGenericAnswerFeedback($generic_answer_feedback = 0)
 
 /**
 * Gets the sequence settings of the ilObjTest object
+ * SEQUENCE SETTING = POSTPONING ENABLED !!
 *
 * @return integer The sequence settings of the test
 * @access public
@@ -3330,69 +3341,57 @@ function getAnswerFeedbackPoints()
 		}
 	}
 
-	function removeSelectedTestResults($active_ids)
+	public function removeTestResults($userIds)
 	{
 		global $ilDB;
 
-		// remove the question from tst_solutions
-		foreach ($active_ids as $active_id)
+		$IN_userIds = $ilDB->in('user_fi', $userIds, false, 'integer');
+		$res = $ilDB->queryF(
+			"SELECT active_id FROM tst_active WHERE test_fi = %s AND $IN_userIds",
+			array('integer'), array($this->getTestId())
+		);
+
+		$activeIds = array();
+		while( $row = $ilDB->fetchAssoc($res) )
 		{
-			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_solutions WHERE active_fi = %s",
-				array('integer'),
-				array($active_id)
-			);
-			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_qst_solved WHERE active_fi = %s",
-				array('integer'),
-				array($active_id)
-			);
-			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_test_result WHERE active_fi = %s",
-				array('integer'),
-				array($active_id)
-			);
-			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_pass_result WHERE active_fi = %s",
-				array('integer'),
-				array($active_id)
-			);
-
-			if ($this->isRandomTest())
-			{
-				$affectedRows = $ilDB->manipulateF("DELETE FROM tst_test_rnd_qst WHERE active_fi = %s",
-					array('integer'),
-					array($active_id)
-				);
-			}
-
-			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
-			if (ilObjAssessmentFolder::_enabledAssessmentLogging())
-			{
-				$this->logAction(sprintf($this->lng->txtlng("assessment", "log_selected_user_data_removed", ilObjAssessmentFolder::_getLogLanguage()), $this->userLookupFullName($this->_getUserIdFromActiveId($active_id))));
-			}
+			$activeIds[] = $row['active_id'];
 		}
 
-		// remove test_active entries of selected users
-		foreach ($active_ids as $active_id)
+		$IN_activeIds = $ilDB->in('active_fi', $activeIds, false, 'integer');
+
+		$ilDB->manipulate("DELETE FROM tst_solutions WHERE $IN_activeIds");
+		$ilDB->manipulate("DELETE FROM tst_qst_solved WHERE $IN_activeIds");
+		$ilDB->manipulate("DELETE FROM tst_test_result WHERE $IN_activeIds");
+		$ilDB->manipulate("DELETE FROM tst_pass_result WHERE $IN_activeIds");
+		$ilDB->manipulate("DELETE FROM tst_result_cache WHERE $IN_activeIds");
+		$ilDB->manipulate("DELETE FROM tst_sequence WHERE $IN_activeIds");
+		
+		if( $this->isRandomTest() )
 		{
-			$usr_id = $this->_getUserIdFromActiveId($active_id);
+			$ilDB->manipulate("DELETE FROM tst_test_rnd_qst WHERE $IN_activeIds");
+		}
+		elseif( $this->isDynamicTest() )
+		{
+			$ilDB->manipulate("DELETE FROM tst_seq_qst_tracking WHERE $IN_activeIds");
+			$ilDB->manipulate("DELETE FROM tst_seq_qst_answstatus WHERE $IN_activeIds");
+			$ilDB->manipulate("DELETE FROM tst_seq_qst_postponed WHERE $IN_activeIds");
+			$ilDB->manipulate("DELETE FROM tst_seq_qst_checked WHERE $IN_activeIds");
+		}
 
-			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_active WHERE active_id = %s",
-				array('integer'),
-				array($active_id)
-			);
+		include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
+		if (ilObjAssessmentFolder::_enabledAssessmentLogging())
+		{
+			$this->logAction(sprintf($this->lng->txtlng("assessment", "log_selected_user_data_removed", ilObjAssessmentFolder::_getLogLanguage()), $this->userLookupFullName($this->_getUserIdFromActiveId($active_id))));
+		}
 
-			$affectedRows = $ilDB->manipulateF("DELETE FROM tst_sequence WHERE active_fi = %s",
-				array('integer'),
-				array($active_id)
-			);
+		$IN_userIds = $ilDB->in('usr_id', $userIds, false, 'integer');
+		$ilDB->manipulateF(
+			"DELETE FROM usr_pref WHERE $IN_userIds AND keyword = %s",
+			array('text'), array("tst_password_".$this->getTestId())
+		);
 
-			// remove saved user password
-			if ($usr_id > 0)
-			{
-				$affectedRows = $ilDB->manipulateF("DELETE FROM usr_pref WHERE usr_id = %s AND keyword = %s",
-					array('integer', 'text'),
-					array($usr_id, "tst_password_".$this->getTestId())
-				);
-			}
-
+		foreach ($activeIds as $active_id)
+		{
 			// TODO: this shouldn't be here since it is question stuff and should be modular but there's no other solution yet
 			// remove file uploads
 			if (@is_dir(CLIENT_WEB_DIR . "/assessment/tst_" . $this->getTestId() . "/$active_id"))
@@ -3402,7 +3401,15 @@ function getAnswerFeedbackPoints()
 		}
 
 		require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionHintTracking.php';
-		ilAssQuestionHintTracking::deleteRequestsByActiveIds($active_ids);
+		ilAssQuestionHintTracking::deleteRequestsByActiveIds($activeIds);
+	}
+
+	public function removeTestActives($activeIds)
+	{
+		global $ilDB;
+
+		$IN_activeIds = $ilDB->in('active_id', $activeIds, false, 'integer');
+		$ilDB->manipulate("DELETE FROM tst_active WHERE $IN_activeIds");
 	}
 
 	function removeTestResultsForUser($user_id)
@@ -4047,7 +4054,7 @@ function getAnswerFeedbackPoints()
 			$dynamicQuestionSetConfig->loadFromDb();
 			
 			$testSequence->loadFromDb($dynamicQuestionSetConfig);
-			$testSequence->loadQuestions($dynamicQuestionSetConfig, array());
+			$testSequence->loadQuestions($dynamicQuestionSetConfig, new ilTestDynamicQuestionSetFilterSelection());
 			
 			$sequence = $testSequence->getUserSequenceQuestions();
 		}
@@ -4073,8 +4080,7 @@ function getAnswerFeedbackPoints()
 						tst_test_result.points reached,
 						tst_test_result.hint_count requested_hints,
 						tst_test_result.hint_points hint_points,
-						tst_test_result.answered answered,
-						tst_solutions.solution_id workedthru
+						tst_test_result.answered answered
 			
 			FROM		tst_test_result
 			
@@ -4094,6 +4100,8 @@ function getAnswerFeedbackPoints()
 		{
 			$arrResults[ $row['question_fi'] ] = $row;
 		}
+
+		$numWorkedThrough = count($arrResults);
 
 		require_once "./Modules/TestQuestionPool/classes/class.assQuestion.php";
 		
@@ -4142,7 +4150,7 @@ function getAnswerFeedbackPoints()
 				"type" => $row["type_tag"],
 				"qid" => $row['question_id'],
 				"original_id" => $row["original_id"],
-				"workedthrough" => ($arrResults[$row['question_id']]['workedthru']) ? 1 : 0,
+				"workedthrough" => isset($arrResults[$row['question_id']]) ? 1 : 0,
 				'answered' => $arrResults[$row['question_id']]['answered']
 			);
 			
@@ -4200,6 +4208,7 @@ function getAnswerFeedbackPoints()
 		$found['pass']['total_hint_points'] = $pass_hint_points;
 		$found['pass']['percent'] = ($pass_max > 0) ? $pass_reached / $pass_max : 0;
 		$found['pass']['obligationsAnswered'] = $obligationsAnswered;
+		$found['pass']['num_workedthrough'] = $numWorkedThrough;
 		
 		$found["test"]["total_max_points"] = $results['max_points'];
 		$found["test"]["total_reached_points"] = $results['reached_points'];
@@ -4830,17 +4839,23 @@ function getAnswerFeedbackPoints()
 		
 		while( $row = $ilDB->fetchAssoc($result) )
 		{
-			$data	->getParticipant($row["active_fi"])
-					->getPass($row["pass"])
-					->addAnsweredQuestion(
-						$row["question_fi"],
-						$row["maxpoints"],
-						$row["points"],
-						$row['answered'],
-						null,
-						$row['manual']
-					)
-			;
+			$participantObject = $data->getParticipant($row["active_fi"]);
+
+			if( !($participantObject instanceof ilTestEvaluationUserData) )
+			{
+				continue;
+			}
+
+			$passObject = $participantObject->getPass($row["pass"]);
+
+			if( !($passObject instanceof ilTestEvaluationPassData) )
+			{
+				continue;
+			}
+
+			$passObject->addAnsweredQuestion(
+				$row["question_fi"], $row["maxpoints"], $row["points"], $row['answered'], null, $row['manual']
+			);
 		}
 
 		foreach( array_keys($data->getParticipants()) as $active_id )
@@ -5365,10 +5380,19 @@ function getAnswerFeedbackPoints()
 		{
 			$question->object->loadFromDb($question_id);
 			
-			global $ilCtrl, $ilDB, $lng;
+			global $ilCtrl, $ilDB, $ilUser, $lng;
 			
 			$feedbackObjectClassname = assQuestion::getFeedbackClassNameByQuestionType($question_type);
 			$question->object->feedbackOBJ = new $feedbackObjectClassname($question->object, $ilCtrl, $ilDB, $lng);
+
+			$assSettings = new ilSetting('assessment');
+			require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionProcessLockerFactory.php';
+			$processLockerFactory = new ilAssQuestionProcessLockerFactory($assSettings, $ilDB);
+			$processLockerFactory->setQuestionId($question->object->getId());
+			$processLockerFactory->setUserId($ilUser->getId());
+			include_once ("./Modules/Test/classes/class.ilObjAssessmentFolder.php");
+			$processLockerFactory->setAssessmentLogEnabled(ilObjAssessmentFolder::_enabledAssessmentLogging());
+			$question->object->setProcessLocker($processLockerFactory->getLocker());
 		}
 		
 		return $question;
@@ -5609,12 +5633,10 @@ function getAnswerFeedbackPoints()
 	}
 
 	/**
-	* Receives parameters from a QTI parser and creates a valid ILIAS test object
-	*
-	* @param object $assessment The QTI assessment object
-	* @access public
-	*/
-	function fromXML(&$assessment)
+	 * Receives parameters from a QTI parser and creates a valid ILIAS test object
+	 * @param ilQTIAssessment $assessment
+	 */
+	public function fromXML(ilQTIAssessment $assessment)
 	{
 		unset($_SESSION["import_mob_xhtml"]);
 
@@ -5628,11 +5650,16 @@ function getAnswerFeedbackPoints()
 				$this->setIntroduction($this->QTIMaterialToString($material));
 			}
 		}
-		if ($assessment->getPresentationMaterial())
+
+		if(
+			$assessment->getPresentationMaterial() &&
+			$assessment->getPresentationMaterial()->getFlowMat(0) &&
+			$assessment->getPresentationMaterial()->getFlowMat(0)->getMaterial(0)
+		)
 		{
-			$this->setFinalStatement($this->QTIMaterialToString($assessment->getPresentationMaterial()->getMaterial(0)));
+			$this->setFinalStatement($this->QTIMaterialToString($assessment->getPresentationMaterial()->getFlowMat(0)->getMaterial(0)));
 		}
-		
+
 		foreach ($assessment->assessmentcontrol as $assessmentcontrol)
 		{
 			switch ($assessmentcontrol->getSolutionswitch())
@@ -5816,7 +5843,7 @@ function getAnswerFeedbackPoints()
 					$this->setMailNotificationType($metadata["entry"]);
 					break;
 				case "exportsettings":
-					$this->setExportSettings($metadata['exportsettings']);
+					$this->setExportSettings($metadata['entry']);
 					break;
 				case "score_cutting":
 					$this->setScoreCutting($metadata["entry"]);
@@ -5842,8 +5869,11 @@ function getAnswerFeedbackPoints()
 					{
 						$this->setReportingDate(sprintf("%02d%02d%02d%02d%02d%02d", $matches[1], $matches[2], $matches[3], $matches[4], $matches[5], $matches[6]));
 					}
+					break; 
+				case 'enable_processing_time': 
+					$this->setEnableProcessingTime($metadata['entry']); 
 					break;
-				case "processing_time":
+				case "processing_time": 
 					$this->setProcessingTime($metadata['entry']);
 					break;
 				case "starting_time":
@@ -5876,10 +5906,12 @@ function getAnswerFeedbackPoints()
 					$this->setRedirectionUrl($metadata['entry']);
 					break;
 				case 'examid_in_kiosk':
-					$this->setExamidInKiosk($metadata['entry']);
+				case 'examid_in_test_pass':
+					$this->setShowExamIdInTestPassEnabled($metadata['entry']);
 					break;
 				case 'show_exam_id':
-					$this->setShowExamid($metadata['entry']);
+				case 'examid_in_test_res':
+					$this->setShowExamIdInTestResultsEnabled($metadata['entry']);
 					break;
 				case 'enable_archiving':
 					$this->setEnableArchiving($metadata['entry']);
@@ -5892,7 +5924,34 @@ function getAnswerFeedbackPoints()
 					break;
 				case 'char_selector_definition':
 					$this->setCharSelectorDefinition($metadata['entry']);
-					break;	
+					break;
+				case 'activation_limited':
+					$this->setActivationLimited($metadata['entry']);
+					break;
+				case 'activation_start_time':
+					$this->setActivationStartingTime($metadata['entry']);
+					break;
+				case 'activation_end_time':
+					$this->setActivationEndingTime($metadata['entry']);
+					break;
+				case 'activation_visibility':
+					$this->setActivationVisibility($metadata['entry']);
+					break;
+				case 'autosave':
+					$this->setAutosave($metadata['entry']);
+					break;
+				case 'autosave_ival':
+					$this->setAutosaveIval($metadata['entry']);
+					break;
+				case 'offer_question_hints':
+					$this->setOfferingQuestionHintsEnabled($metadata['entry']);
+					break;
+				case 'instant_feedback_specific':
+					$this->setSpecificAnswerFeedback($metadata['entry']);
+					break;
+				case 'obligations_enabled':
+					$this->setObligationsEnabled($metadata['entry']);
+					break;
 			}
 			if (preg_match("/mark_step_\d+/", $metadata["label"]))
 			{
@@ -6094,16 +6153,16 @@ function getAnswerFeedbackPoints()
 		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getResultsPresentation()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
-		// examid in kiosk
+		// examid in test pass
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_kiosk");
-		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getExamidInKiosk()));
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_test_pass");
+		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->isShowExamIdInTestPassEnabled()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// examid in kiosk
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "show_exam_id");
-		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getShowExamid()));
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_test_res");
+		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->isShowExamIdInTestResultsEnabled()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 		
 		// solution details
@@ -6202,7 +6261,7 @@ function getAnswerFeedbackPoints()
 		// export settings
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "exportsettings");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getExportSettings());
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getExportSettings());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// force JavaScript
@@ -6226,37 +6285,37 @@ function getAnswerFeedbackPoints()
 		// processing time
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "processing_time");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getProcessingTime());
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getProcessingTime());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 		
 		// enable_examview
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "enable_examview");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getEnableExamview());
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getEnableExamview());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// show_examview_html
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "show_examview_html");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getShowExamviewHtml());
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getShowExamviewHtml());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// show_examview_pdf
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "show_examview_pdf");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getShowExamviewPdf());
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getShowExamviewPdf());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// enable_archiving
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "enable_archiving");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getEnableArchiving());
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getEnableArchiving());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// sign_submission
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "sign_submission");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getSignSubmission());
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getSignSubmission());
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 		
 		// char_selector_availability
@@ -6290,6 +6349,68 @@ function getAnswerFeedbackPoints()
 			$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("P%dY%dM%dDT%dH%dM%dS", $matches[1], $matches[2], $matches[3], $matches[4], $matches[5], $matches[6]));
 			$a_xml_writer->xmlEndTag("qtimetadatafield");
 		}
+
+
+		//activation_limited
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "activation_limited");
+		$a_xml_writer->xmlElement("fieldentry", NULL,(int)$this->isActivationLimited());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+
+		//activation_start_time
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "activation_start_time");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getActivationStartingTime());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+
+		//activation_end_time
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "activation_end_time");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getActivationEndingTime());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+
+		//activation_visibility
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "activation_visibility");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getActivationVisibility());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+
+		// autosave
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "autosave");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getAutosave());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+
+		// autosave_ival
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "autosave_ival");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getAutosaveIval());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+
+		//offer_question_hints
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "offer_question_hints");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->isOfferingQuestionHintsEnabled());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+
+		//instant_feedback_specific
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "instant_feedback_specific");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getSpecificAnswerFeedback());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+		
+		//obligations_enabled
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "obligations_enabled");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->areObligationsEnabled());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+		
+		//enable_processing_time
+		$a_xml_writer->xmlStartTag("qtimetadatafield");
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "enable_processing_time");
+		$a_xml_writer->xmlElement("fieldentry", NULL, (int)$this->getEnableProcessingTime());
+		$a_xml_writer->xmlEndTag("qtimetadatafield");
+		
 		foreach ($this->mark_schema->mark_steps as $index => $mark)
 		{
 			// mark steps
@@ -6822,6 +6943,8 @@ function getAnswerFeedbackPoints()
 		$newObj->setAnswerFeedback($this->getAnswerFeedback());
 		$newObj->setAnswerFeedbackPoints($this->getAnswerFeedbackPoints());
 		$newObj->setAuthor($this->getAuthor());
+		$newObj->setAllowedUsers($this->getAllowedUsers());
+		$newObj->setAllowedUsersTimeGap($this->getAllowedUsersTimeGap());
 		$newObj->setCountSystem($this->getCountSystem());
 		$newObj->setECTSFX($this->getECTSFX());
 		$newObj->setECTSGrades($this->getECTSGrades());
@@ -6866,8 +6989,8 @@ function getAnswerFeedbackPoints()
 		$newObj->setTemplate($this->getTemplate());
 		$newObj->setPoolUsage($this->getPoolUsage());
 		$newObj->setPrintBestSolutionWithResult($this->isBestSolutionPrintedWithResult());
-		$newObj->setExamidInKiosk($this->getExamidInKiosk());
-		$newObj->setShowExamid($this->getShowExamid());
+		$newObj->setShowExamIdInTestPassEnabled($this->isShowExamIdInTestPassEnabled());
+		$newObj->setShowExamIdInTestResultsEnabled($this->isShowExamIdInTestResultsEnabled());
 		$newObj->setEnableExamView($this->getEnableExamview());
 		$newObj->setShowExamViewHtml($this->getShowExamviewHtml());
 		$newObj->setShowExamViewPdf($this->getShowExamviewPdf());
@@ -6889,6 +7012,7 @@ function getAnswerFeedbackPoints()
 		$testQuestionSetConfigFactory->getQuestionSetConfig()->cloneQuestionSetRelatedData($newObj);
 
 		$newObj->saveToDb();
+		$newObj->updateMetaData();// #14467
 		return $newObj;
 	}
 
@@ -7482,21 +7606,6 @@ function getAnswerFeedbackPoints()
 		);
 	}
 
-
-	/**
-	 * submits active test for user user_id
-	 */
-	function setActiveTestSubmitted($user_id)
-	{
-		global $ilDB, $ilLog;
-
-		$affectedRows = $ilDB->manipulateF("UPDATE tst_active SET submitted = %s, submittimestamp = %s, tstamp = %s WHERE test_fi = %s AND user_fi = %s",
-			array('integer', 'timestamp', 'integer', 'integer', 'integer'),
-			array(1, date('Y-m-d H:i:s'), time(), $this->getTestId(), $user_id)
-		);
-		$this->testSession = NULL;
-	}
-
 	/**
 	 * returns if the active for user_id has been submitted
 	 */
@@ -7540,6 +7649,7 @@ function getAnswerFeedbackPoints()
 
 	/**
 	 * returns if number of tries are reached
+	 * @deprecated: tries field differs per situation, outside a pass it's the number of tries, inside a pass it's the current pass number.
 	 */
 
 	function isNrOfTriesReached($tries)
@@ -7832,7 +7942,7 @@ function getAnswerFeedbackPoints()
 			$dynamicQuestionSetConfig->loadFromDb();
 			
 			$testSequence->loadFromDb($dynamicQuestionSetConfig);
-			$testSequence->loadQuestions($dynamicQuestionSetConfig, array());
+			$testSequence->loadQuestions($dynamicQuestionSetConfig, new ilTestDynamicQuestionSetFilterSelection());
 			
 			return $testSequence->getTrackedQuestionCount();
 		}
@@ -7941,21 +8051,22 @@ function getAnswerFeedbackPoints()
 			}
 		}
 
-		if ($this->hasNrOfTriesRestriction() && ($active_id > 0) && $this->isNrOfTriesReached($testSession->getPass()))
+		if ($this->hasNrOfTriesRestriction() && ($active_id > 0))
 		{
-			$result["executable"] = false;
-			$result["errormessage"] = $this->lng->txt("maximum_nr_of_tries_reached");
-			return $result;
-		}
-		
-		if ($testSession->isSubmitted())
-		{
-			$result["executable"] = FALSE;
-			$result["errormessage"] = $this->lng->txt("maximum_nr_of_tries_reached");
-			return $result;
-		}
+			require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+			$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this);
+			$testPassesSelector->setActiveId($active_id);
+			$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
 
-		// TODO: max. processing time
+			$closedPasses = $testPassesSelector->getReportablePasses();
+
+			if( count($closedPasses) >= $this->getNrOfTries() )
+			{
+				$result["executable"] = false;
+				$result["errormessage"] = $this->lng->txt("maximum_nr_of_tries_reached");
+				return $result;
+			}
+		}
 
 		return $result;
 	}
@@ -8042,12 +8153,15 @@ function getAnswerFeedbackPoints()
 * @return mixed The unix timestamp if the user started the test, FALSE otherwise
 * @access public
 */
-	function getStartingTimeOfUser($active_id)
+	function getStartingTimeOfUser($active_id, $pass = null)
 	{
 		global $ilDB;
 
 		if ($active_id < 1) return FALSE;
+		if($pass === null)
+		{
 		$pass = ($this->getResetProcessingTime()) ? $this->_getPass($active_id) : 0;
+		}
 		$result = $ilDB->queryF("SELECT tst_times.started FROM tst_times WHERE tst_times.active_fi = %s AND tst_times.pass = %s ORDER BY tst_times.started",
 			array('integer', 'integer'),
 			array($active_id, $pass)
@@ -9381,56 +9495,95 @@ function getAnswerFeedbackPoints()
 		global $ilDB;
 		global $ilUser;
 		$testsettings = array(
-			"TitleOutput" => $this->getTitleOutput(),
-			"PassScoring" => $this->getPassScoring(),
-			"Introduction" => $this->getIntroduction(),
-			"FinalStatement" => $this->getFinalStatement(),
-			"ShowInfo" => $this->getShowInfo(),
-			"ForceJS" => $this->getForceJS(),
-			"CustomStyle" => $this->getCustomStyle(),
-			"ShowFinalStatement" => $this->getShowFinalStatement(),
-			"SequenceSettings" => $this->getSequenceSettings(),
-			"ScoreReporting" => $this->getScoreReporting(),
-			"InstantFeedbackSolution" => $this->getInstantFeedbackSolution(),
-			"AnswerFeedback" => $this->getAnswerFeedback(),
-			"AnswerFeedbackPoints" => $this->getAnswerFeedbackPoints(),
-			"ResultsPresentation" => $this->getResultsPresentation(),
-			"Anonymity" => $this->getAnonymity(),
-			"ShowCancel" => $this->getShowCancel(),
-			"ShowMarker" => $this->getShowMarker(),
-			"ReportingDate" => $this->getReportingDate(),
-			"NrOfTries" => $this->getNrOfTries(),
-			"Shuffle" => $this->getShuffleQuestions(),
-			"Kiosk" => $this->getKiosk(),
-			"UsePreviousAnswers" => $this->getUsePreviousAnswers(),
-			"ProcessingTime" => $this->getProcessingTime(),
-			"EnableProcessingTime" => $this->getEnableProcessingTime(),
-			"ResetProcessingTime" => $this->getResetProcessingTime(),
-			"StartingTime" => $this->getStartingTime(),
-			"EndingTime" => $this->getEndingTime(),
-			"ECTSOutput" => $this->getECTSOutput(),
-			"ECTSFX" => $this->getECTSFX(),
-			"ECTSGrades" => $this->getECTSGrades(),
-			"questionSetType" => $this->getQuestionSetType(),
-			"CountSystem" => $this->getCountSystem(),
-			"MCScoring" => $this->getMCScoring(),
-			"mailnotification" => $this->getMailNotification(),
-			"mailnottype" => $this->getMailNotificationType(),
-			"exportsettings" => $this->getExportSettings(),
-			"ListOfQuestionsSettings" => $this->getListOfQuestionsSettings(),
-			'obligations_enabled' => (int)$this->areObligationsEnabled(),
-			'offer_question_hints' => (int)$this->isOfferingQuestionHintsEnabled(),
-			'pass_deletion_allowed' => (int)$this->isPassDeletionAllowed(),
-			'enable_examview' => $this->getEnableExamview(),
-			'show_examview_html' => $this->getShowExamviewHtml(),
-			'show_examview_pdf' => $this->getShowExamviewPdf(),
+			"TitleOutput"                => $this->getTitleOutput(),
+			"PassScoring"                => $this->getPassScoring(),
+			"Introduction"               => $this->getIntroduction(),
+			"FinalStatement"             => $this->getFinalStatement(),
+			"ShowInfo"                   => $this->getShowInfo(),
+			"ForceJS"                    => $this->getForceJS(),
+			"CustomStyle"                => $this->getCustomStyle(),
+			"ShowFinalStatement"         => $this->getShowFinalStatement(),
+			"SequenceSettings"           => $this->getSequenceSettings(),
+			"ScoreReporting"             => $this->getScoreReporting(),
+			"ScoreCutting"               => $this->getScoreCutting(),
+			'SpecificAnswerFeedback'     => $this->getSpecificAnswerFeedback(),
+			'PrintBsWithRes'             => (int)$this->isBestSolutionPrintedWithResult(),
+			"InstantFeedbackSolution"    => $this->getInstantFeedbackSolution(),
+			"AnswerFeedback"             => $this->getAnswerFeedback(),
+			"AnswerFeedbackPoints"       => $this->getAnswerFeedbackPoints(),
+			"ResultsPresentation"        => $this->getResultsPresentation(),
+			"Anonymity"                  => $this->getAnonymity(),
+			"ShowCancel"                 => $this->getShowCancel(),
+			"ShowMarker"                 => $this->getShowMarker(),
+			"ReportingDate"              => $this->getReportingDate(),
+			"NrOfTries"                  => $this->getNrOfTries(),
+			"Shuffle"                    => $this->getShuffleQuestions(),
+			"Kiosk"                      => $this->getKiosk(),
+			"UsePreviousAnswers"         => $this->getUsePreviousAnswers(),
+			"ProcessingTime"             => $this->getProcessingTime(),
+			"EnableProcessingTime"       => $this->getEnableProcessingTime(),
+			"ResetProcessingTime"        => $this->getResetProcessingTime(),
+			"StartingTime"               => $this->getStartingTime(),
+			"EndingTime"                 => $this->getEndingTime(),
+			"ECTSOutput"                 => $this->getECTSOutput(),
+			"ECTSFX"                     => $this->getECTSFX(),
+			"ECTSGrades"                 => $this->getECTSGrades(),
+			"questionSetType"            => $this->getQuestionSetType(),
+			"CountSystem"                => $this->getCountSystem(),
+			"MCScoring"                  => $this->getMCScoring(),
+			"mailnotification"           => $this->getMailNotification(),
+			"mailnottype"                => $this->getMailNotificationType(),
+			"exportsettings"             => $this->getExportSettings(),
+			"ListOfQuestionsSettings"    => $this->getListOfQuestionsSettings(),
+			'obligations_enabled'        => (int)$this->areObligationsEnabled(),
+			'offer_question_hints'       => (int)$this->isOfferingQuestionHintsEnabled(),
+			'pass_deletion_allowed'      => (int)$this->isPassDeletionAllowed(),
+			'enable_examview'            => $this->getEnableExamview(),
+			'show_examview_html'         => $this->getShowExamviewHtml(),
+			'show_examview_pdf'          => $this->getShowExamviewPdf(),
 			'char_selector_availability' => $this->getCharSelectorAvailability(),
-			'char_selector_definition' => $this->getCharSelectorDefinition()
+			'char_selector_definition'   => $this->getCharSelectorDefinition(),
+			'redirection_mode'           => $this->getRedirectionMode(),
+			'redirection_url'            => $this->getRedirectionUrl(),
+			'sign_submission'            => $this->getSignSubmission(),
+			'autosave'                   => (int)$this->getAutosave(),
+			'autosave_ival'              => (int)$this->getAutosaveIval(),
+			'examid_in_test_pass'        => (int)$this->isShowExamIdInTestPassEnabled(),
+			'examid_in_test_res'         => (int)$this->isShowExamIdInTestResultsEnabled(),
+
+			'enable_archiving'           => (int)$this->getEnableArchiving(),
+			'password'                   => (string)$this->getPassword(),
+			'fixed_participants'         => $this->getFixedParticipants(),
+			'allowedusers'               => $this->getAllowedUsers(),
+			'alloweduserstimegap'        => $this->getAllowedUsersTimeGap(),
+			'pool_usage'                 => $this->getPoolUsage(),
+			'activation_limited'         => $this->isActivationLimited(),
+			'activation_start_time'      => $this->getActivationStartingTime(),
+			'activation_end_time'        => $this->getActivationEndingTime(),
+			'activation_visibility'      => $this->getActivationVisibility(),
+			'highscore_enabled'          => $this->getHighscoreEnabled(),
+			'highscore_anon'             => $this->getHighscoreAnon(),
+			'highscore_achieved_ts'      => $this->getHighscoreAchievedTS(),
+			'highscore_score'            => $this->getHighscoreScore(),
+			'highscore_percentage'       => $this->getHighscorePercentage(),
+			'highscore_hints'            => $this->getHighscoreHints(),
+			'highscore_wtime'            => $this->getHighscoreWTime(),
+			'highscore_own_table'        => $this->getHighscoreOwnTable(),
+			'highscore_top_table'        => $this->getHighscoreTopTable(),
+			'highscore_top_num'          => $this->getHighscoreTopNum(),
+			'use_previous_answers'       => (string)$this->getUsePreviousAnswers()
 		);
 		$next_id = $ilDB->nextId('tst_test_defaults');
-		$affectedRows = $ilDB->manipulateF("INSERT INTO tst_test_defaults (test_defaults_id, name, user_fi, defaults, marks, tstamp) VALUES (%s, %s, %s, %s, %s, %s)",
-			array('integer', 'text', 'integer', 'text', 'text', 'integer'),
-			array($next_id, $a_name, $ilUser->getId(), serialize($testsettings), serialize($this->mark_schema), time())
+		$ilDB->insert(
+			'tst_test_defaults',
+			array(
+				'test_defaults_id' => array('integer', $next_id),
+				'name'             => array('text', $a_name),
+				'user_fi'          => array('integer', $ilUser->getId()),
+				'defaults'         => array('clob', serialize($testsettings)),
+				'marks'            => array('clob', serialize($this->mark_schema)),
+				'tstamp'           => array('integer', time())
+			)
 		);
 	}
 
@@ -9457,6 +9610,9 @@ function getAnswerFeedbackPoints()
 		$this->setShowFinalStatement($testsettings["ShowFinalStatement"]);
 		$this->setSequenceSettings($testsettings["SequenceSettings"]);
 		$this->setScoreReporting($testsettings["ScoreReporting"]);
+		$this->setScoreCutting($testsettings['ScoreCutting']);
+		$this->setSpecificAnswerFeedback($testsettings['SpecificAnswerFeedback']);
+		$this->setPrintBestSolutionWithResult((bool)$testsettings['PrintBsWithRes']);
 		$this->setInstantFeedbackSolution($testsettings["InstantFeedbackSolution"]);
 		$this->setAnswerFeedback($testsettings["AnswerFeedback"]);
 		$this->setAnswerFeedbackPoints($testsettings["AnswerFeedbackPoints"]);
@@ -9513,8 +9669,22 @@ function getAnswerFeedbackPoints()
 		$this->setHighscoreTopTable($testsettings['highscore_top_table']);
 		$this->setHighscoreTopNum($testsettings['highscore_top_num']);
 		$this->setPassDeletionAllowed($testsettings['pass_deletion_allowed']);
-		$this->setExamidInKiosk($testsettings['examid_in_kiosk']);
-		$this->setShowExamid($testsettings['show_exam_id']);
+		if( isset($testsettings['examid_in_kiosk']) )
+		{
+			$this->setShowExamIdInTestPassEnabled($testsettings['examid_in_kiosk']);
+		}
+		else
+		{
+			$this->setShowExamIdInTestPassEnabled($testsettings['examid_in_test_pass']);
+		}
+		if( isset($testsettings['show_exam_id']) )
+		{
+			$this->setShowExamIdInTestResultsEnabled($testsettings['show_exam_id']);
+		}
+		else
+		{
+			$this->setShowExamIdInTestResultsEnabled($testsettings['examid_in_test_res']);
+		}
 		$this->setEnableExamview($testsettings['enable_examview']);
 		$this->setShowExamviewHtml($testsettings['show_examview_html']);
 		$this->setShowExamviewPdf($testsettings['show_examview_pdf']);
@@ -9522,6 +9692,24 @@ function getAnswerFeedbackPoints()
 		$this->setSignSubmission($testsettings['sign_submission']);
 		$this->setCharSelectorAvailability($testsettings['char_selector_availability']);
 		$this->setCharSelectorDefinition($testsettings['char_selector_definition']);
+
+		$this->setRedirectionMode($testsettings['redirection_mode']);
+		$this->setRedirectionUrl($testsettings['redirection_url']);
+
+		$this->setAutosave($testsettings['autosave']);
+		$this->setAutosaveIval($testsettings['autosave_ival']);
+		$this->setShowExamIdInTestResultsEnabled((int)$testsettings['examid_in_test_res']);
+		$this->setPassword($testsettings['password']);
+		$this->setFixedParticipants($testsettings['fixed_participants']	);
+		$this->setAllowedUsers($testsettings['allowedusers']);
+		$this->setAllowedUsersTimeGap($testsettings['alloweduserstimegap']);
+		$this->setUsePreviousAnswers($testsettings['use_previous_answers']);
+		$this->setPoolUsage($testsettings['pool_usage']);
+		$this->setActivationLimited($testsettings['activation_limited']);
+		$this->setActivationStartingTime($testsettings['activation_start_time']);
+		$this->setActivationEndingTime($testsettings['activation_end_time']);
+		$this->setActivationVisibility($testsettings['activation_visibility']);
+		
 		$this->saveToDb();
 
 		return true;
@@ -9861,7 +10049,7 @@ function getAnswerFeedbackPoints()
 		}
 	}
 	
-	protected function getPassed($active_id)
+	public function getPassed($active_id)
 	{
 		global $ilDB;
 		
@@ -10082,29 +10270,12 @@ function getAnswerFeedbackPoints()
 	
 	public function sendSimpleNotification($active_id)
 	{
-		include_once "./Services/Mail/classes/class.ilMail.php";
-		$mail = new ilMail(ANONYMOUS_USER_ID);
-
-		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
-		$message = new ilTemplate("tpl.il_as_tst_finish_notification_simple.html", TRUE, TRUE, "Modules/Test");
-		$message->setVariable('TEXT_TEST_TITLE', $this->lng->txt('title'));
-		$message->setVariable('VALUE_TEST_TITLE', $this->getTitle());
-		$message->setVariable('TEXT_USER_NAME', $this->lng->txt('username'));
-		$message->setVariable('VALUE_USER_NAME', $usr_data);
-		$message->setVariable('TEXT_FINISH_TIME', $this->lng->txt('tst_finished'));
-		ilDatePresentation::setUseRelativeDates(false);
-		$message->setVariable('VALUE_FINISH_TIME', ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX)));
+		include_once "./Modules/Test/classes/class.ilTestMailNotification.php";
 		
-		$res = $mail->sendMail(
-			ilObjUser::_lookupLogin($this->getOwner()), // to
-			"", // cc
-			"", // bcc
-			sprintf($this->lng->txt('tst_user_finished_test'), $this->getTitle()), // subject
-			$message->get(), // message
-			array(), // attachments
-			array('normal') // type
-		);	
-		global $ilLog; $ilLog->write("sending mail: " . $res);
+		$mail = new ilTestMailNotification();
+		$owner_id = $this->getOwner();
+		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
+		$mail->sendSimpleNotification($owner_id, $this->getTitle(), $usr_data);
 	}
 	
 	/**
@@ -10122,18 +10293,11 @@ function getAnswerFeedbackPoints()
 
 	public function sendAdvancedNotification($active_id)
 	{
-		include_once "./Services/Mail/classes/class.ilMail.php";
-		$mail = new ilMail(ANONYMOUS_USER_ID);
+		include_once "./Modules/Test/classes/class.ilTestMailNotification.php";
 
+		$mail = new ilTestMailNotification();
+		$owner_id = $this->getOwner();
 		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
-		$message = new ilTemplate("tpl.il_as_tst_finish_notification_simple.html", TRUE, TRUE, "Modules/Test");
-		$message->setVariable('TEXT_TEST_TITLE', $this->lng->txt('title'));
-		$message->setVariable('VALUE_TEST_TITLE', $this->getTitle());
-		$message->setVariable('TEXT_USER_NAME', $this->lng->txt('username'));
-		$message->setVariable('VALUE_USER_NAME', $usr_data);
-		$message->setVariable('TEXT_FINISH_TIME', $this->lng->txt('tst_finished'));
-		ilDatePresentation::setUseRelativeDates(false);
-		$message->setVariable('VALUE_FINISH_TIME', ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX)));
 
 		include_once "./Modules/Test/classes/class.ilTestExport.php";
 		$exportObj = new ilTestExport($this, "results");
@@ -10142,15 +10306,9 @@ function getAnswerFeedbackPoints()
 		$fd = new ilFileDataMail(ANONYMOUS_USER_ID);
 		$fd->copyAttachmentFile($file, "result_" . $active_id . ".xls");
 		$file_names[] = "result_" . $active_id . ".xls";
-		$result = $mail->sendMail(
-			ilObjUser::_lookupLogin($this->getOwner()), // to
-			"", // cc
-			"", // bcc
-			sprintf($this->lng->txt('tst_user_finished_test'), $this->getTitle()), // subject
-			$message->get(), // message
-			count($file_names) ? $file_names : array(), // attachments
-			array('normal') // type
-		);
+
+		$mail->sendAdvancedNotification($owner_id, $this->getTitle(), $usr_data, $file_names);
+	
 		if(count($file_names))
 		{
 			$fd->unlinkFiles($file_names);
@@ -10211,7 +10369,9 @@ function getAnswerFeedbackPoints()
 						}
 						else
 						{
-							$this->setActiveTestSubmitted($user_id);
+							$testSession->setSubmitted(1);
+							$testSession->setSubmittedTimestamp(date('Y-m-d H:i:s'));
+							$testSession->saveToDb();
 						}
 					}
 					$number--;
@@ -10498,20 +10658,31 @@ function getAnswerFeedbackPoints()
 
 	}
 
-	public function hasQuestionsWithoutQuestionpool() {
+	public function hasQuestionsWithoutQuestionpool()
+	{
 	    global $ilDB;
+
 	    $questions = $this->getQuestionTitlesAndIndexes();
-	    $query = 'SELECT count(question_id) cnt FROM qpl_questions'.
-			' INNER JOIN object_data on obj_fi = obj_id'.
-			' WHERE type <> '.$ilDB->quote('qpl', 'text').
-			' AND '.$ilDB->in('question_id', array_keys($questions), false, 'integer');
+		
+		$IN_questions = $ilDB->in('q1.question_id', array_keys($questions), false, 'integer');
+		
+	    $query = "
+			SELECT		count(q1.question_id) cnt
+			
+			FROM		qpl_questions q1
+
+			INNER JOIN	qpl_questions q2
+			ON			q2.question_id = q1.original_id
+			
+			WHERE		$IN_questions
+			AND		 	q1.obj_fi = q2.obj_fi
+		";
 
 	    $rset = $ilDB->query($query);
 	    
-	    if ($row = $ilDB->fetchAssoc($rset)) {
+	    $row = $ilDB->fetchAssoc($rset);
+
 		return $row['cnt'] > 0;
-	    }
-	    return false;
 	}
 
 	/**
@@ -11230,7 +11401,7 @@ function getAnswerFeedbackPoints()
 	 * @param $pass
 	 * @return array
 	 */
-	public function getExamId($active_id, $pass)
+	public function lookupExamId($active_id, $pass)
 	{
 		/** @TODO Move this to a proper place. */
 		global $ilDB, $ilSetting;
@@ -11246,42 +11417,54 @@ function getAnswerFeedbackPoints()
 				return $exam_id_row['exam_id'];
 			}
 		}
+		
+		return null;
+	}
+
+	/**
+	 * @param  $active_id
+	 * @param  $pass
+	 * @param  $test_obj_id
+	 * @return array
+	 */
+	public static function buildExamId($active_id, $pass)
+	{
+		/** @TODO Move this to a proper place. */
+		global $ilSetting;
 
 		$inst_id = $ilSetting->get( 'inst_id', null );
-		$obj_id  = ilObject::_lookupObjId($this->ref_id);
-		return 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
+
+		$obj_id  = self::_getObjectIDFromActiveID($active_id);
+
+		$examId = 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
+
+		return $examId;
 	}
 
-	/**
-	 * @param boolean $examid_in_kiosk
-	 */
-	public function setExamidInKiosk($examid_in_kiosk)
+	public function setShowExamIdInTestPassEnabled($show_exam_id_in_test_pass_enabled)
 	{
-		$this->examid_in_kiosk = $examid_in_kiosk;
+		$this->show_exam_id_in_test_pass_enabled = $show_exam_id_in_test_pass_enabled;
 	}
 
-	/**
-	 * @return boolean
-	 */
-	public function getExamidInKiosk()
+	public function isShowExamIdInTestPassEnabled()
 	{
-		return $this->examid_in_kiosk;
+		return $this->show_exam_id_in_test_pass_enabled;
 	}
 
 	/**
 	 * @param boolean $show_exam_id
 	 */
-	public function setShowExamid($show_exam_id)
+	public function setShowExamIdInTestResultsEnabled($show_exam_id_in_test_results_enabled)
 	{
-		$this->show_exam_id = $show_exam_id;
+		$this->show_exam_id_in_test_results_enabled = $show_exam_id_in_test_results_enabled;
 	}
 
 	/**
 	 * @return boolean
 	 */
-	public function getShowExamid()
+	public function isShowExamIdInTestResultsEnabled()
 	{
-		return $this->show_exam_id;
+		return $this->show_exam_id_in_test_results_enabled;
 	}
 
 	/**
@@ -11409,6 +11592,23 @@ function getAnswerFeedbackPoints()
 	{
 		return self::lookupQuestionSetType($a_obj_id) == self::QUESTION_SET_TYPE_RANDOM;
 	}
+
+	public function getQuestionSetTypeTranslation(ilLanguage $lng, $questionSetType)
+	{
+		switch( $questionSetType )
+		{
+			case ilObjTest::QUESTION_SET_TYPE_FIXED:
+				return $lng->txt('tst_question_set_type_fixed');
+
+			case ilObjTest::QUESTION_SET_TYPE_RANDOM:
+				return $lng->txt('tst_question_set_type_random');
+
+			case ilObjTest::QUESTION_SET_TYPE_DYNAMIC:
+				return $lng->txt('tst_question_set_type_dynamic');
+		}
+
+		throw new ilTestException('invalid question set type value given: '.$questionSetType);
+	}
 	
 	public function participantDataExist()
 	{
@@ -11437,5 +11637,45 @@ function getAnswerFeedbackPoints()
 		);
 		
 		return $questionChangeListeners;
+	}
+	
+	public static function getTestObjIdsWithActiveForUserId($userId)
+	{
+		global $ilDB;
+		
+		$query = "
+			SELECT obj_fi
+			FROM tst_active
+			INNER JOIN tst_tests
+			ON test_id = test_fi
+			WHERE user_fi = %s
+		";
+		
+		$res = $ilDB->queryF($query, array('integer'), array($userId));
+		
+		$objIds = array();
+		
+		while( $row = $ilDB->fetchAssoc($res) )
+		{
+			$objIds[] = (int)$row['obj_fi'];
+		}
+		
+		return $objIds;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isTestFinalBroken()
+	{
+		return $this->testFinalBroken;
+	}
+
+	/**
+	 * @param boolean $testFinalBroken
+	 */
+	public function setTestFinalBroken($testFinalBroken)
+	{
+		$this->testFinalBroken = $testFinalBroken;
 	}
 }

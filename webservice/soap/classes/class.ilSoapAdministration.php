@@ -27,7 +27,7 @@
    * Base class for all SOAP registered methods. E.g ilSoapUserAdministration
    *
    * @author Stefan Meyer <meyer@leifos.com>
-   * @version $Id: class.ilSoapAdministration.php 40033 2013-02-20 15:25:02Z jluetzen $
+   * @version $Id$
    *
    * @package ilias
    */

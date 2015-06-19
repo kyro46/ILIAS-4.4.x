@@ -12,7 +12,7 @@
 * Logging and message generation are generic
 *
 * @author	Fred Neumann <fred.neumann@fim.uni-erlangen.de>
-* @version $Id: class.ilVirusScanner.php 33489 2012-03-02 19:59:14Z akill $
+* @version $Id$
 * 
 */
 class ilVirusScanner

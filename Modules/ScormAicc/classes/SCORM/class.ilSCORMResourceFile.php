@@ -27,7 +27,7 @@ require_once("./Modules/ScormAicc/classes/SCORM/class.ilSCORMObject.php");
 * SCORM Resource File, DB accesses are done in ilSCORMResource
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMResourceFile.php 12711 2006-12-01 15:24:41Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

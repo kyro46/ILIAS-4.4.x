@@ -9,7 +9,7 @@
 * the design of the desktop.
 *
 * @author Arjan Ammerlaan <a.l.ammerlaan@web.de>
-* @version $Id: class.ilLocatorGUI.php 33415 2012-02-28 22:27:52Z akill $
+* @version $Id$
 * 
 */
 class ilLocatorGUI
@@ -217,6 +217,13 @@ class ilLocatorGUI
 	*/
 	function addItem($a_title, $a_link, $a_frame = "", $a_ref_id = 0, $type = null)
 	{
+		global $ilAccess;
+
+		if ($a_ref_id > 0 && !$ilAccess->checkAccess("visible", "", $a_ref_id))
+		{
+			return;
+		}
+
 		$this->entries[] = array("title" => $a_title,
 			"link" => $a_link, "frame" => $a_frame, "ref_id" => $a_ref_id, "type" => $type); 
 	}

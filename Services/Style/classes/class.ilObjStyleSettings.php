@@ -5,7 +5,7 @@
 * Class ilObjStyleSettings
 * 
 * @author Alex Killing <alex.killing@gmx.de> 
-* @version $Id: class.ilObjStyleSettings.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @extends ilObject
 */

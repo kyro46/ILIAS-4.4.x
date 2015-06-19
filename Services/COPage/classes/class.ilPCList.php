@@ -9,7 +9,7 @@ require_once("./Services/COPage/classes/class.ilPageContent.php");
 * List content object (see ILIAS DTD)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCList.php 43464 2013-07-17 09:18:27Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

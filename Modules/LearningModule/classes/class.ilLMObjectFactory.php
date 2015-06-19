@@ -30,7 +30,7 @@ require_once ("./Modules/LearningModule/classes/class.ilStructureObject.php");
 * Creates StructureObject or PageObject by ID (see table lm_data)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilLMObjectFactory.php 19193 2009-02-28 01:53:40Z akill $
+* @version $Id$
 *
 * @ingroup ModulesIliasLearningModule
 */

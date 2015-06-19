@@ -5,7 +5,7 @@
 * This class represents a key value pair wizard property in a property form.
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilErrorTextWizardInputGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilErrorTextWizardInputGUI extends ilTextInputGUI

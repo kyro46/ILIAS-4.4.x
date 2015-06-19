@@ -26,7 +26,7 @@
 * Class ilObjSystemFolder
 * 
 * @author Stefan Meyer <meyer@leifos.com> 
-* @version $Id: class.ilObjSystemFolder.php 49370 2014-04-11 09:11:14Z jluetzen $
+* @version $Id$
 * 
 * @extends ilObject
 */

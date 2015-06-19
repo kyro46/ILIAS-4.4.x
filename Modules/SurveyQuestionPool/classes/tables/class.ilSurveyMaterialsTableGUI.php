@@ -27,7 +27,7 @@ include_once("./Services/Table/classes/class.ilTable2GUI.php");
 * TableGUI class for survey question materials
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilSurveyMaterialsTableGUI.php 26013 2010-10-12 16:01:03Z hschottm $
+* @version $Id$
 *
 * @ingroup ModulesSurveyQuestionPool
 * 

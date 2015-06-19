@@ -25,7 +25,7 @@
 * QTI assessmentcontrol class
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilQTIAssessmentcontrol.php 12481 2006-11-09 00:04:34Z hschottm $
+* @version $Id$
 *
 * @package assessment
 */

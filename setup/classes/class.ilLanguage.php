@@ -34,7 +34,7 @@
  * you can translate a lang-topic into the actual language
  *
  * @author Peter Gabriel <pgabriel@databay.de>
- * @version $Id: class.ilLanguage.php 27896 2011-02-28 15:49:51Z smeyer $
+ * @version $Id$
  * 
  * 
  * @todo The DATE field is not set correctly on changes of a language (update, install, your stable).

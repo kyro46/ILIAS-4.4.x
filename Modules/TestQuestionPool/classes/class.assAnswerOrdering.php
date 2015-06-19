@@ -10,7 +10,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * ASS_AnswerOrdering is a class for ordering question answers used in ordering questions.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assAnswerOrdering.php 46529 2013-12-02 09:09:24Z mbecker $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 * @see ASS_AnswerSimple
 */

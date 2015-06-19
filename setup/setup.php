@@ -29,7 +29,7 @@
 * it can set up the database to if the settings are correct and the dbuser has the rights
 *
 * @author Sascha Hofmann <shofmann@databay.de> 
-* @version $Id: setup.php 21712 2009-09-16 23:37:53Z akill $
+* @version $Id$
 *
 * @package ilias-setup
 */

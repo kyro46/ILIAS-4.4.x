@@ -102,7 +102,7 @@ require_once 'Services/User/classes/class.ilObjUser.php';
 *
 *
 * @author	Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilMail.php 48706 2014-03-18 15:05:05Z mjansen $
+* @version $Id$
 *
 */
 
@@ -2636,7 +2636,7 @@ class ilMail
 		$lang->loadLanguageModule('mail');
 		return sprintf($lang->txt('mail_auto_generated_info'),
 			$ilSetting->get('inst_name','ILIAS 4'),
-			$http_path."\n\n");
+			$http_path)."\n\n";
 	}
 
 	/**

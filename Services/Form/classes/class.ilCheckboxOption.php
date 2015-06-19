@@ -25,7 +25,7 @@
 * This class represents an option in a checkbox group
 *
 * @author Helmut Schottmüller <ilias@aurealis.de> 
-* @version $Id: class.ilCheckboxOption.php 20330 2009-06-24 11:51:49Z hschottm $
+* @version $Id$
 * @ingroup	ServicesForm
 */
 class ilCheckboxOption extends ilRadioOption

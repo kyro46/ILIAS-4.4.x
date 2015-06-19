@@ -28,7 +28,7 @@ require_once ("./Modules/ScormAicc/classes/SCORM/class.ilSCORMResources.php");
 * GUI class for SCORM Resources element
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMResourcesGUI.php 12711 2006-12-01 15:24:41Z akill $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

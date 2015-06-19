@@ -31,7 +31,7 @@
 *  Required methods for the PR relation are grantPermission(), revokePermission()
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilRbacAdmin.php 48540 2014-03-12 10:31:17Z smeyer $
+* @version $Id$
 *
 * @ingroup ServicesAccessControl
 */
@@ -754,28 +754,38 @@ class ilRbacAdmin
 	{
 		global $ilDB, $rbacreview;
 
-		// only copy if source2 is different than target
-		if(
-			$a_source2_id != $a_dest_id and
-			$a_source2_parent != $a_dest_parent
-		)
-		{
-			$this->copyRoleTemplatePermissions(
-				$a_source2_id,
-				$a_source2_parent,
-				$a_dest_parent,
-				$a_dest_id
-			);
-		}
-
+		
 		$s1_ops = $rbacreview->getAllOperationsOfRole($a_source1_id,$a_source1_parent);
 		$s2_ops = $rbacreview->getAlloperationsOfRole($a_source2_id,$a_source2_parent);
+		
+		$this->deleteRolePermission($a_dest_id, $a_dest_parent);
+
+		$GLOBALS['ilLog']->write(__METHOD__.': '.print_r($s1_ops,TRUE));
+		$GLOBALS['ilLog']->write(__METHOD__.': '.print_r($s2_ops,TRUE));
 
 		foreach($s1_ops as $type => $ops)
 		{
 			foreach($ops as $op)
 			{
-				if(!isset($s2_ops[$type]) or !in_array($op, $s2_ops[$type]))
+				// insert all permission of source 1
+				// #15469
+				$query = 'INSERT INTO rbac_templates (rol_id,type,ops_id,parent) '.
+					'VALUES( '.
+					$ilDB->quote($a_dest_id,'integer').', '.
+					$ilDB->quote($type,'text').', '.
+					$ilDB->quote($op,'integer').', '.
+					$ilDB->quote($a_dest_parent,'integer').' '.
+					')';
+				$ilDB->manipulate($query);
+			}
+		}
+		
+		// and the other direction...
+		foreach($s2_ops as $type => $ops)
+		{
+			foreach($ops as $op)
+			{
+				if(!isset($s1_ops[$type]) or !in_array($op, $s1_ops[$type]))
 				{
 					$query = 'INSERT INTO rbac_templates (rol_id,type,ops_id,parent) '.
 						'VALUES( '.
@@ -788,6 +798,7 @@ class ilRbacAdmin
 				}
 			}
 		}
+		
 		return true;
 	}
 	
@@ -1219,5 +1230,27 @@ class ilRbacAdmin
 		}
 
 	}
+	
+	
+	/**
+	 * Copies all permission from source to target for all roles 
+	 * @param type $a_source_ref_id
+	 * @param type $target_ref_id
+	 * @param type $a_subtree_id
+	 */
+	public function copyEffectiveRolePermissions($a_source_ref_id, $target_ref_id, $a_subtree_id)
+	{
+		global $rbacreview;
+		
+		$parent_roles = $rbacreview->getParentRoleIds($a_source_ref_id, FALSE);
+		$GLOBALS['ilLog']->write(__METHOD__.': '. print_r($parent_roles,TRUE));
+		
+		
+		
+	}
+	
+	
+	
+	
 } // END class.ilRbacAdmin
 ?>

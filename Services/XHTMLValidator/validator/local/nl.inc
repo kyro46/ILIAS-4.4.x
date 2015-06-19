@@ -1,7 +1,7 @@
 <?php
 
 // Translation: Sebastiaan J.L. van der Velden (sjlvdv@tiscali.no)
-// Revision: $Revision: 8379 $
+// Revision: $Revision$
 // EN-Revision: 1.11
 
 $error[0] = 'Ongeldige URL: <em>%s</em>!';

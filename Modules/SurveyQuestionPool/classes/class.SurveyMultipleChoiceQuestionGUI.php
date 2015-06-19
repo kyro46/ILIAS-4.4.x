@@ -30,7 +30,7 @@ include_once "./Modules/SurveyQuestionPool/classes/class.SurveyQuestionGUI.php";
 * for multiple choice survey question types.
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.SurveyMultipleChoiceQuestionGUI.php 43730 2013-07-29 13:59:58Z jluetzen $
+* @version	$Id$
 * @extends SurveyQuestionGUI
 * @ingroup ModulesSurveyQuestionPool
 */
@@ -112,8 +112,23 @@ class SurveyMultipleChoiceQuestionGUI extends SurveyQuestionGUI
 	{
 		if($a_form->getInput("use_min_answers"))
 		{		
+			// #13927 - see importEditFormValues()
+			$cnt_answers = 0;
+			foreach ($_POST['answers']['answer'] as $key => $value) 
+			{
+				if (strlen($value))
+				{
+					$cnt_answers++;
+				}
+			}		
+			if (strlen($_POST['answers']['neutral']))
+			{
+				$cnt_answers++;
+			}
+			/* this would be the DB-values
 			$cnt_answers = $a_form->getItemByPostVar("answers");
-			$cnt_answers = $cnt_answers->getCategoryCount();
+			$cnt_answers = $cnt_answers->getCategoryCount();		 						 
+			*/
 			$min_anwers = $a_form->getInput("nr_min_answers");
 			$max_anwers = $a_form->getInput("nr_max_answers");
 			
@@ -334,25 +349,11 @@ class SurveyMultipleChoiceQuestionGUI extends SurveyQuestionGUI
 			case 1:
 				// horizontal orientation	
 				
-				// #9363: split categories in answer and answer+text
-				// as we have 2 table rows we have to keep them in sync
-				$ordered_ids = array(0=>array(), 1=>array());				
+				// #15477 - reverting the categorizing of answers				
 				for ($i = 0; $i < $this->object->categories->getCategoryCount(); $i++) 
 				{
-					$cat = $this->object->categories->getCategory($i);
-					if ($cat->other)
-					{
-						$ordered_ids[1][] = $cat;
-					}
-					else
-					{
-						$ordered_ids[0][] = $cat;
-					}
-				}				
-				$ordered_ids = array_merge($ordered_ids[0], $ordered_ids[1]);	
-							
-				foreach ($ordered_ids as $i => $cat) 
-				{			
+					$cat = $this->object->categories->getCategory($i);	
+					
 					// checkbox
 					$template->setCurrentBlock("checkbox_col");
 					if ($cat->neutral) $template->setVariable('COLCLASS', ' neutral');
@@ -411,7 +412,7 @@ class SurveyMultipleChoiceQuestionGUI extends SurveyQuestionGUI
 						$template->setVariable("QUESTION_ID", $this->object->getId());
 						$template->parseCurrentBlock();
 					}
-					// $template->touchBlock('text_outer_col');																				
+					$template->touchBlock('text_outer_col');																				
 				}				
 				break;
 		}

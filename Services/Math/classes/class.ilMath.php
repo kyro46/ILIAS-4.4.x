@@ -27,7 +27,7 @@
 * Wrapper for mathematical operations
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* $Id: class.ilMath.php 49315 2014-04-09 10:55:52Z gvollbach $
+* $Id$
 */
 class ilMath
 {
@@ -36,9 +36,13 @@ class ilMath
 	*/
 	public static function _add($left_operand, $right_operand, $scale = 50)
 	{
+		$left_operand=ilMath::bcconv($left_operand);
+		$right_operand=ilMath::bcconv($right_operand);
+		$scale=ilMath::bcconv($scale);
+		
 		if (function_exists("bcadd"))
 		{
-			return bcadd(ilMath::exp2dec($left_operand), ilMath::exp2dec($right_operand), $scale);
+			return bcadd($left_operand, $right_operand, $scale);
 		}
 		else
 		{
@@ -53,9 +57,13 @@ class ilMath
 	*/
 	public static function _comp($left_operand, $right_operand, $scale = 50)
 	{
+		$left_operand=ilMath::bcconv($left_operand);
+		$right_operand=ilMath::bcconv($right_operand);
+		$scale=ilMath::bcconv($scale);
+		
 		if (function_exists("bccomp"))
 		{
-			return bccomp(ilMath::exp2dec($left_operand), ilMath::exp2dec($right_operand), $scale);
+			return bccomp($left_operand, $right_operand, $scale);
 		}
 		else
 		{
@@ -75,9 +83,13 @@ class ilMath
 	*/
 	public static function _div($left_operand, $right_operand, $scale = 50)
 	{
+		$left_operand=ilMath::bcconv($left_operand);
+		$right_operand=ilMath::bcconv($right_operand);
+		$scale=ilMath::bcconv($scale);
+		
 		if (function_exists("bcdiv"))
 		{
-			return bcdiv(ilMath::exp2dec($left_operand), ilMath::exp2dec($right_operand), $scale);
+			return bcdiv($left_operand, $right_operand, $scale);
 		}
 		else
 		{
@@ -93,9 +105,12 @@ class ilMath
 	*/
 	public static function _mod($left_operand, $modulus)
 	{
+		$left_operand=ilMath::bcconv($left_operand);
+		$modulus=ilMath::bcconv($modulus);
+		
 		if (function_exists("bcmod"))
 		{
-			return bcmod(ilMath::exp2dec($left_operand), $modulus);
+			return bcmod($left_operand, $modulus);
 		}
 		else
 		{
@@ -108,9 +123,13 @@ class ilMath
 	*/
 	public static function _mul($left_operand, $right_operand, $scale = 50)
 	{
+		$left_operand=ilMath::bcconv($left_operand);
+		$right_operand=ilMath::bcconv($right_operand);
+		$scale=ilMath::bcconv($scale);
+		
 		if (function_exists("bcmul"))
 		{
-			return bcmul(ilMath::exp2dec($left_operand), ilMath::exp2dec($right_operand), $scale);
+			return bcmul($left_operand, $right_operand, $scale);
 		}
 		else
 		{
@@ -125,6 +144,10 @@ class ilMath
 	*/
 	public static function _pow($left_operand, $right_operand, $scale = 50)
 	{
+		$left_operand=ilMath::bcconv($left_operand);
+		$right_operand=ilMath::bcconv($right_operand);
+		$scale=ilMath::bcconv($scale);
+		
 		if(function_exists("bcpow"))
 		{
 			// bcpow() only supports exponents less than or equal to 2^31-1.
@@ -134,12 +157,19 @@ class ilMath
 			$right_operand_dec = ilMath::exp2dec($right_operand);
 
 			$is_exponent_decimal_number = strpos($right_operand_dec, '.') !== false;
-			if(!$is_exponent_decimal_number || $scale > 14)
+
+			// bcpow does NOT support decimal exponents
+			if(!$is_exponent_decimal_number)
 			{
 				return bcpow($left_operand_dec, $right_operand_dec, $scale);
 			}
-
-			// fall through
+		}
+		
+		// pow does calculate with a scale of 14,
+		// so rounding should not consider larger scale
+		if( $scale > 14 )
+		{
+			$scale = 14;
 		}
 
 		$res = pow($left_operand, $right_operand);
@@ -152,9 +182,12 @@ class ilMath
 	*/
 	public static function _sqrt($operand, $scale = 50)
 	{
+		$operand=ilMath::bcconv($operand);
+		$scale=ilMath::bcconv($scale);
+		
 		if (function_exists("bcsqrt"))
 		{
-			return bcsqrt(ilMath::exp2dec($operand), $scale);
+			return bcsqrt($operand, $scale);
 		}
 		else
 		{
@@ -169,9 +202,13 @@ class ilMath
 	*/
 	public static function _sub($left_operand, $right_operand, $scale = 50)
 	{
+		$left_operand=ilMath::bcconv($left_operand);
+		$right_operand=ilMath::bcconv($right_operand);
+		$scale=ilMath::bcconv($scale);
+		
 		if (function_exists("bcsub"))
 		{
-			return bcsub(ilMath::exp2dec($left_operand), ilMath::exp2dec($right_operand), $scale);
+			return bcsub($left_operand, $right_operand, $scale);
 		}
 		else
 		{
@@ -250,6 +287,31 @@ class ilMath
 		{
 			return $a;
 		}
-	}	
+	}
+
+	/**
+	 * @param $fNumber
+	 * @return string
+	 * function fixes problem which occur when locale ist set to de_DE for example,
+	 * because bc* function expecting strings
+	 */
+	private static function bcconv($fNumber)
+	{
+		$fNumber=ilMath::exp2dec($fNumber);
+		$locale_info = localeconv();
+		if($locale_info["decimal_point"] != ".")
+		{
+			$sAppend = '';
+			$iDecimals = ini_get('precision') - floor(log10(abs($fNumber)));
+			if (0 > $iDecimals)
+			{
+				$fNumber *= pow(10, $iDecimals);
+				$sAppend = str_repeat('0', -$iDecimals);
+				$iDecimals = 0;
+			}
+			return number_format($fNumber, $iDecimals, '.', '').$sAppend;
+		}
+		return $fNumber;
+	}
 }
 ?>

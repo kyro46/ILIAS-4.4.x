@@ -9,7 +9,7 @@
 * Base class to create PDF certificates using XML-FO XML transformations
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilCertificate.php 47940 2014-02-14 11:02:39Z mbecker $
+* @version	$Id$
 * @ingroup Services
 */
 class ilCertificate

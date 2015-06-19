@@ -7,7 +7,7 @@ require_once "./Modules/Test/classes/inc.AssessmentConstants.php";
 * Scoring class for tests
 *
 * @author	Maximilian Becker <mbecker@databay.de>
-* @version	$Id: class.ilTestToplistGUI.php 44716 2013-09-11 13:43:58Z mbecker $
+* @version	$Id$
 *
 * @ingroup ModulesTest
 */

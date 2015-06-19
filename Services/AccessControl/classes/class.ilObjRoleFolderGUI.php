@@ -29,7 +29,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * @author Stefan Meyer <meyer@leifos.com>
 * @author Sascha Hofmann <saschahofmann@gmx.de>
 *
-* @version $Id: class.ilObjRoleFolderGUI.php 48693 2014-03-18 13:23:55Z smeyer $
+* @version $Id$
 * 
 * @ilCtrl_Calls ilObjRoleFolderGUI: ilPermissionGUI
 *

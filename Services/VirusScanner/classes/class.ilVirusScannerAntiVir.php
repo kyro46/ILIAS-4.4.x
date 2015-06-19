@@ -6,7 +6,7 @@
 * Interface to the AntiVir virus protector
 *
 * @author	Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilVirusScannerAntiVir.php 33990 2012-03-29 11:24:28Z jluetzen $
+* @version $Id$
 *
 * @extends ilVirusScanner
 */

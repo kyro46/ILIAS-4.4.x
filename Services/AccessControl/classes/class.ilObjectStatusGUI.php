@@ -6,7 +6,7 @@
 * ("Permissions" -> "Permission of User")
 *
 * @author Sascha Hofmann <saschahofmann@gmx.de>
-* @version $Id: class.ilObjectStatusGUI.php 43297 2013-07-08 14:41:23Z smeyer $
+* @version $Id$
 *
 * @ingroup	ServicesAccessControl
 */

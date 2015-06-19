@@ -438,22 +438,6 @@ class ilSurveyParticipantsGUI
 		$this->tpl->setVariable('ADM_CONTENT', $table_gui->getHTML());	
 	}
 	
-	
-	function doAutoCompleteObject()
-	{
-		$fields = array('login','firstname','lastname','email');
-				
-		include_once './Services/User/classes/class.ilUserAutoComplete.php';
-		$auto = new ilUserAutoComplete();
-		$auto->setSearchFields($fields);
-		$auto->setResultField('login');
-		$auto->enableFieldSearchableCheck(true);
-		echo $auto->getList($_REQUEST['term']);
-		exit();
-	}
-
-	
-	
 	/**
 	* Change survey language for direct access URL's
 	*/
@@ -782,7 +766,7 @@ class ilSurveyParticipantsGUI
 				}			
 				$this->object->sendCodes($_POST['m_notsent'], $_POST['m_subject'], $_POST['m_message'],$lang);
 				ilUtil::sendSuccess($this->lng->txt('mail_sent'), true);
-				$this->ctrl->redirect($this, 'codesMail');
+				$this->ctrl->redirect($this, 'mailCodes');
 			}
 		}
 		else
@@ -1055,7 +1039,11 @@ class ilSurveyParticipantsGUI
 	{
 		if(sizeof($a_user_ids))
 		{			
-			$this->object->addAppraisee(array_pop($a_user_ids));
+			// #13319
+			foreach(array_unique($a_user_ids) as $user_id)
+			{
+				$this->object->addAppraisee($user_id);
+			}
 
 			ilUtil::sendSuccess($this->lng->txt("settings_saved"), true);
 		}
@@ -1282,15 +1270,18 @@ class ilSurveyParticipantsGUI
 				
 		if(sizeof($a_user_ids))
 		{			
-			$user_id = array_pop($a_user_ids);
-			
-			if($ilAccess->checkAccess("write", "", $this->ref_id) ||
-				$this->object->get360SelfEvaluation() ||
-				$user_id != $ilUser->getId())
-			{			
-				$this->object->addRater($appr_id, $user_id);		
-				ilUtil::sendSuccess($this->lng->txt("settings_saved"), true);			
+			// #13319
+			foreach(array_unique($a_user_ids) as $user_id)
+			{							
+				if($ilAccess->checkAccess("write", "", $this->ref_id) ||
+					$this->object->get360SelfEvaluation() ||
+					$user_id != $ilUser->getId())
+				{					
+					$this->object->addRater($appr_id, $user_id);									
+				}
 			}
+			
+			ilUtil::sendSuccess($this->lng->txt("settings_saved"), true);	
 		}
 		
 		$this->ctrl->setParameter($this, "appr_id", $appr_id);
@@ -1510,7 +1501,8 @@ class ilSurveyParticipantsGUI
 					if(substr($rec_id, 0, 1) == "a")
 					{
 						$mytxt = $txt_a;
-						$url = $user["href"];									
+						$url = $user["href"];	
+						$rcp = $user["email"];
 					}
 					// reg
 					else
@@ -1518,6 +1510,7 @@ class ilSurveyParticipantsGUI
 						$mytxt = $txt_u;
 						$user["code"] = $this->lng->txt("survey_code_mail_on_demand");
 						$url = ilLink::_getStaticLink($this->object->getRefId());
+						$rcp = $user["login"]; // #15141
 					}
 					
 					$mytxt = str_replace("[lastname]", $user["lastname"], $mytxt); 
@@ -1527,7 +1520,7 @@ class ilSurveyParticipantsGUI
 
 					$mail = new ilMail($sender_id);					
 					$mail->sendMail(
-						$user["email"], // to
+						$rcp, // to
 						"", // cc
 						"", // bcc
 						$subj, // subject

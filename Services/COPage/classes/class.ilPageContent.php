@@ -10,7 +10,7 @@
 * ilMediaObject, ...)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPageContent.php 49011 2014-03-26 13:28:15Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

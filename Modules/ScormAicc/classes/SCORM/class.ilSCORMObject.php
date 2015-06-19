@@ -26,7 +26,7 @@
 * Parent object for all SCORM objects, that are stored in table scorm_object
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilSCORMObject.php 24224 2010-06-14 07:50:50Z mjansen $
+* @version $Id$
 *
 * @ingroup ModulesScormAicc
 */

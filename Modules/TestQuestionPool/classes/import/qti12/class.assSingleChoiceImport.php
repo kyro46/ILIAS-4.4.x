@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * assSingleChoiceImport is a class for single choice question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assSingleChoiceImport.php 47237 2014-01-14 13:52:33Z bheyser $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assSingleChoiceImport extends assQuestionImport

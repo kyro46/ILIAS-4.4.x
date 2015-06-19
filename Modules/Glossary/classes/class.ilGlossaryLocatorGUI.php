@@ -6,7 +6,7 @@
  * Glossary Locator GUI
  *
  * @author Alex Killing <alex.killing@gmx.de>
- * @version $Id: class.ilGlossaryLocatorGUI.php 43736 2013-07-29 19:46:50Z akill $
+ * @version $Id$
  *
  * @ingroup ModulesGlossary
  */

@@ -8,7 +8,7 @@ include_once("./Services/Export/classes/class.ilXmlImporter.php");
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilAccessControlImporter.php 35965 2012-08-03 10:50:38Z smeyer $
+* @version $Id$
 *
 * @ingroup ServicesAccessControl
 */

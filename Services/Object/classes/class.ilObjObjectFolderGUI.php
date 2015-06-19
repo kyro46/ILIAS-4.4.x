@@ -26,7 +26,7 @@
 * Class ilObjObjectFolderGUI
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* $Id: class.ilObjObjectFolderGUI.php 35423 2012-07-07 17:42:36Z akill $
+* $Id$
 * 
 * @ilCtrl_Calls ilObjObjectFolderGUI: ilPermissionGUI
 *

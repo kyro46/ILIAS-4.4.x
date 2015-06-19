@@ -26,7 +26,7 @@
 * Meta Data class (element keyword)
 *
 * @package ilias-core
-* @version $Id: class.ilMDKeyword.php 36575 2012-08-28 12:17:50Z jluetzen $
+* @version $Id$
 */
 include_once 'class.ilMDBase.php';
 

@@ -6,7 +6,7 @@
 * Class ilObjFolderGUI
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* $Id: class.ilObjFolderGUI.php 46509 2013-11-29 12:25:29Z akill $
+* $Id$
 *
 * @ilCtrl_Calls ilObjFolderGUI: ilPermissionGUI
 * @ilCtrl_Calls ilObjFolderGUI: ilCourseContentGUI, ilLearningProgressGUI
@@ -265,7 +265,12 @@ class ilObjFolderGUI extends ilContainerGUI
 	}
 	
 	protected function afterSave(ilObject $a_new_object)
-	{		
+	{	
+		include_once './Services/Container/classes/class.ilContainerSortingSettings.php';
+		$sort = new ilContainerSortingSettings($a_new_object->getId());
+		$sort->setSortMode(ilContainer::SORT_INHERIT);
+		$sort->update();
+		
 		// always send a message
 		ilUtil::sendSuccess($this->lng->txt("fold_added"),true);
 		$this->ctrl->setParameter($this, "ref_id", $a_new_object->getRefId());

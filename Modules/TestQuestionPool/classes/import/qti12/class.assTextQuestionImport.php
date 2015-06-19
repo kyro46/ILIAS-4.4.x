@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assQuestionI
 * assTextQuestionImport is a class for essay question imports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assTextQuestionImport.php 49217 2014-04-04 10:02:14Z gvollbach $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assTextQuestionImport extends assQuestionImport
@@ -171,7 +171,7 @@ class assTextQuestionImport extends assQuestionImport
 		}
 		if($no_keywords_found)
 		{
-			$this->object->setKeywordRelation('none');
+			$this->object->setKeywordRelation('non');
 			$this->object->addAnswer('', $maxpoints);
 		}
 			

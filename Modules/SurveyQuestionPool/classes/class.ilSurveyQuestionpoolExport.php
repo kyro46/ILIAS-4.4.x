@@ -25,7 +25,7 @@
 * Export class for survey questionpools
 *
 * @author Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version $Id: class.ilSurveyQuestionpoolExport.php 43723 2013-07-29 11:19:02Z jluetzen $
+* @version $Id$
 * @ingroup ModulesSurveyQuestionPool
 */
 class ilSurveyQuestionpoolExport

@@ -5,7 +5,7 @@
  * Mapping utils
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSMappingUtils.php 43547 2013-07-22 14:39:46Z smeyer $
+ * $Id$
  */
 class ilECSMappingUtils
 {

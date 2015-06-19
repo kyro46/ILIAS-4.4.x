@@ -26,7 +26,7 @@
 * 
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilCronCheck.php 43595 2013-07-24 07:27:31Z jluetzen $
+* @version $Id$
 *
 * @package ilias
 */

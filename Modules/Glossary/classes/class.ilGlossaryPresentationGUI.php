@@ -15,7 +15,7 @@ require_once("./Services/COPage/classes/class.ilPCParagraph.php");
 * GUI class for glossary presentation
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilGlossaryPresentationGUI.php 46558 2013-12-03 12:43:38Z akill $
+* @version $Id$
 *
 * @ilCtrl_Calls ilGlossaryPresentationGUI: ilNoteGUI, ilInfoScreenGUI, ilShopPurchaseGUI, ilPresentationListTableGUI
 *

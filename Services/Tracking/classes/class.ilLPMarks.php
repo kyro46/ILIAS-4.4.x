@@ -26,7 +26,7 @@
 *
 * @author Stefan Meyer <meyer@leifos.com>
 *
-* @version $Id: class.ilLPMarks.php 44217 2013-08-16 08:15:24Z jluetzen $
+* @version $Id$
 *
 * @package ilias-tracking
 *

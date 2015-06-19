@@ -34,7 +34,9 @@ class ilTestRandomQuestionSetConfigGUI
 	const CMD_SAVE_AND_NEW_CREATE_SRC_POOL_DEF_FORM = 'saveCreateAndNewSourcePoolDefinitionForm';
 	const CMD_SHOW_EDIT_SRC_POOL_DEF_FORM           = 'showEditSourcePoolDefinitionForm';
 	const CMD_SAVE_EDIT_SRC_POOL_DEF_FORM           = 'saveEditSourcePoolDefinitionForm';
+	const CMD_BUILD_QUESTION_STAGE					= 'buildQuestionStage';
 	
+	const HTTP_PARAM_AFTER_REBUILD_QUESTION_STAGE_CMD = 'afterRebuildQuestionStageCmd';
 	/**
 	 * @var ilCtrl
 	 */
@@ -196,6 +198,8 @@ class ilTestRandomQuestionSetConfigGUI
 			case self::CMD_DELETE_MULTI_SRC_POOL_DEFS:
 			case self::CMD_SAVE_CREATE_SRC_POOL_DEF_FORM:
 			case self::CMD_SAVE_EDIT_SRC_POOL_DEF_FORM:
+			case self::CMD_SAVE_AND_NEW_CREATE_SRC_POOL_DEF_FORM:
+			case self::CMD_BUILD_QUESTION_STAGE:
 
 				return true;
 		}
@@ -240,6 +244,37 @@ class ilTestRandomQuestionSetConfigGUI
 				break;
 		}
 	}
+	
+	private function buildQuestionStageCmd()
+	{
+		$this->sourcePoolDefinitionList->loadDefinitions();
+		$this->stagingPool->rebuild( $this->sourcePoolDefinitionList );
+		$this->sourcePoolDefinitionList->saveDefinitions();
+
+		$this->questionSetConfig->loadFromDb();
+		$this->questionSetConfig->setLastQuestionSyncTimestamp(time());
+		$this->questionSetConfig->saveToDb();
+
+		$this->testOBJ->saveCompleteStatus( $this->questionSetConfig );
+		
+		ilUtil::sendSuccess($this->lng->txt("tst_msg_random_question_set_synced"), true);
+		$this->ctrl->redirect($this, $this->fetchAfterRebuildQuestionStageCmdParameter());
+	}
+	
+	private function fetchAfterRebuildQuestionStageCmdParameter()
+	{
+		if( !isset($_GET[self::HTTP_PARAM_AFTER_REBUILD_QUESTION_STAGE_CMD]) )
+		{
+			return self::CMD_SHOW_GENERAL_CONFIG_FORM;
+		}
+		
+		if( !strlen($_GET[self::HTTP_PARAM_AFTER_REBUILD_QUESTION_STAGE_CMD]) )
+		{
+			return self::CMD_SHOW_GENERAL_CONFIG_FORM;
+		}
+
+		return $_GET[self::HTTP_PARAM_AFTER_REBUILD_QUESTION_STAGE_CMD];
+	}
 
 	private function showGeneralConfigFormCmd(ilTestRandomQuestionSetGeneralConfigFormGUI $form = null)
 	{
@@ -251,7 +286,7 @@ class ilTestRandomQuestionSetConfigGUI
 		
 		$this->tpl->setContent( $this->ctrl->getHTML($form) );
 
-		$this->handleConfigurationStateMessages();
+		$this->handleConfigurationStateMessages(self::CMD_SHOW_GENERAL_CONFIG_FORM);
 	}
 
 	private function saveGeneralConfigFormCmd()
@@ -315,7 +350,7 @@ class ilTestRandomQuestionSetConfigGUI
 
 		$this->tpl->setContent($content);
 
-		$this->handleConfigurationStateMessages();
+		$this->handleConfigurationStateMessages(self::CMD_SHOW_SRC_POOL_DEF_LIST);
 	}
 
 	private function saveSourcePoolDefinitionListCmd()
@@ -348,7 +383,7 @@ class ilTestRandomQuestionSetConfigGUI
 		require_once 'Modules/Test/classes/toolbars/class.ilTestRandomQuestionSetSourcePoolDefinitionListToolbarGUI.php';
 
 		$toolbar = new ilTestRandomQuestionSetSourcePoolDefinitionListToolbarGUI(
-			$this->ctrl, $this->lng, $this->testOBJ, $this, $this->questionSetConfig
+			$this->ctrl, $this->lng, $this, $this->questionSetConfig
 		);
 
 		$toolbar->build();
@@ -655,11 +690,26 @@ class ilTestRandomQuestionSetConfigGUI
 		throw new ilTestQuestionPoolNotAvailableAsSourcePoolException();
 	}
 
-	private function handleConfigurationStateMessages()
+	private function handleConfigurationStateMessages($currentRequestCmd)
 	{
 		if( !$this->questionSetConfig->isQuestionAmountConfigComplete() )
 		{
 			$infoMessage = $this->lng->txt('tst_msg_rand_quest_set_incomplete_quest_amount_cfg');
+			
+			if( $this->isQuestionAmountConfigPerTestHintRequired($currentRequestCmd) )
+			{
+				$infoMessage .= '<br />'.sprintf(
+					$this->lng->txt('tst_msg_rand_quest_set_change_quest_amount_here'),
+					$this->buildGeneralConfigSubTabLink()
+				);
+			}
+			elseif( $this->isQuestionAmountConfigPerPoolHintRequired($currentRequestCmd) )
+			{
+				$infoMessage .= '<br />'.sprintf(
+					$this->lng->txt('tst_msg_rand_quest_set_change_quest_amount_here'),
+					$this->buildQuestionSelectionSubTabLink()
+				);
+			}
 		}
 		elseif( !$this->questionSetConfig->hasSourcePoolDefinitions() )
 		{
@@ -678,8 +728,107 @@ class ilTestRandomQuestionSetConfigGUI
 			$infoMessage = sprintf(
 				$this->lng->txt('tst_msg_rand_quest_set_stage_pool_last_sync'), ilDatePresentation::formatDate($syncDate)
 			);
+
+			if( !$this->testOBJ->participantDataExist() )
+			{
+				$infoMessage .= "<br />{$this->buildQuestionStageRebuildLink($currentRequestCmd)}";
+			}
+		}
+		
+		if( $this->isNoAvailableQuestionPoolsHintRequired($currentRequestCmd) )
+		{
+			$infoMessage .= '<br />'.$this->lng->txt('tst_msg_rand_quest_set_no_pools_available');
 		}
 
 		ilUtil::sendInfo($infoMessage);
+	}
+
+	/**
+	 * @param $afterRebuildQuestionStageCmd
+	 * @return string
+	 */
+	private function buildQuestionStageRebuildLink($afterRebuildQuestionStageCmd)
+	{
+		$this->ctrl->setParameter(
+			$this, self::HTTP_PARAM_AFTER_REBUILD_QUESTION_STAGE_CMD, $afterRebuildQuestionStageCmd
+		);
+		
+		$href = $this->ctrl->getLinkTarget($this, self::CMD_BUILD_QUESTION_STAGE);
+		$label = $this->lng->txt('tst_btn_rebuild_random_question_stage');
+		
+		return "<a href=\"{$href}\">{$label}</a>";
+	}
+
+	private function buildGeneralConfigSubTabLink()
+	{
+		$href = $this->ctrl->getLinkTarget($this, self::CMD_SHOW_GENERAL_CONFIG_FORM);
+		$label = $this->lng->txt('tst_rnd_quest_cfg_tab_general');
+		
+		return "<a href=\"{$href}\">{$label}</a>";
+	}
+
+	private function buildQuestionSelectionSubTabLink()
+	{
+		$href = $this->ctrl->getLinkTarget($this, self::CMD_SHOW_SRC_POOL_DEF_LIST);
+		$label = $this->lng->txt('tst_rnd_quest_cfg_tab_pool');
+
+		return "<a href=\"{$href}\">{$label}</a>";
+	}
+
+	/**
+	 * @param $currentRequestCmd
+	 * @return bool
+	 */
+	private function isNoAvailableQuestionPoolsHintRequired($currentRequestCmd)
+	{
+		if( $currentRequestCmd != self::CMD_SHOW_SRC_POOL_DEF_LIST )
+		{
+			return false;
+		}
+		
+		if( $this->questionSetConfig->doesSelectableQuestionPoolsExist() )
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * @param $currentRequestCmd
+	 * @return bool
+	 */
+	private function isQuestionAmountConfigPerPoolHintRequired($currentRequestCmd)
+	{
+		if( $currentRequestCmd != self::CMD_SHOW_GENERAL_CONFIG_FORM )
+		{
+			return false;
+		}
+
+		if( !$this->questionSetConfig->isQuestionAmountConfigurationModePerPool() )
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param $currentRequestCmd
+	 * @return bool
+	 */
+	private function isQuestionAmountConfigPerTestHintRequired($currentRequestCmd)
+	{
+		if( $currentRequestCmd != self::CMD_SHOW_SRC_POOL_DEF_LIST )
+		{
+			return false;
+		}
+
+		if( !$this->questionSetConfig->isQuestionAmountConfigurationModePerTest() )
+		{
+			return false;
+		}
+
+		return true;
 	}
 }

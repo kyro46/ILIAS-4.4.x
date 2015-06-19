@@ -27,7 +27,7 @@
 * Performs Mysql Like search in object_data title and description
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: class.ilLikeForumSearch.php 21296 2009-08-26 13:08:43Z smeyer $
+* @version $Id$
 * 
 * @package ilias-search
 *

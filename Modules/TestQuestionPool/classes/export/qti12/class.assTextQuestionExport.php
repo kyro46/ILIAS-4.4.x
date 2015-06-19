@@ -9,7 +9,7 @@ include_once "./Modules/TestQuestionPool/classes/export/qti12/class.assQuestionE
 * assTextQuestionExport is a class for essay question exports
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.assTextQuestionExport.php 45969 2013-11-04 16:10:58Z bheyser $
+* @version	$Id$
 * @ingroup ModulesTestQuestionPool
 */
 class assTextQuestionExport extends assQuestionExport

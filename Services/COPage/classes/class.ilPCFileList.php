@@ -11,7 +11,7 @@ require_once("./Services/COPage/classes/class.ilPageContent.php");
 * File List content object (see ILIAS DTD)
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilPCFileList.php 45140 2013-10-01 11:11:38Z akill $
+* @version $Id$
 *
 * @ingroup ServicesCOPage
 */

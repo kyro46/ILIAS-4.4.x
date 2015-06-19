@@ -14,23 +14,35 @@ require_once 'Modules/Test/classes/class.ilTestPlayerAbstractGUI.php';
  * 
  * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
  * @author		Björn Heyser <bheyser@databay.de>
- * @version		$Id: class.ilTestPlayerDynamicQuestionSetGUI.php 46379 2013-11-22 12:47:28Z fneumann $
+ * @version		$Id$
  * 
  * @package		Modules/Test
  * 
  * @ilCtrl_Calls ilTestPlayerDynamicQuestionSetGUI: ilAssQuestionHintRequestGUI
- * @ilCtrl_Calls ilTestPlayerDynamicQuestionSetGUI: ilFilteredQuestionsTableGUI
+ * @ilCtrl_Calls ilTestPlayerDynamicQuestionSetGUI: ilAssQuestionPageGUI
+ * @ilCtrl_Calls ilTestPlayerDynamicQuestionSetGUI: ilTestDynamicQuestionSetStatisticTableGUI
  * @ilCtrl_Calls ilTestPlayerDynamicQuestionSetGUI: ilToolbarGUI
  */
 class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 {
 	const CMD_SHOW_QUESTION_SELECTION = 'showQuestionSelection';
 	const CMD_SHOW_QUESTION = 'showQuestion';
+	const CMD_FROM_PASS_DELETION = 'fromPassDeletion';
 		
 	/**
 	 * @var ilObjTestDynamicQuestionSetConfig
 	 */
 	private $dynamicQuestionSetConfig = null;
+
+	/**
+	 * @var ilTestSequenceDynamicQuestionSet
+	 */
+	protected $testSequence;
+
+	/**
+	 * @var ilTestSessionDynamicQuestionSet
+	 */
+	protected $testSession;
 	
 	/**
 	 * execute command
@@ -50,6 +62,9 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 
 		$testSessionFactory = new ilTestSessionFactory($this->object);
 		$this->testSession = $testSessionFactory->getSession($_GET['active_id']);
+
+		$this->ensureExistingTestSession($this->testSession);
+		$this->initProcessLocker($this->testSession->getActiveId());
 		
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
 		$this->testSequence = $testSequenceFactory->getSequence($this->testSession);
@@ -70,6 +85,15 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		
 		switch($nextClass)
 		{
+			case 'ilassquestionpagegui':
+
+				$questionId = $this->testSequence->getQuestionForSequence( $this->calculateSequence() );
+
+				require_once "./Modules/TestQuestionPool/classes/class.ilAssQuestionPageGUI.php";
+				$page_gui = new ilAssQuestionPageGUI($questionId);
+				$ret = $this->ctrl->forwardCommand($page_gui);
+				break;
+
 			case 'ilassquestionhintrequestgui':
 				
 				$questionGUI = $this->object->createQuestionGUI(
@@ -77,15 +101,15 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 				);
 
 				require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionHintRequestGUI.php';
-				$gui = new ilAssQuestionHintRequestGUI($this, $this->testSession, $questionGUI);
+				$gui = new ilAssQuestionHintRequestGUI($this, self::CMD_SHOW_QUESTION, $this->testSession, $questionGUI);
 				
 				$this->ctrl->forwardCommand($gui);
 				
 				break;
 				
-			case 'ilfilteredquestionstablegui':
+			case 'ildynamicquestionsetstatistictablegui':
 				
-				$this->ctrl->forwardCommand( $this->buildFilteredQuestionsTableGUI() );
+				$this->ctrl->forwardCommand( $this->buildQuestionSetFilteredStatisticTableGUI() );
 				
 				break;
 			
@@ -123,12 +147,6 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	{
 		global $ilUser;
 		
-		// ensure existing test session
-		$this->testSession->setRefId($this->object->getRefId());
-		$this->testSession->setTestId($this->object->getTestId());
-		$this->testSession->setUserId($ilUser->getId());
-		$this->testSession->setAnonymousId($_SESSION['tst_access_code'][$this->object->getTestId()]);
-		
 		$this->testSession->setCurrentQuestionId(null); // no question "came up" yet
 		
 		$this->testSession->saveToDb();
@@ -155,27 +173,56 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	{
 		$this->prepareSummaryPage();
 		
+		if( $this->testSession->getCurrentQuestionId() )
+		{
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->unsetQuestionPostponed($questionId);
+		}
+		
 		$this->testSequence->loadQuestions(
-				$this->dynamicQuestionSetConfig, $this->testSession->getTaxonomyFilterSelection()
+				$this->dynamicQuestionSetConfig, $this->testSession->getQuestionSetFilterSelection()
 		);
 		
 		$this->testSequence->cleanupQuestions($this->testSession);
-		
+
+		$this->testSequence->saveToDb();
+			
 		require_once 'Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php';
 		$toolbarGUI = new ilToolbarGUI();
-		$toolbarGUI->addButton($this->getEnterTestButtonLangVar(), $this->ctrl->getLinkTarget(
-				$this, self::CMD_SHOW_QUESTION
-		));
 		
-		$data = $this->buildQuestionsTableDataArray(
-			$this->testSequence->getFilteredQuestionList(), $this->getMarkedQuestions()
+		$toolbarGUI->addButton(
+			$this->getEnterTestButtonLangVar(), $this->ctrl->getLinkTarget($this, self::CMD_SHOW_QUESTION),
+			'', '', '', '', 'submit emphsubmit'
 		);
 		
-		$tableGUI = $this->buildFilteredQuestionsTableGUI();
-		$tableGUI->setData($data);
+		if( $this->object->isPassDeletionAllowed() )
+		{
+			require_once 'Modules/Test/classes/confirmations/class.ilTestPassDeletionConfirmationGUI.php';
+			
+			$toolbarGUI->addButton(
+				$this->lng->txt('tst_dyn_test_pass_deletion_button'),
+				$this->getPassDeletionTarget(ilTestPassDeletionConfirmationGUI::CONTEXT_DYN_TEST_PLAYER)
+			);
+		}
 		
+		$filteredData = array($this->buildQuestionSetAnswerStatisticRowArray(
+			$this->testSequence->getFilteredQuestionsData(), $this->getMarkedQuestions()
+		)); #vd($filteredData);
+		$filteredTableGUI = $this->buildQuestionSetFilteredStatisticTableGUI();
+		$filteredTableGUI->setData($filteredData);
+
+		$completeData = array($this->buildQuestionSetAnswerStatisticRowArray(
+			$this->testSequence->getCompleteQuestionsData(), $this->getMarkedQuestions()
+		)); #vd($completeData);
+		$completeTableGUI = $this->buildQuestionSetCompleteStatisticTableGUI();
+		$completeTableGUI->setData($completeData);
+
 		$content = $this->ctrl->getHTML($toolbarGUI);
-		$content .= $this->ctrl->getHTML($tableGUI);
+		$content .= $this->ctrl->getHTML($filteredTableGUI);
+		$content .= $this->ctrl->getHTML($completeTableGUI);
 
 		$this->tpl->setVariable('TABLE_LIST_OF_QUESTIONS', $content);	
 
@@ -187,47 +234,78 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	
 	protected function filterQuestionSelectionCmd()
 	{
-		$tableGUI = $this->buildFilteredQuestionsTableGUI();
+		$tableGUI = $this->buildQuestionSetFilteredStatisticTableGUI();
 		$tableGUI->writeFilterToSession();
-		
-		$filterSelection = array();
+
+		$taxFilterSelection = array();
+		$answerStatusFilterSelection = ilAssQuestionList::ANSWER_STATUS_FILTER_ALL_NON_CORRECT;
 		
 		foreach( $tableGUI->getFilterItems() as $item )
 		{
-			$taxId = substr( $item->getPostVar(), strlen('tax_') );
-			
-			$filterSelection[$taxId] = $item->getValue();
+			if( strpos($item->getPostVar(), 'tax_') !== false )
+			{
+				$taxId = substr( $item->getPostVar(), strlen('tax_') );
+				$taxFilterSelection[$taxId] = $item->getValue();
+			}
+			elseif( $item->getPostVar() == 'question_answer_status' )
+			{
+				$answerStatusFilterSelection = $item->getValue();
+			}
 		}
 		
-		$this->testSession->setTaxonomyFilterSelection( $filterSelection );
+		$this->testSession->getQuestionSetFilterSelection()->setTaxonomySelection($taxFilterSelection);
+		$this->testSession->getQuestionSetFilterSelection()->setAnswerStatusSelection($answerStatusFilterSelection);
 		$this->testSession->saveToDb();
+		
+		$this->testSequence->resetTrackedQuestionList();
+		$this->testSequence->saveToDb();
 		
 		$this->ctrl->redirect($this, 'showQuestionSelection');
 	}
 	
 	protected function resetQuestionSelectionCmd()
 	{
-		$tableGUI = $this->buildFilteredQuestionsTableGUI();
+		$tableGUI = $this->buildQuestionSetFilteredStatisticTableGUI();
 		$tableGUI->resetFilter();
 		
-		$this->testSession->setTaxonomyFilterSelection( array() );
+		$this->testSession->getQuestionSetFilterSelection()->setTaxonomySelection( array() );
+		$this->testSession->getQuestionSetFilterSelection()->setAnswerStatusSelection( null );
 		$this->testSession->saveToDb();
+		
+		$this->testSequence->resetTrackedQuestionList();
+		$this->testSequence->saveToDb();
 		
 		$this->ctrl->redirect($this, 'showQuestionSelection');
 	}
 
 	protected function showTrackedQuestionListCmd()
 	{
+		if( !$this->dynamicQuestionSetConfig->isPreviousQuestionsListEnabled() )
+		{
+			$this->ctrl->redirect($this, self::CMD_SHOW_QUESTION);
+		}
+		
 		$this->prepareSummaryPage();
-		
-		$this->saveQuestionSolution();
-		
+
+		$questionId = $this->testSession->getCurrentQuestionId();
+
+		if( $questionId )
+		{
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->unsetQuestionPostponed($questionId);
+		}
+
 		$this->testSequence->loadQuestions(
-				$this->dynamicQuestionSetConfig, $this->testSession->getTaxonomyFilterSelection()
+				$this->dynamicQuestionSetConfig, $this->testSession->getQuestionSetFilterSelection()
 		);
 		
 		$this->testSequence->cleanupQuestions($this->testSession);
-
+		
+		$this->testSequence->saveToDb();
+		
 		$data = $this->buildQuestionsTableDataArray(
 			$this->testSequence->getTrackedQuestionList( $this->testSession->getCurrentQuestionId() ),
 			$this->getMarkedQuestions()
@@ -235,7 +313,7 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		
 		include_once "./Modules/Test/classes/tables/class.ilTrackedQuestionsTableGUI.php";
 		$table_gui = new ilTrackedQuestionsTableGUI(
-				$this, 'showTrackedQuestionList', $this->object->getShowMarker()
+				$this, 'showTrackedQuestionList', $this->object->getSequenceSettings(), $this->object->getShowMarker()
 		);
 		
 		$table_gui->setData($data);
@@ -252,46 +330,44 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	{
 		
 	}
+
+	protected function fromPassDeletionCmd()
+	{
+		$this->resetCurrentQuestion();
+		$this->ctrl->redirect($this, 'showQuestion');
+	}
 	
 	protected function nextQuestionCmd()
 	{
-		$this->updateWorkingTime();
-
-		$this->saveQuestionSolution();
-		
 		$questionId = $this->testSession->getCurrentQuestionId();
-		$activeId = $this->testSession->getActiveId();
-		
-		if( $this->isQuestionAnsweredCorrect($questionId, $activeId) )
+
+		if( $questionId )
 		{
-			$this->testSequence->setQuestionAnsweredCorrect($questionId);
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->unsetQuestionPostponed($questionId);
+			$this->testSequence->saveToDb();
 		}
-		else
-		{
-			$this->testSequence->setQuestionAnsweredWrong($questionId);
-		}
-		
-		$this->testSession->setCurrentQuestionId(null);
-		
-		$this->testSequence->saveToDb();
-		$this->testSession->saveToDb();
-		
-		$this->ctrl->setParameter(
-				$this, 'sequence', $this->testSession->getCurrentQuestionId()
-		);
+
+		$this->resetCurrentQuestion();
 		
 		$this->ctrl->redirect($this, 'showQuestion');
 	}
 	
 	protected function postponeQuestionCmd()
 	{
-		$this->updateWorkingTime();
-
-		$this->saveQuestionSolution();
+		$questionId = $this->testSession->getCurrentQuestionId();
 		
-		$this->testSequence->setQuestionPostponed(
-				$this->testSession->getCurrentQuestionId()
-		);
+		if( $questionId )
+		{
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->setQuestionPostponed($questionId);
+		}
 		
 		$this->testSession->setCurrentQuestionId(null);
 		
@@ -303,8 +379,18 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	
 	protected function markQuestionCmd()
 	{
-		$this->saveQuestionSolution();
-		
+		$questionId = $this->testSession->getCurrentQuestionId();
+
+		if( $questionId )
+		{
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->unsetQuestionPostponed($questionId);
+			$this->testSequence->saveToDb();
+		}
+
 		global $ilUser;
 		$this->object->setQuestionSetSolved(1, $this->testSession->getCurrentQuestionId(), $ilUser->getId());
 		
@@ -313,8 +399,18 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 
 	protected function unmarkQuestionCmd()
 	{
-		$this->saveQuestionSolution();
-		
+		$questionId = $this->testSession->getCurrentQuestionId();
+
+		if( $questionId )
+		{
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->unsetQuestionPostponed($questionId);
+			$this->testSequence->saveToDb();
+		}
+
 		global $ilUser;
 		$this->object->setQuestionSetSolved(0, $this->testSession->getCurrentQuestionId(), $ilUser->getId());
 		
@@ -324,7 +420,7 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	protected function gotoQuestionCmd()
 	{
 		$this->testSequence->loadQuestions(
-				$this->dynamicQuestionSetConfig, $this->testSession->getTaxonomyFilterSelection()
+				$this->dynamicQuestionSetConfig, $this->testSession->getQuestionSetFilterSelection()
 		);
 		
 		$this->testSequence->cleanupQuestions($this->testSession);
@@ -347,7 +443,7 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		$this->handleJavascriptActivationStatus();
 
 		$this->testSequence->loadQuestions(
-				$this->dynamicQuestionSetConfig, $this->testSession->getTaxonomyFilterSelection()
+				$this->dynamicQuestionSetConfig, $this->testSession->getQuestionSetFilterSelection()
 		);
 		
 		$this->testSequence->cleanupQuestions($this->testSession);
@@ -355,7 +451,7 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		if( !$this->testSession->getCurrentQuestionId() )
 		{
 			$this->testSession->setCurrentQuestionId(
-					$this->testSequence->getUpcomingQuestionId()
+				$this->testSequence->getUpcomingQuestionId()
 			);
 		}
 		
@@ -378,13 +474,24 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	
 	protected function showInstantResponseCmd()
 	{
-		$this->saveQuestionSolution();
+		$questionId = $this->testSession->getCurrentQuestionId();
+
+		if( $questionId )
+		{
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->unsetQuestionPostponed($questionId);
+		}
 
 		$this->handleJavascriptActivationStatus();
 
-		$this->testSequence->loadQuestions(
-				$this->dynamicQuestionSetConfig, $this->testSession->getTaxonomyFilterSelection()
-		);
+		$filterSelection = $this->testSession->getQuestionSetFilterSelection();
+		
+		$filterSelection->setForcedQuestionIds(array($this->testSession->getCurrentQuestionId()));
+		
+		$this->testSequence->loadQuestions($this->dynamicQuestionSetConfig, $filterSelection);
 		
 		$this->testSequence->cleanupQuestions($this->testSession);
 		
@@ -400,10 +507,18 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	
 	protected function handleQuestionActionCmd()
 	{
-		$this->updateWorkingTime();
+		$questionId = $this->testSession->getCurrentQuestionId();
 
-		$this->saveQuestionSolution();
-		
+		if( $questionId )
+		{
+			$this->updateWorkingTime();
+			$this->saveQuestionSolution();
+			$this->persistQuestionAnswerStatus();
+
+			$this->testSequence->unsetQuestionPostponed($questionId);
+			$this->testSequence->saveToDb();
+		}
+
 		$this->ctrl->setParameter(
 				$this, 'sequence', $this->testSession->getCurrentQuestionId()
 		);
@@ -428,7 +543,22 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		$question_gui = $this->object->createQuestionGUI(
 				"", $this->testSession->getCurrentQuestionId()
 		);
-		
+
+		if( !is_object($question_gui) )
+		{
+			global $ilLog;
+
+			$ilLog->write(
+				"INV SEQ: active={$this->testSession->getActiveId()} qId={$this->testSession->getCurrentQuestionId()} "
+				.serialize($this->testSequence)
+			);
+
+			$ilLog->logStack('INV SEQ');
+
+			$this->resetCurrentQuestion();
+			$this->ctrl->redirect($this, 'showQuestion');
+		}
+
 		$question_gui->setTargetGui($this);
 		
 		$question_gui->setQuestionCount(
@@ -654,11 +784,11 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		
 		$this->tpl->setVariable("PAGETITLE", "- " . $this->object->getTitle());
 		
-		if ($this->object->getShowExamid() && !$this->object->getKioskMode())
+		if ($this->object->isShowExamIdInTestPassEnabled() && !$this->object->getKioskMode())
 		{
 			$this->tpl->setCurrentBlock('exam_id');
-			$this->tpl->setVariable('EXAM_ID', $this->object->getExamId(
-					$this->testSession->getActiveId(), $this->testSession->getPass()
+			$this->tpl->setVariable('EXAM_ID', ilObjTest::lookupExamId(
+				$this->testSession->getActiveId(), $this->testSession->getPass(), $this->object->getId()
 			));
 			$this->tpl->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
 			$this->tpl->parseCurrentBlock();
@@ -676,14 +806,15 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		
 		if( $this->testSequence->openQuestionExists() )
 		{
-			$msgLangVar = 'tst_dyn_test_msg_currently_finished_selection';
+			$message = $this->lng->txt('tst_dyn_test_msg_currently_finished_selection');
 		}
 		else
 		{
-			$msgLangVar = 'tst_dyn_test_msg_currently_finished_completely';
+			$message = $this->lng->txt('tst_dyn_test_msg_currently_finished_completely');
+			$message .= "<br /><br />{$this->buildFinishPagePassDeletionLink()}";
 		}
 		
-		$msgHtml = $this->tpl->getMessageHTML($this->lng->txt($msgLangVar));
+		$msgHtml = $this->tpl->getMessageHTML($message);
 		
 		$this->tpl->addBlockFile(
 				'QUESTION_OUTPUT', 'test_currently_finished_msg_block',
@@ -786,11 +917,11 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		return $this->saveResult;
 	}
 	
-	private function isQuestionAnsweredCorrect($questionId, $activeId)
+	private function isQuestionAnsweredCorrect($questionId, $activeId, $pass)
 	{
 		$questionGUI = $this->object->createQuestionGUI("", $questionId);
 
-		$reachedPoints = assQuestion::_getReachedPoints($activeId, $questionId, 0);
+		$reachedPoints = assQuestion::_getReachedPoints($activeId, $questionId, $pass);
 		$maxPoints = $questionGUI->object->getMaximumPoints();
 		
 		if($reachedPoints < $maxPoints)
@@ -804,15 +935,22 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 
 	protected function populatePreviousButtons($sequence)
 	{
-		if( !$this->isFirstPageInSequence($sequence) )
+		if( !$this->dynamicQuestionSetConfig->isPreviousQuestionsListEnabled() )
 		{
-			$this->populateUpperPreviousButtonBlock(
-					'showTrackedQuestionList', "&lt;&lt; " . $this->lng->txt( "save_previous" )
-			);
-			$this->populateLowerPreviousButtonBlock(
-					'showTrackedQuestionList', "&lt;&lt; " . $this->lng->txt( "save_previous" )
-			);
+			return;
 		}
+		
+		if( $this->isFirstPageInSequence($sequence) )
+		{
+			return;
+		}
+		
+		$this->populateUpperPreviousButtonBlock(
+				'showTrackedQuestionList', "&lt;&lt; " . $this->lng->txt( "save_previous" )
+		);
+		$this->populateLowerPreviousButtonBlock(
+				'showTrackedQuestionList', "&lt;&lt; " . $this->lng->txt( "save_previous" )
+		);
 	}
 	
 	protected function buildQuestionsTableDataArray($questions, $marked_questions)
@@ -855,22 +993,98 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		
 		return $data;
 	}
-	
-	private function buildFilteredQuestionsTableGUI()
+
+	protected function buildQuestionSetAnswerStatisticRowArray($questions, $marked_questions)
 	{
-		require_once 'Services/Taxonomy/classes/class.ilObjTaxonomy.php';
-		$taxIds = ilObjTaxonomy::getUsageOfObject(
-				$this->dynamicQuestionSetConfig->getSourceQuestionPoolId()
+		$questionAnswerStats = array(
+			'total_all' => count($questions),
+			'total_open' => 0,
+			'non_answered' => 0,
+			'wrong_answered' => 0,
+			'correct_answered' => 0,
+			'postponed' => 0,
+			'marked' => 0
 		);
 
-		include_once "./Modules/Test/classes/tables/class.ilFilteredQuestionsTableGUI.php";
-		$gui = new ilFilteredQuestionsTableGUI(
-				$this, 'showQuestionSelection', $this->object->getShowMarker(), $taxIds
+		foreach($questions as $key => $value )
+		{
+			switch( $value['question_answer_status'] )
+			{
+				case ilAssQuestionList::QUESTION_ANSWER_STATUS_NON_ANSWERED:
+					$questionAnswerStats['non_answered']++;
+					$questionAnswerStats['total_open']++;
+					break;
+				case ilAssQuestionList::QUESTION_ANSWER_STATUS_WRONG_ANSWERED:
+					$questionAnswerStats['wrong_answered']++;
+					$questionAnswerStats['total_open']++;
+					break;
+				case ilAssQuestionList::QUESTION_ANSWER_STATUS_CORRECT_ANSWERED:
+					$questionAnswerStats['correct_answered']++;
+					break;
+			}
+
+			if( $this->testSequence->isPostponedQuestion($value["question_id"]) )
+			{
+				$questionAnswerStats['postponed']++;
+			}
+
+			if( isset($marked_questions[$value["question_id"]]) )
+			{
+				if( $marked_questions[$value["question_id"]]["solved"] == 1 )
+				{
+					$questionAnswerStats['marked']++;
+				}
+			}
+		}
+
+		return $questionAnswerStats;
+	}
+
+	private function buildQuestionSetCompleteStatisticTableGUI()
+	{
+		require_once 'Modules/Test/classes/tables/class.ilTestDynamicQuestionSetStatisticTableGUI.php';
+		$gui = $this->buildQuestionSetStatisticTableGUI(
+			ilTestDynamicQuestionSetStatisticTableGUI::COMPLETE_TABLE_ID
 		);
-		
+
+		$gui->initTitle('tst_dynamic_question_set_complete');
+		$gui->initColumns('tst_num_all_questions');
+
+		return $gui;
+	}
+	
+	private function buildQuestionSetFilteredStatisticTableGUI()
+	{
+		require_once 'Modules/Test/classes/tables/class.ilTestDynamicQuestionSetStatisticTableGUI.php';
+		$gui = $this->buildQuestionSetStatisticTableGUI(
+			ilTestDynamicQuestionSetStatisticTableGUI::FILTERED_TABLE_ID
+		);
+
+		$gui->initTitle('tst_dynamic_question_set_selection');
+		$gui->initColumns('tst_num_selected_questions');
+
+		require_once 'Services/Taxonomy/classes/class.ilObjTaxonomy.php';
+		$gui->setTaxIds(ilObjTaxonomy::getUsageOfObject(
+			$this->dynamicQuestionSetConfig->getSourceQuestionPoolId()
+		));
+
+		$gui->initFilter();
 		$gui->setFilterCommand('filterQuestionSelection');
 		$gui->setResetCommand('resetQuestionSelection');
 		
+		return $gui;
+	}
+		
+	private function buildQuestionSetStatisticTableGUI($tableId)
+	{
+		require_once 'Modules/Test/classes/tables/class.ilTestDynamicQuestionSetStatisticTableGUI.php';
+		$gui = new ilTestDynamicQuestionSetStatisticTableGUI(
+				$this->ctrl, $this->lng, $this, 'showQuestionSelection', $tableId
+		);
+		
+		$gui->setShowNumMarkedQuestionsEnabled($this->object->getShowMarker());
+		$gui->setShowNumPostponedQuestionsEnabled($this->object->getSequenceSettings());
+
 		return $gui;
 	}
 	
@@ -882,5 +1096,57 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		}
 		
 		return $this->lng->txt('tst_start_dyn_test_with_cur_quest_sel');
+	}
+
+	protected function persistQuestionAnswerStatus()
+	{
+		$questionId = $this->testSession->getCurrentQuestionId();
+		$activeId = $this->testSession->getActiveId();
+		$pass = $this->testSession->getPass();
+
+		if($this->isQuestionAnsweredCorrect($questionId, $activeId, $pass))
+		{
+			$this->testSequence->setQuestionAnsweredCorrect($questionId);
+		}
+		else
+		{
+			$this->testSequence->setQuestionAnsweredWrong($questionId);
+		}
+	}
+
+	private function resetCurrentQuestion()
+	{
+		$this->testSession->setCurrentQuestionId(null);
+
+		$this->testSequence->saveToDb();
+		$this->testSession->saveToDb();
+
+		$this->ctrl->setParameter($this, 'sequence', $this->testSession->getCurrentQuestionId());
+	}
+
+	/**
+	 * @return string
+	 */
+	private function buildFinishPagePassDeletionLink()
+	{
+		$href = $this->getPassDeletionTarget();
+
+		$label = $this->lng->txt('tst_dyn_test_msg_pass_deletion_link');
+
+		return "<a href=\"{$href}\">{$label}</a>";
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getPassDeletionTarget()
+	{
+		require_once 'Modules/Test/classes/confirmations/class.ilTestPassDeletionConfirmationGUI.php';
+		
+		$this->ctrl->setParameterByClass('ilTestEvaluationGUI', 'context', ilTestPassDeletionConfirmationGUI::CONTEXT_DYN_TEST_PLAYER);
+		$this->ctrl->setParameterByClass('ilTestEvaluationGUI', 'active_id', $this->testSession->getActiveId());
+		$this->ctrl->setParameterByClass('ilTestEvaluationGUI', 'pass', $this->testSession->getPass());
+
+		return $this->ctrl->getLinkTargetByClass('ilTestEvaluationGUI', 'confirmDeletePass');
 	}
 }

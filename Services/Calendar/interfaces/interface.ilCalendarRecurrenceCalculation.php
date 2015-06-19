@@ -24,7 +24,7 @@
 /**
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id: interface.ilCalendarRecurrenceCalculation.php 31535 2011-11-09 10:38:13Z smeyer $
+* @version $Id$
 *
 * @ingroup ServicesCalendar
 */

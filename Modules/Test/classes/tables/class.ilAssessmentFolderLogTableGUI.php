@@ -7,7 +7,7 @@ include_once('./Services/Table/classes/class.ilTable2GUI.php');
 /**
 *
 * @author Helmut Schottmüller <ilias@aurealis.de>
-* @version $Id: class.ilAssessmentFolderLogTableGUI.php 44245 2013-08-17 11:15:45Z mbecker $
+* @version $Id$
 *
 * @ingroup ModulesTest
 */
@@ -59,7 +59,7 @@ class ilAssessmentFolderLogTableGUI extends ilTable2GUI
 	 */
 	public function fillRow($data)
 	{
-		$this->tpl->setVariable("DATE", ilDatePresentation::formatDate(new ilDate($data['tstamp'], IL_CAL_UNIX)));
+		$this->tpl->setVariable("DATE", ilDatePresentation::formatDate(new ilDateTime($data['tstamp'], IL_CAL_UNIX)));
 		$user = ilObjUser::_lookupName($data["user_fi"]);
 		$this->tpl->setVariable("USER", ilUtil::prepareFormOutput(trim($user["title"] . " " . $user["firstname"] . " " . $user["lastname"])));
 		$title = "";

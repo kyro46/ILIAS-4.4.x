@@ -26,7 +26,7 @@
 * class for DOM utilities
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilDOMUtil.php 17101 2008-08-03 10:30:43Z akill $
+* @version $Id$
 *
 * @ingroup	ServicesUtilities
 */

@@ -7,7 +7,7 @@ include_once './Services/Tree/classes/class.ilTree.php';
  * 
  * 
  * @author Stefan Meyer <smeyer.ilias@gmx.de>
- * $Id: class.ilECSCmsTree.php 39161 2013-01-10 10:46:56Z smeyer $
+ * $Id$
  */
 class ilECSCmsTree extends ilTree
 {

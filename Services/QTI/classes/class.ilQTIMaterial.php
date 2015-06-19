@@ -25,7 +25,7 @@
 * QTI material class
 *
 * @author Helmut Schottmüller <hschottm@gmx.de>
-* @version $Id: class.ilQTIMaterial.php 13868 2007-05-11 13:47:30Z hschottm $
+* @version $Id$
 *
 * @package assessment
 */

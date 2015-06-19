@@ -7,7 +7,7 @@ require_once "./Services/Object/classes/class.ilObject.php";
 * Class ilObjSearchSettings
 * 
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjSearchSettings.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 * @extends ilObject
 * @package ilias-core

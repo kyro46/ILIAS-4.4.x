@@ -28,7 +28,7 @@ include_once("./Services/Object/classes/class.ilObjectAccess.php");
 *
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjSearchSettingsAccess.php 33501 2012-03-03 11:11:05Z akill $
+* @version $Id$
 *
 */
 class ilObjSearchSettingsAccess extends ilObjectAccess

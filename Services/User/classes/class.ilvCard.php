@@ -25,7 +25,7 @@
 * RFC 2426 vCard MIME Directory Profile 3.0 class
 *
 * @author Helmut Schottmüller <hschottm@tzi.de>
-* @version $Id: class.ilvCard.php 14579 2007-08-23 12:06:19Z akill $
+* @version $Id$
 *
 */
 

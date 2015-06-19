@@ -8,7 +8,7 @@ require_once "./Services/Object/classes/class.ilObjectGUI.php";
 * Class ilObjRoleTemplateGUI
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilObjRoleTemplateGUI.php 47571 2014-01-28 10:23:28Z jluetzen $
+* @version $Id$
 *
 * @ilCtrl_Calls ilObjRoleTemplateGUI:
 *

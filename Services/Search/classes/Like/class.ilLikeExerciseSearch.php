@@ -27,7 +27,7 @@
 * Performs Mysql Like search in object_data title and description
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilLikeExerciseSearch.php 23386 2010-03-26 06:47:42Z akill $
+* @version $Id$
 * 
 * @package ilias-search
 *

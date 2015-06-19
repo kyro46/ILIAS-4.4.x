@@ -19,7 +19,7 @@ include_once("./Services/Utilities/classes/class.ilDOMUtil.php");
  *
  * @author Alex Killing <alex.killing@gmx.de>
  *
- * @version $Id: class.ilPageObjectGUI.php 48857 2014-03-22 09:17:23Z akill $
+ * @version $Id$
  *
  * @ilCtrl_Calls ilPageObjectGUI: ilPageEditorGUI, ilEditClipboardGUI, ilMDEditorGUI
  * @ilCtrl_Calls ilPageObjectGUI: ilPublicUserProfileGUI, ilNoteGUI, ilNewsItemGUI
@@ -911,7 +911,7 @@ return;
 	function &executeCommand()
 	{
 		global $ilCtrl, $ilTabs, $lng, $ilAccess, $tpl;
-		
+
 		$next_class = $this->ctrl->getNextClass($this);
 
 		$cmd = $this->ctrl->getCmd();
@@ -1747,6 +1747,7 @@ return;
 		// check cache (same parameters, non-edit mode and rendered time
 		// > last change
 		if (($this->getOutputMode() == "preview" || $this->getOutputMode() == "presentation") &&
+			!$this->getCompareMode() &&
 			!$this->getAbstractOnly() &&
 			$md5 == $this->obj->getRenderMd5() &&
 			($this->obj->getLastChange() < $this->obj->getRenderedTime()) &&
@@ -2871,7 +2872,7 @@ return;
 	 */
 	function edit()
 	{
-		global $tree, $lng, $ilCtrl, $ilSetting, $ilUser;
+		global $tree, $lng, $ilCtrl, $ilSetting, $ilUser, $ilHelp;
 
 		// editing allowed?
 		if (!$this->getEnableEditing())
@@ -2879,7 +2880,9 @@ return;
 			ilUtil::sendFailure($lng->txt("permission_denied"), true);
 			$ilCtrl->redirect($this, "preview");
 		}
-		
+
+		$ilHelp->setScreenId("edit_".$this->getParentType());
+
 		require_once 'Services/Captcha/classes/class.ilCaptchaUtil.php';
 		if(
 			$ilUser->isAnonymous() &&
@@ -3296,32 +3299,31 @@ return;
 		}
 
 		$tpl = new ilTemplate("tpl.page_compare.html", true, true, "Services/COPage");
-		$compare = $this->obj->compareVersion($_POST["left"], $_POST["right"]);
+		$compare = $this->obj->compareVersion((int) $_POST["left"], (int) $_POST["right"]);
 		
 		// left page
 		$lpage = $compare["l_page"];
-		$lpage_gui = new ilPageObjectGUI($lpage->getParentType(), 0);
-		$cfg = $lpage_gui->getPageConfig();
+		$cfg = $this->getPageConfig();
 		$cfg->setPreventHTMLUnmasking(true);
-		$lpage_gui->setOutputMode(IL_PAGE_PREVIEW);
-		$lpage_gui->setPageObject($lpage);
-		$lpage_gui->setPresentationTitle($this->getPresentationTitle());
-		$lpage_gui->setCompareMode(true);
-		$lhtml = $lpage_gui->showPage();
+
+		$this->setOutputMode(IL_PAGE_PREVIEW);
+		$this->setPageObject($lpage);
+		$this->setPresentationTitle($this->getPresentationTitle());
+		$this->setCompareMode(true);
+
+		$lhtml = $this->showPage();
 		$lhtml = $this->replaceDiffTags($lhtml);
 		$lhtml = str_replace("&lt;br /&gt;", "<br />", $lhtml);
 		$tpl->setVariable("LEFT", $lhtml);
 		
 		// right page
 		$rpage = $compare["r_page"];
-		$rpage_gui = new ilPageObjectGUI($rpage->getParentType(), 0);
-		$cfg = $rpage_gui->getPageConfig();
-		$cfg->setPreventHTMLUnmasking(true);
-		$rpage_gui->setOutputMode(IL_PAGE_PREVIEW);
-		$rpage_gui->setPageObject($rpage);
-		$rpage_gui->setPresentationTitle($this->getPresentationTitle());
-		$rpage_gui->setCompareMode(true);
-		$rhtml = $rpage_gui->showPage();
+		$this->setPageObject($rpage);
+		$this->setPresentationTitle($this->getPresentationTitle());
+		$this->setCompareMode(true);
+		$this->setOutputMode(IL_PAGE_PREVIEW);
+
+		$rhtml = $this->showPage();
 		$rhtml = $this->replaceDiffTags($rhtml);
 		$rhtml = str_replace("&lt;br /&gt;", "<br />", $rhtml);
 		$tpl->setVariable("RIGHT", $rhtml);
@@ -3548,7 +3550,7 @@ return;
 			foreach ($q_ids as $q_id)
 			{
 				$q_exporter = new ilQuestionExporter($a_no_interaction);
-				$js[$q_id] = $q_exporter->exportQuestion($q_id);
+				$js[$q_id] = $q_exporter->exportQuestion($q_id, null, $this->getOutputMode());
 			}
 		}
 		return $js;

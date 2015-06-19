@@ -7,7 +7,7 @@ include_once "./Services/Certificate/classes/class.ilCertificateAdapter.php";
 * Test certificate adapter
 *
 * @author		Helmut Schottmüller <helmut.schottmueller@mac.com>
-* @version	$Id: class.ilTestCertificateAdapter.php 44772 2013-09-16 07:46:20Z mjansen $
+* @version	$Id$
 * @ingroup ModulesTest
 */
 class ilTestCertificateAdapter extends ilCertificateAdapter

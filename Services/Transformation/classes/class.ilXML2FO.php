@@ -26,7 +26,7 @@
 * Generic class for transformation from xml to xsl-fo
 *
 * @author Stefan Meyer <meyer@leifos.com>
-* @version $Id: class.ilXML2FO.php 23607 2010-04-21 23:03:20Z akill $
+* @version $Id$
 *
 * @package ilias
 */

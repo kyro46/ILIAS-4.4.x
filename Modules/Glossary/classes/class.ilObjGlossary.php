@@ -12,7 +12,7 @@ require_once("./Modules/Glossary/classes/class.ilGlossaryTerm.php");
 * Class ilObjGlossary
 *
 * @author Alex Killing <alex.killing@gmx.de>
-* @version $Id: class.ilObjGlossary.php 47283 2014-01-15 18:04:51Z akill $
+* @version $Id$
 *
 * @ingroup ModulesGlossary
 */
