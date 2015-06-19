@@ -425,7 +425,7 @@ class ilTinyMCE extends ilRTE
 	*/
 	function addUserTextEditor($editor_selector)
 	{
-		$validtags = array("strong","em","p", "br", "div", "span");
+		$validtags = array("strong", "em", "p", "br", "div", "span", "li", "ul", "ol");
 		$buttontags = array("strong","em");
 		include_once "./Services/UICore/classes/class.ilTemplate.php";
 		$template = new ilTemplate("tpl.usereditor.html", true, true, "Services/RTE");
@@ -440,7 +440,7 @@ class ilTinyMCE extends ilRTE
 		{
 			$template->setVariable("STYLE_SELECT", ",styleselect");
 		}
-		$template->setVariable("BUTTONS", $this->_buildButtonsFromHTMLTags($buttontags) . ",backcolor,removeformat");
+		$template->setVariable("BUTTONS", $this->_buildButtonsFromHTMLTags($buttontags) .",bullist,numlist,charmap,forecolor,backcolor,separator,outdent,indent,separator,undo,redo,separator,removeformat");
 		include_once "./Services/Utilities/classes/class.ilUtil.php";
 		//$template->setVariable("STYLESHEET_LOCATION", $this->getContentCSS());
 		$template->setVariable("STYLESHEET_LOCATION", ilUtil::getNewContentStyleSheetLocation() . "," . ilUtil::getStyleSheetLocation("output", "delos.css"));
